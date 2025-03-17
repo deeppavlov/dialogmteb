@@ -9,15 +9,14 @@ class ViraIntentClassification(AbsTaskClassification):
         name="ViraIntentClassification",
         description="",
         dataset={
-            "path": "ibm-research/vira-intents-live",
-            "revision": "1f8d799c0974a1eec9499eb68a6a4c1092d4477d",
-            # TODO in their repo spits are broken
+            "path": "DeepPavlov/vira-intents-live",
+            "revision": "a4141f65d270c89e13d269099aa9a6f188fa09f1",
         },
         reference="https://huggingface.co/datasets/ibm-research/vira-intents-live",
         type="Classification",
         category=None,
         modalities=["text"],
-        eval_splits=["validation", "test"],
+        eval_splits=["val", "test"],
         eval_langs=["eng-Latn"],
         main_score="accuracy",
         date=None,

@@ -9,8 +9,8 @@ class AtisIntentClassification(AbsTaskClassification):
         name="AtisIntentClassification",
         description="",
         dataset={
-            "path": "fathyshalab/atis_intents",
-            "revision": "a71b5376f7f3e38502e726a9c3838e88c643d258",
+            "path": "DeepPavlov/atis_intent_classification",
+            "revision": "01f3bc14cd27fdd6d4c4ac07e30e6ad3fa09c0a6",
         },
         reference="https://huggingface.co/datasets/fathyshalab/atis_intents",
         type="Classification",
@@ -36,3 +36,4 @@ class AtisIntentClassification(AbsTaskClassification):
             url = "https://aclanthology.org/H90-1021/"
         }""",
     )
+

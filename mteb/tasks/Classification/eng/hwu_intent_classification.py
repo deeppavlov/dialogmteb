@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import datasets
+
 from mteb.abstasks.AbsTaskClassification import AbsTaskClassification
 from mteb.abstasks.TaskMetadata import TaskMetadata
 
@@ -9,8 +11,8 @@ class HWUIntentClassification(AbsTaskClassification):
         name="HWUIntentClassification",
         description="",
         dataset={
-            "path": "AutoIntent/hwu64",
-            "revision": "1c1f110ec61e1d63c31f280b704c1ea4dffdf54f",
+            "path": "DeepPavlov/hwu_intent_classification",
+            "revision": "050d2712be8b6f069a4350139c9c2d3ed7ce4aaf",
         },
         reference="https://huggingface.co/datasets/fathyshalab/atis_intents",
         type="Classification",
@@ -36,6 +38,3 @@ class HWUIntentClassification(AbsTaskClassification):
           url={https://arxiv.org/abs/1903.05566}, 
     }""",
     )
-
-    def dataset_transform(self):
-        self.dataset = self.dataset.rename_column("utterance", "text")

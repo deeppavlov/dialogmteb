@@ -9,8 +9,8 @@ class ClincIntentClassification(AbsTaskClassification):
         name="ClincIntentClassification",
         description="",
         dataset={
-            "path": "clinc/clinc_oos",
-            "revision": "155b9c710419136e17307b80d0a13e68cd46b4ec",
+            "path": "DeepPavlov/clinc_oos",
+            "revision": "9b995dc4a780cfabf0c7bb044bab7f48a3762c8d",
         },
         reference="https://huggingface.co/datasets/clinc/clinc_oos",
         type="Classification",
@@ -49,6 +49,3 @@ class ClincIntentClassification(AbsTaskClassification):
     }""",
     )
 
-    def dataset_transform(self):
-        for hf_subset, ds_dict in self.dataset.items():
-            self.dataset[hf_subset] = ds_dict.rename_column("intent", "label")
