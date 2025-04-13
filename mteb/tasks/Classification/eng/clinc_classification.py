@@ -7,14 +7,14 @@ from mteb.abstasks.TaskMetadata import TaskMetadata
 class ClincIntentClassification(AbsTaskClassification):
     metadata = TaskMetadata(
         name="ClincIntentClassification",
-        description="",
+        description="Task-oriented dialog systems need to know when a query falls outside their range of supported intents, but current text classification corpora only define label sets that cover every example",
         dataset={
             "path": "DeepPavlov/clinc_oos",
             "revision": "9b995dc4a780cfabf0c7bb044bab7f48a3762c8d",
         },
         reference="https://huggingface.co/datasets/clinc/clinc_oos",
         type="Classification",
-        category=None,
+        category="t2c",
         modalities=["text"],
         eval_splits=["test", "validation"],
         eval_langs={
@@ -23,13 +23,13 @@ class ClincIntentClassification(AbsTaskClassification):
             "imbalanced": ["eng-Latn"],
         },
         main_score="accuracy",
-        date=None,
-        domains=None,
-        task_subtypes=None,
+        date=("01-01-2019", "01-01-2019"),
+        domains=["Financial", "Web", "Social"],
+        task_subtypes=["Intent classification"],
         license="cc-by-3.0",
-        annotations_creators=None,
+        annotations_creators="human-annotated",
         dialect=[],
-        sample_creation=None,
+        sample_creation="created",
         bibtex_citation="""@inproceedings{larson-etal-2019-evaluation,
         title = "An Evaluation Dataset for Intent Classification and Out-of-Scope Prediction",
         author = "Larson, Stefan  and

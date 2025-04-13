@@ -19,18 +19,18 @@ class DailyDialogClassificationAct(AbsTaskClassification):
         },
         reference="https://huggingface.co/datasets/li2017dailydialog/daily_dialog",
         type="Classification",
-        category=None,
+        category="t2c",
         modalities=["text"],
         eval_splits=["test", "validation"],
         eval_langs=["eng-Latn"],
         main_score="accuracy",
-        date=None,
-        domains=None,
-        task_subtypes=None,
-        license=None,
-        annotations_creators=None,
+        date=("11-07-2017", "11-07-2017"),
+        domains=["Social"],
+        task_subtypes=["Intent classification"],
+        license="cc-by-nc-sa-4.0",
+        annotations_creators="human-annotated",
         dialect=[],
-        sample_creation=None,
+        sample_creation="found",
         bibtex_citation="""@misc{li2017dailydialogmanuallylabelledmultiturn,
       title={DailyDialog: A Manually Labelled Multi-turn Dialogue Dataset}, 
       author={Yanran Li and Hui Su and Xiaoyu Shen and Wenjie Li and Ziqiang Cao and Shuzi Niu},
@@ -59,18 +59,18 @@ class DailyDialogClassificationEmotion(AbsTaskClassification):
         },
         reference="https://huggingface.co/datasets/li2017dailydialog/daily_dialog",
         type="Classification",
-        category=None,
+        category="t2c",
         modalities=["text"],
         eval_splits=["test", "validation"],
         eval_langs=["eng-Latn"],
         main_score="accuracy",
-        date=None,
-        domains=None,
-        task_subtypes=None,
-        license=None,
-        annotations_creators=None,
+        date=("11-07-2017", "11-07-2017"),
+        domains=["Social"],
+        task_subtypes=["Intent classification"],
+        license="cc-by-nc-sa-4.0",
+        annotations_creators="human-annotated",
         dialect=[],
-        sample_creation=None,
+        sample_creation="found",
         bibtex_citation="""@misc{li2017dailydialogmanuallylabelledmultiturn,
       title={DailyDialog: A Manually Labelled Multi-turn Dialogue Dataset}, 
       author={Yanran Li and Hui Su and Xiaoyu Shen and Wenjie Li and Ziqiang Cao and Shuzi Niu},
@@ -87,16 +87,3 @@ class DailyDialogClassificationEmotion(AbsTaskClassification):
         self.dataset = self.dataset.rename_columns(
             {"emotion_label": "label", "dialog": "text"}
         )
-
-
-if __name__ == "__main__":
-    tasks = [
-        DailyDialogClassificationAct(),
-        DailyDialogClassificationEmotion(),
-    ]
-    import mteb
-    evaluator = mteb.MTEB(tasks)
-    model = mteb.get_model("minishlab/potion-base-2M")
-    evaluator.run(
-        model,
-    )
