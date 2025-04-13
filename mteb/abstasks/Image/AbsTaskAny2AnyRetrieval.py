@@ -9,12 +9,13 @@ from time import asctime, time
 from typing import Any
 
 import tqdm
-from datasets import Features, Value, load_dataset
+from datasets import Dataset, Features, Value, concatenate_datasets, load_dataset
 from PIL import Image
+
+from mteb.abstasks.TaskMetadata import DescriptiveStatistics
 
 from ...evaluation.evaluators import Any2AnyRetrievalEvaluator
 from ..AbsTask import AbsTask, ScoresDict
-from ..TaskMetadata import DescriptiveStatistics
 
 logger = logging.getLogger(__name__)
 
@@ -298,12 +299,11 @@ class AbsTaskAny2AnyRetrieval(AbsTask):
         model,
         split: str = "test",
         *,
-        encode_kwargs: dict[str, Any] = {},
+        encode_kwargs: dict[str, Any],
         **kwargs,
     ):
         retriever = Any2AnyRetrievalEvaluator(
             retriever=model,
-            task_name=self.metadata.name,
             encode_kwargs=encode_kwargs,
             **kwargs,
         )
@@ -327,15 +327,28 @@ class AbsTaskAny2AnyRetrieval(AbsTask):
                     self.relevant_docs[hf_subset][split],
                 )
             scores[hf_subset] = self._evaluate_subset(
-                retriever, corpus, queries, relevant_docs, hf_subset, **kwargs
+                retriever, corpus, queries, relevant_docs, hf_subset, split, **kwargs
             )
         return scores
 
     def _evaluate_subset(
-        self, retriever, corpus, queries, relevant_docs, hf_subset: str, **kwargs
+        self,
+        retriever,
+        corpus,
+        queries,
+        relevant_docs,
+        hf_subset: str,
+        hf_split: str,
+        **kwargs,
     ):
         start_time = time()
-        results = retriever(corpus, queries)
+        results = retriever(
+            corpus,
+            queries,
+            hf_split=hf_split,
+            hf_subset=hf_subset,
+            task_metadata=self.metadata,
+        )
         end_time = time()
         logger.info(f"Time taken to retrieve: {end_time - start_time:.2f} seconds")
 
@@ -437,12 +450,20 @@ class AbsTaskAny2AnyRetrieval(AbsTask):
             corpus = self.corpus[hf_subset][split]
             relevant_docs = self.relevant_docs[hf_subset][split]
         elif compute_overall:
-            queries = {}
-            corpus = {}
+            queries = concatenate_datasets(
+                [
+                    process_docs(self.queries, hf_subset, split)
+                    for hf_subset in self.metadata.eval_langs
+                ]
+            )
+            corpus = concatenate_datasets(
+                [
+                    process_docs(self.corpus, hf_subset, split)
+                    for hf_subset in self.metadata.eval_langs
+                ]
+            )
             relevant_docs = {}
             for hf_subset in self.metadata.eval_langs:
-                queries.update(process_docs(self.queries, hf_subset, split))
-                corpus.update(process_docs(self.corpus, hf_subset, split))
                 relevant_docs.update(
                     process_relevant_docs(self.relevant_docs, hf_subset, split)
                 )
@@ -533,6 +554,14 @@ def process_docs(
     collection: dict[str, dict[str, dict[str, str] | str]], hf_subset: str, split: str
 ) -> dict[str, str]:
     """Collections can contain overlapping ids in different splits. Prepend split to avoid this"""
-    return {
-        f"{split}_{hf_subset}_{k}": v for k, v in collection[hf_subset][split].items()
-    }
+    res = {}
+    for k in collection[hf_subset][split].features.keys():
+        res.update(
+            {
+                k: [
+                    f"{split}_{hf_subset}_{ele}"
+                    for ele in collection[hf_subset][split][k]
+                ]
+            }
+        )
+    return Dataset.from_dict(res)

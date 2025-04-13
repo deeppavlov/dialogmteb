@@ -13,7 +13,7 @@ class MalteseNewsClassification(AbsTaskMultilabelClassification):
         Articles. The data was collected from the press_mt subset from Korpus
         Malti v4.0. Article contents were cleaned to filter out JavaScript, CSS,
         & repeated non-Maltese sub-headings. The labels are based on the category
-        field from this corpus. 
+        field from this corpus.
         """,
         reference="https://huggingface.co/datasets/MLRS/maltese_news_categories",
         dataset={
@@ -21,7 +21,7 @@ class MalteseNewsClassification(AbsTaskMultilabelClassification):
             "revision": "6bb0321659c4f07c4c2176c30c98c971be6571b4",
         },
         type="MultilabelClassification",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         eval_splits=["test"],
         eval_langs=["mlt-Latn"],

@@ -14,7 +14,7 @@ class CSFDCZMovieReviewSentimentClassification(AbsTaskClassification):
             "revision": "dd2ede6faaea338ef6b1e2966f06808656975a23",
         },
         type="Classification",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         date=("2002-06-28", "2020-03-13"),
         eval_splits=["test"],
@@ -28,7 +28,7 @@ class CSFDCZMovieReviewSentimentClassification(AbsTaskClassification):
         sample_creation="found",
         bibtex_citation="""
 @misc{štefánik2023resources,
-      title={Resources and Few-shot Learners for In-context Learning in Slavic Languages}, 
+      title={Resources and Few-shot Learners for In-context Learning in Slavic Languages},
       author={Michal Štefánik and Marek Kadlčík and Piotr Gramacki and Petr Sojka},
       year={2023},
       eprint={2304.01922},

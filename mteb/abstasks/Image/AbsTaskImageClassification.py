@@ -7,16 +7,14 @@ from typing import Any
 import numpy as np
 from PIL import ImageFile
 
-from mteb.abstasks.TaskMetadata import HFSubset
+from mteb.abstasks.TaskMetadata import DescriptiveStatistics, HFSubset
 
 from ...encoder_interface import Encoder
 from ...evaluation.evaluators import (
     ImagekNNClassificationEvaluator,
-    ImagekNNClassificationEvaluatorPytorch,
     ImagelogRegClassificationEvaluator,
 )
 from ..AbsTask import AbsTask, ScoresDict
-from ..TaskMetadata import DescriptiveStatistics
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -99,8 +97,7 @@ class AbsTaskImageClassification(AbsTask):
             imgs = self.dataset[hf_subset][split][self.image_column_name]
             labels = self.dataset[hf_subset][split][self.label_column_name]
         elif compute_overall:
-            imgs = []
-            labels = []
+            imgs, labels = [], []
             for hf_subset in self.metadata.eval_langs:
                 imgs.extend(self.dataset[hf_subset][split][self.image_column_name])
                 labels.extend(self.dataset[hf_subset][split][self.label_column_name])
@@ -114,7 +111,7 @@ class AbsTaskImageClassification(AbsTask):
 
         img_widths, img_heights = [], []
         for img in imgs:
-            width, height = img.size
+            width, height = img.size  # type: ignore
             img_heights.append(height)
             img_widths.append(width)
 
@@ -138,7 +135,7 @@ class AbsTaskImageClassification(AbsTask):
         eval_split: str = "test",
         train_split: str = "train",
         *,
-        encode_kwargs: dict[str, Any] = {},
+        encode_kwargs: dict[str, Any],
         **kwargs,
     ) -> dict[HFSubset, ScoresDict]:
         if not self.data_loaded:
@@ -159,8 +156,9 @@ class AbsTaskImageClassification(AbsTask):
             scores[hf_subset] = self._evaluate_subset(
                 model,
                 ds,
-                eval_split,
-                train_split,
+                hf_subset=hf_subset,
+                hf_split=eval_split,
+                train_split=train_split,
                 encode_kwargs=encode_kwargs,
                 **kwargs,
             )
@@ -172,13 +170,15 @@ class AbsTaskImageClassification(AbsTask):
         self,
         model: Encoder,
         dataset,
-        eval_split: str = "test",
+        hf_subset: str,
+        hf_split: str = "test",
         train_split: str = "train",
-        encode_kwargs: dict[str, Any] = {},
+        *,
+        encode_kwargs: dict[str, Any],
         **kwargs,
     ) -> ScoresDict:
         train_split = dataset[train_split]
-        eval_split = dataset[eval_split]
+        eval_split = dataset[hf_split]
         params = {"k": self.k}
         params.update(kwargs)
 
@@ -205,17 +205,9 @@ class AbsTaskImageClassification(AbsTask):
                     eval_split,
                     self.image_column_name,
                     self.label_column_name,
-                    task_name=self.metadata.name,
-                    encode_kwargs=encode_kwargs,
-                    **params,
-                )
-            elif self.method == "kNN-pytorch":
-                evaluator = ImagekNNClassificationEvaluatorPytorch(
-                    undersampled_train,
-                    eval_split,
-                    self.image_column_name,
-                    self.label_column_name,
-                    task_name=self.metadata.name,
+                    task_metadata=self.metadata,
+                    hf_split=hf_split,
+                    hf_subset=hf_subset,
                     encode_kwargs=encode_kwargs,
                     **params,
                 )
@@ -225,7 +217,9 @@ class AbsTaskImageClassification(AbsTask):
                     eval_split,
                     self.image_column_name,
                     self.label_column_name,
-                    task_name=self.metadata.name,
+                    task_metadata=self.metadata,
+                    hf_split=hf_split,
+                    hf_subset=hf_subset,
                     encode_kwargs=encode_kwargs,
                     **params,
                 )
@@ -249,7 +243,7 @@ class AbsTaskImageClassification(AbsTask):
         """
         if idxs is None:
             idxs = np.arange(len(dataset_split))
-        np.random.shuffle(idxs)
+        self.np_rng.shuffle(idxs)
         if not isinstance(idxs, list):
             idxs = idxs.tolist()
         label_counter = defaultdict(int)

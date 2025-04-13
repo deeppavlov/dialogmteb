@@ -23,6 +23,8 @@ from .multilingual import (
     PhincBitextMining,
     RomaTalesBitextMining,
     TatoebaBitextMining,
+    WebFAQBitextMiningQAs,
+    WebFAQBitextMiningQuestions,
 )
 from .srn import SRNCorpusBitextMining
 from .vie import VieMedEVBitextMining
@@ -45,6 +47,8 @@ __all__ = [
     "NTREXBitextMining",
     "IndicGenBenchFloresBitextMining",
     "NollySentiBitextMining",
+    "WebFAQBitextMiningQAs",
+    "WebFAQBitextMiningQuestions",
     "BUCCBitextMiningFast",
     "PhincBitextMining",
     "TatoebaBitextMining",

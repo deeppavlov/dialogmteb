@@ -17,6 +17,7 @@ from pydantic import BaseModel, field_validator
 from mteb.abstasks.AbsTask import AbsTask, ScoresDict
 from mteb.abstasks.TaskMetadata import ISO_LANGUAGE_SCRIPT, HFSubset
 from mteb.languages import ISO_LANGUAGE, LanguageScripts
+from mteb.model_meta import ScoringFunction
 
 Split = str
 Score = Any
@@ -377,10 +378,10 @@ class TaskResult(BaseModel):
         for split, split_score in scores.items():
             for hf_subset, hf_subset_scores in split_score.items():
                 for name, prev_name in [
-                    ("cosine", "cos_sim"),
-                    ("manhattan", "manhattan"),
-                    ("euclidean", "euclidean"),
-                    ("dot", "dot"),
+                    (ScoringFunction.COSINE.value, "cos_sim"),
+                    (ScoringFunction.MANHATTAN.value, "manhattan"),
+                    (ScoringFunction.EUCLIDEAN.value, "euclidean"),
+                    (ScoringFunction.DOT_PRODUCT.value, "dot"),
                     ("max", "max"),
                     ("similarity", "similarity"),
                 ]:

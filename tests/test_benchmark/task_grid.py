@@ -12,7 +12,6 @@ from .mock_tasks import (
     MockClassificationTask,
     MockClusteringFastTask,
     MockClusteringTask,
-    MockImageClassificationKNNPTTask,
     MockImageClassificationKNNTask,
     MockImageClassificationTask,
     MockImageClusteringTask,
@@ -44,9 +43,8 @@ from .mock_tasks import (
     MockRetrievalTask,
     MockSTSTask,
     MockSummarizationTask,
-    MockTextMultipleChoiceTask,
     MockVisualSTSTask,
-    MockZeroshotClassificationTask,
+    MockZeroShotClassificationTask,
 )
 
 TASK_TEST_GRID = (
@@ -113,15 +111,13 @@ MOCK_TASK_REGISTRY = {task.metadata.name: type(task) for task in MOCK_TASK_TEST_
 MOCK_MIEB_TASK_GRID = [
     MockAny2AnyRetrievalI2TTask(),
     MockAny2AnyRetrievalT2ITask(),
-    MockTextMultipleChoiceTask(),
     MockMultiChoiceTask(),
     MockImageClassificationTask(),
-    MockImageClassificationKNNPTTask(),
     MockImageClassificationKNNTask(),
     MockImageClusteringTask(),
     MockImageTextPairClassificationTask(),
     MockVisualSTSTask(),
-    MockZeroshotClassificationTask(),
+    MockZeroShotClassificationTask(),
     MockImageMultilabelClassificationTask(),
     MockMultilingualImageClassificationTask(),
     MockMultilingualImageTextPairClassificationTask(),

@@ -27,7 +27,7 @@ class EightTagsClustering(AbsTaskClustering):
             "revision": "78b962b130c6690659c65abf67bf1c2f030606b6",
         },
         type="Clustering",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         eval_splits=["test"],
         eval_langs=["pol-Latn"],
@@ -42,8 +42,8 @@ class EightTagsClustering(AbsTaskClustering):
         bibtex_citation="""@inproceedings{dadas-etal-2020-evaluation,
             title = "Evaluation of Sentence Representations in {P}olish",
             author = "Dadas, Slawomir  and
-            Pere{\l}kiewicz, Micha{\l}  and
-            Po{\'s}wiata, Rafa{\l}",
+            Pere{\\l}kiewicz, Micha{\\l}  and
+            Po{\\'s}wiata, Rafa{\\l}",
             editor = "Calzolari, Nicoletta  and
             B{\'e}chet, Fr{\'e}d{\'e}ric  and
             Blache, Philippe  and
@@ -54,7 +54,7 @@ class EightTagsClustering(AbsTaskClustering):
             Isahara, Hitoshi  and
             Maegaard, Bente  and
             Mariani, Joseph  and
-            Mazo, H{\'e}l{\`e}ne  and
+            Mazo, H{\\'e}l{\\`e}ne  and
             Moreno, Asuncion  and
             Odijk, Jan  and
             Piperidis, Stelios",
@@ -86,7 +86,7 @@ class EightTagsClusteringFast(AbsTaskClusteringFast):
             "revision": "78b962b130c6690659c65abf67bf1c2f030606b6",
         },
         type="Clustering",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         eval_splits=["test"],
         eval_langs=["pol-Latn"],
@@ -101,10 +101,10 @@ class EightTagsClusteringFast(AbsTaskClusteringFast):
         bibtex_citation="""@inproceedings{dadas-etal-2020-evaluation,
             title = "Evaluation of Sentence Representations in {P}olish",
             author = "Dadas, Slawomir  and
-            Pere{\l}kiewicz, Micha{\l}  and
-            Po{\'s}wiata, Rafa{\l}",
+            Pere{\\l}kiewicz, Micha{\\l}  and
+            Po{\\'s}wiata, Rafa{\\l}",
             editor = "Calzolari, Nicoletta  and
-            B{\'e}chet, Fr{\'e}d{\'e}ric  and
+            B{\\'e}chet, Fr{\\'e}d{\\'e}ric  and
             Blache, Philippe  and
             Choukri, Khalid  and
             Cieri, Christopher  and
@@ -113,7 +113,7 @@ class EightTagsClusteringFast(AbsTaskClusteringFast):
             Isahara, Hitoshi  and
             Maegaard, Bente  and
             Mariani, Joseph  and
-            Mazo, H{\'e}l{\`e}ne  and
+            Mazo, H{\\'e}l{\\`e}ne  and
             Moreno, Asuncion  and
             Odijk, Jan  and
             Piperidis, Stelios",
@@ -161,7 +161,7 @@ class PlscClusteringS2S(AbsTaskClusteringFast):
             "revision": "39bcadbac6b1eddad7c1a0a176119ce58060289a",
         },
         type="Clustering",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         eval_splits=["test"],
         eval_langs=["pol-Latn"],
@@ -188,7 +188,7 @@ class PlscClusteringS2SFast(AbsTaskClusteringFast):
             "revision": "39bcadbac6b1eddad7c1a0a176119ce58060289a",
         },
         type="Clustering",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         eval_splits=["test"],
         eval_langs=["pol-Latn"],
@@ -243,7 +243,7 @@ class PlscClusteringP2P(AbsTaskClusteringFast):
             "revision": "8436dd4c05222778013d6642ee2f3fa1722bca9b",
         },
         type="Clustering",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         eval_splits=["test"],
         eval_langs=["pol-Latn"],
@@ -270,7 +270,7 @@ class PlscClusteringP2PFast(AbsTaskClusteringFast):
             "revision": "8436dd4c05222778013d6642ee2f3fa1722bca9b",
         },
         type="Clustering",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         eval_splits=["test"],
         eval_langs=["pol-Latn"],

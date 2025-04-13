@@ -11,10 +11,8 @@ from .evaluators import (
     RetrievalEvaluator,
     STSEvaluator,
     SummarizationEvaluator,
-    corpus_to_str,
     dot_distance,
     kNNClassificationEvaluator,
-    kNNClassificationEvaluatorPytorch,
     logRegClassificationEvaluator,
 )
 from .LangMapping import LANG_MAPPING
@@ -30,9 +28,7 @@ __all__ = [
     "ClusteringEvaluator",
     "BitextMiningEvaluator",
     "PairClassificationEvaluator",
-    "corpus_to_str",
     "kNNClassificationEvaluator",
-    "kNNClassificationEvaluatorPytorch",
     "logRegClassificationEvaluator",
     "dot_distance",
     "LANG_MAPPING",

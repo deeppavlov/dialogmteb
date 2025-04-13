@@ -9,10 +9,12 @@ import pytest
 import mteb
 from mteb.abstasks import AbsTask
 from mteb.abstasks.AbsTaskRetrieval import AbsTaskRetrieval
-from mteb.abstasks.AbsTaskSpeedTask import AbsTaskSpeedTask
 from mteb.abstasks.aggregated_task import AbsTaskAggregate
 from mteb.abstasks.Image.AbsTaskAny2AnyMultiChoice import AbsTaskAny2AnyMultiChoice
 from mteb.abstasks.Image.AbsTaskAny2AnyRetrieval import AbsTaskAny2AnyRetrieval
+from mteb.abstasks.Image.AbsTaskImageTextPairClassification import (
+    AbsTaskImageTextPairClassification,
+)
 from mteb.overview import TASKS_REGISTRY, get_tasks
 
 from ..test_benchmark.task_grid import (
@@ -31,34 +33,21 @@ tasks = [
 ]
 
 
-dataset_revisions = list(
-    {  # deduplicate as multiple tasks rely on the same dataset (save us at least 100 test cases)
-        (t.metadata.dataset["path"], t.metadata.dataset["revision"])
-        for t in mteb.get_tasks(exclude_superseded=False)
-        if not isinstance(t, (AbsTaskAggregate, AbsTaskSpeedTask))
-        and t.metadata.name != "AfriSentiLangClassification"
-        and t.metadata.name not in ALL_MOCK_TASKS
-    }
-)
+datasets_not_available = [
+    "AfriSentiLangClassification",
+    "SNLHierarchicalClusteringP2P",
+    "SNLClustering",
+    "SNLHierarchicalClusteringS2S",
+    "SNLRetrieval",
+]
 
 
 dataset_revisions = list(
     {  # deduplicate as multiple tasks rely on the same dataset (save us at least 100 test cases)
         (t.metadata.dataset["path"], t.metadata.dataset["revision"])
         for t in mteb.get_tasks(exclude_superseded=False)
-        if not isinstance(t, (AbsTaskAggregate, AbsTaskSpeedTask))
-        and t.metadata.name != "AfriSentiLangClassification"
-        and t.metadata.name not in ALL_MOCK_TASKS
-    }
-)
-
-
-dataset_revisions = list(
-    {  # deduplicate as multiple tasks rely on the same dataset (save us at least 100 test cases)
-        (t.metadata.dataset["path"], t.metadata.dataset["revision"])
-        for t in mteb.get_tasks(exclude_superseded=False)
-        if not isinstance(t, (AbsTaskAggregate, AbsTaskSpeedTask))
-        and t.metadata.name != "AfriSentiLangClassification"
+        if not isinstance(t, AbsTaskAggregate)
+        and t.metadata.name not in datasets_not_available
         and t.metadata.name not in ALL_MOCK_TASKS
     }
 )
@@ -74,8 +63,8 @@ def test_load_data(
     if (
         isinstance(task, AbsTaskRetrieval)
         or isinstance(task, AbsTaskAny2AnyRetrieval)
-        or isinstance(task, AbsTaskSpeedTask)
         or isinstance(task, AbsTaskAny2AnyMultiChoice)
+        or isinstance(task, AbsTaskImageTextPairClassification)
         or task.metadata.is_multilingual
     ):
         pytest.skip()
@@ -88,6 +77,7 @@ def test_load_data(
             mock_dataset_transform.assert_called_once()
 
 
+@pytest.mark.test_datasets
 @pytest.mark.flaky(
     reruns=3,
     reruns_delay=5,

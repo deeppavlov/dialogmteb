@@ -5,7 +5,7 @@ import logging
 import warnings
 
 import mteb.benchmarks.benchmarks as benchmark_module
-from mteb.benchmarks.benchmarks import (
+from mteb.benchmarks import (
     C_MTEB,
     FA_MTEB,
     MTEB_DEU,
@@ -22,10 +22,11 @@ from mteb.benchmarks.benchmarks import (
     MTEB_RETRIEVAL_MEDICAL,
     MTEB_RETRIEVAL_WITH_INSTRUCTIONS,
     SEB,
-    Benchmark,
     MTEB_code,
     MTEB_multilingual,
 )
+
+from .benchmark import Benchmark
 
 logger = logging.getLogger(__name__)
 
@@ -79,8 +80,13 @@ def get_benchmark(
 
 
 def get_benchmarks(
-    names: list[str] | None = None,
+    names: list[str] | None = None, display_on_leaderboard: bool | None = None
 ) -> list[Benchmark]:
     if names is None:
         names = list(BENCHMARK_REGISTRY.keys())
-    return [get_benchmark(name) for name in names]
+    benchmarks = [get_benchmark(name) for name in names]
+    if display_on_leaderboard is not None:
+        benchmarks = [
+            b for b in benchmarks if b.display_on_leaderboard is display_on_leaderboard
+        ]
+    return benchmarks

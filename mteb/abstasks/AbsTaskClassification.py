@@ -7,6 +7,7 @@ from typing import Any
 import numpy as np
 from datasets import Dataset, DatasetDict
 
+from mteb.abstasks.TaskMetadata import DescriptiveStatistics
 from mteb.encoder_interface import Encoder
 
 from ..evaluation.evaluators import (
@@ -14,7 +15,6 @@ from ..evaluation.evaluators import (
 )
 from ..load_results.task_results import HFSubset, ScoresDict
 from .AbsTask import AbsTask
-from .TaskMetadata import DescriptiveStatistics
 
 logger = logging.getLogger(__name__)
 
@@ -82,7 +82,7 @@ class AbsTaskClassification(AbsTask):
         split: str = "test",
         subsets_to_run: list[HFSubset] | None = None,
         *,
-        encode_kwargs: dict[str, Any] = {},
+        encode_kwargs: dict[str, Any],
         **kwargs: Any,
     ) -> dict[HFSubset, ScoresDict]:
         if not self.data_loaded:
@@ -105,7 +105,8 @@ class AbsTaskClassification(AbsTask):
             scores[hf_subset] = self._evaluate_subset(
                 model,
                 ds,
-                eval_split_name=split,
+                hf_split=split,
+                hf_subset=hf_subset,
                 encode_kwargs=encode_kwargs,
                 **kwargs,
             )
@@ -117,12 +118,13 @@ class AbsTaskClassification(AbsTask):
         self,
         model: Encoder,
         dataset: DatasetDict | Dataset,
-        eval_split_name: str,
-        encode_kwargs: dict[str, Any] = {},
+        hf_split: str,
+        hf_subset: str,
+        encode_kwargs: dict[str, Any],
         **kwargs,
     ) -> ScoresDict:
         train_split = dataset[self.train_split]
-        eval_split = dataset[eval_split_name]
+        eval_split = dataset[hf_split]
         params = {"k": self.k}
         params.update(kwargs)
 
@@ -136,19 +138,18 @@ class AbsTaskClassification(AbsTask):
                 "=" * 10 + f" Experiment {i + 1}/{self.n_experiments} " + "=" * 10
             )
             # Bootstrap `self.samples_per_label` samples per label for each split
-            X_sampled, y_sampled, idxs = self._undersample_data(
-                train_split["text"],  # type: ignore
-                train_split["label"],  # type: ignore
+            train_dataset, idxs = self._undersample_data(
+                train_split,
                 self.samples_per_label,
                 idxs,
             )
 
             evaluator = self.evaluator(
-                X_sampled,
-                y_sampled,
-                eval_split["text"],  # type: ignore
-                eval_split["label"],  # type: ignore
-                task_name=self.metadata.name,
+                train_dataset,
+                eval_split,
+                task_metadata=self.metadata,
+                hf_split=hf_split,
+                hf_subset=hf_subset,
                 **params,
             )
             scores_exp, test_cache = evaluator(
@@ -162,21 +163,36 @@ class AbsTaskClassification(AbsTask):
         avg_scores["scores_per_experiment"] = scores
         return avg_scores
 
-    def _undersample_data(self, X, y, samples_per_label: int, idxs=None):
-        """Undersample data to have samples_per_label samples of each label"""
-        X_sampled = []
-        y_sampled = []
+    def _undersample_data(
+        self, dataset: Dataset, samples_per_label: int, idxs=None
+    ) -> tuple[Dataset, list[int]]:
+        """Undersample data to have `samples_per_label` samples of each label.
+
+        Args:
+            dataset: Hugging Face `datasets.Dataset` containing "text" and "label".
+            samples_per_label: Number of samples per label to retain.
+            idxs: Optional indices to shuffle and sample from.
+
+        Returns:
+            A new Dataset containing undersampled examples.
+            The shuffled indices used for sampling.
+        """
         if idxs is None:
-            idxs = np.arange(len(y))
+            idxs = list(range(len(dataset)))
+
         rng_state = np.random.default_rng(self.seed)
         rng_state.shuffle(idxs)
+
         label_counter = defaultdict(int)
+        sampled_idxs = []
+
         for i in idxs:
-            if label_counter[y[i]] < samples_per_label:
-                X_sampled.append(X[i])
-                y_sampled.append(y[i])
-                label_counter[y[i]] += 1
-        return X_sampled, y_sampled, idxs
+            label = dataset[i]["label"]
+            if label_counter[label] < samples_per_label:
+                sampled_idxs.append(i)
+                label_counter[label] += 1
+
+        return dataset.select(sampled_idxs), idxs
 
     def _calculate_metrics_from_split(
         self, split: str, hf_subset: str | None = None, compute_overall: bool = False

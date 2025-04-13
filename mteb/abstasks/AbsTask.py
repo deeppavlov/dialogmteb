@@ -29,7 +29,7 @@ ScoresDict = dict[str, Any]
 
 def set_seed(seed: int) -> tuple[random.Random, np.random.Generator]:
     torch.manual_seed(seed)
-    np.random.seed(seed)
+    np.random.seed(seed)  # noqa: NPY002
     transformers.set_seed(seed)
     return random.Random(seed), np.random.default_rng(seed)
 
@@ -120,7 +120,7 @@ class AbsTask(ABC):
         split: str = "test",
         subsets_to_run: list[HFSubset] | None = None,
         *,
-        encode_kwargs: dict[str, Any] = {},
+        encode_kwargs: dict[str, Any],
         **kwargs: Any,
     ) -> dict[HFSubset, ScoresDict]:
         """Evaluates a Sentence Embedding Model on the task.
@@ -156,7 +156,12 @@ class AbsTask(ABC):
             else:
                 data_split = self.dataset[hf_subset][split]
             scores[hf_subset] = self._evaluate_subset(
-                model, data_split, encode_kwargs=encode_kwargs, **kwargs
+                model,
+                data_split,
+                hf_split=split,
+                hf_subset=hf_subset,
+                encode_kwargs=encode_kwargs,
+                **kwargs,
             )
             self._add_main_score(scores[hf_subset])
         return scores
@@ -167,6 +172,8 @@ class AbsTask(ABC):
         model: Encoder,
         data_split: DatasetDict | Dataset,
         encode_kwargs: dict[str, Any],
+        hf_split: str,
+        hf_subset: str,
         **kwargs: Any,
     ) -> ScoresDict:
         raise NotImplementedError(
@@ -333,6 +340,29 @@ class AbsTask(ABC):
         self._eval_splits = eval_splits
         return self
 
+    def filter_modalities(
+        self, modalities: list[str] | None, exclusive_modality_filter: bool = False
+    ) -> AbsTask:
+        """Filter the modalities of the task.
+
+        Args:
+        modalities: A list of modalities to filter by. If None, the task is returned unchanged.
+        exclusive_modality_filter: If True, only keep tasks where _all_ filter modalities are included in the
+            task's modalities and ALL task modalities are in filter modalities (exact match).
+            If False, keep tasks if _any_ of the task's modalities match the filter modalities.
+        """
+        if modalities is None:
+            return self
+        filter_modalities_set = set(modalities)
+        task_modalities_set = set(self.modalities)
+        if exclusive_modality_filter:
+            if not (filter_modalities_set == task_modalities_set):
+                self.metadata.modalities = []
+        else:
+            if not filter_modalities_set.intersection(task_modalities_set):
+                self.metadata.modalities = []
+        return self
+
     def filter_languages(
         self,
         languages: list[str] | None,
@@ -419,6 +449,11 @@ class AbsTask(ABC):
         if self._eval_splits:
             return self._eval_splits
         return self.metadata.eval_splits
+
+    @property
+    def modalities(self) -> list[str]:
+        """Returns the modalities of the task"""
+        return self.metadata.modalities
 
     def __repr__(self) -> str:
         """Format the representation of the task such that it appears as:

@@ -14,7 +14,7 @@ class AmazonPolarityClassification(AbsTaskClassification):
             "revision": "e2d317d38cd51312af73b3d32a06d1a08b442046",
         },
         type="Classification",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         eval_splits=["test"],
         eval_langs=["eng-Latn"],
@@ -25,8 +25,8 @@ class AmazonPolarityClassification(AbsTaskClassification):
         ),  # Estimated range for the collection of reviews
         domains=["Reviews", "Written"],
         task_subtypes=["Sentiment/Hate speech"],
-        license="not specified",
         annotations_creators="derived",
+        license="apache-2.0",
         dialect=[],
         sample_creation="found",
         bibtex_citation="""@article{McAuley2013HiddenFA,

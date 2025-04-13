@@ -22,7 +22,7 @@ class StackExchangeClusteringFast(AbsTaskClusteringFast):
             "revision": "6cbc1f7b2bc0622f2e39d2c77fa502909748c259",
         },
         type="Clustering",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         eval_splits=["test"],
         eval_langs=["eng-Latn"],
@@ -35,8 +35,8 @@ class StackExchangeClusteringFast(AbsTaskClusteringFast):
         dialect=[],
         sample_creation="found",
         bibtex_citation="""@article{geigle:2021:arxiv,
-        author    = {Gregor Geigle and 
-                        Nils Reimers and 
+        author    = {Gregor Geigle and
+                        Nils Reimers and
                         Andreas R{\"u}ckl{\'e} and
                         Iryna Gurevych},
         title     = {TWEAC: Transformer with Extendable QA Agent Classifiers},
@@ -83,7 +83,7 @@ class StackExchangeClustering(AbsTaskClustering):
             "revision": "6cbc1f7b2bc0622f2e39d2c77fa502909748c259",
         },
         type="Clustering",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         eval_splits=["test"],
         eval_langs=["eng-Latn"],
@@ -96,8 +96,8 @@ class StackExchangeClustering(AbsTaskClustering):
         dialect=[],
         sample_creation="found",
         bibtex_citation="""@article{geigle:2021:arxiv,
-        author    = {Gregor Geigle and 
-                        Nils Reimers and 
+        author    = {Gregor Geigle and
+                        Nils Reimers and
                         Andreas R{\"u}ckl{\'e} and
                         Iryna Gurevych},
         title     = {TWEAC: Transformer with Extendable QA Agent Classifiers},

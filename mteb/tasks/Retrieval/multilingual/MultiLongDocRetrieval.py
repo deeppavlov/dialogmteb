@@ -5,8 +5,6 @@ import datasets
 from mteb.abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 from mteb.abstasks.TaskMetadata import TaskMetadata
 
-from ....abstasks.AbsTaskRetrieval import *
-
 _LANGUAGES = {
     "ar": ["ara-Arab"],
     "de": ["deu-Latn"],
@@ -31,9 +29,9 @@ def load_mldr_data(
     cache_dir: str = None,
     revision: str = None,
 ):
-    corpus = {lang: {split: None for split in eval_splits} for lang in langs}
-    queries = {lang: {split: None for split in eval_splits} for lang in langs}
-    relevant_docs = {lang: {split: None for split in eval_splits} for lang in langs}
+    corpus = {lang: dict.fromkeys(eval_splits) for lang in langs}
+    queries = {lang: dict.fromkeys(eval_splits) for lang in langs}
+    relevant_docs = {lang: dict.fromkeys(eval_splits) for lang in langs}
 
     for lang in langs:
         lang_corpus = datasets.load_dataset(
@@ -62,7 +60,7 @@ def load_mldr_data(
 class MultiLongDocRetrieval(AbsTaskRetrieval):
     metadata = TaskMetadata(
         name="MultiLongDocRetrieval",
-        description="""Multi Long Doc Retrieval (MLDR) 'is curated by the multilingual articles from Wikipedia, Wudao and mC4 (see Table 7), and NarrativeQA (Kocˇisky ́ et al., 2018; Gu ̈nther et al., 2023), which is only for English.' (Chen et al., 2024). 
+        description="""Multi Long Doc Retrieval (MLDR) 'is curated by the multilingual articles from Wikipedia, Wudao and mC4 (see Table 7), and NarrativeQA (Kocˇisky ́ et al., 2018; Gu ̈nther et al., 2023), which is only for English.' (Chen et al., 2024).
         It is constructed by sampling lengthy articles from Wikipedia, Wudao and mC4 datasets and randomly choose paragraphs from them. Then we use GPT-3.5 to generate questions based on these paragraphs. The generated question and the sampled article constitute a new text pair to the dataset.""",
         reference="https://arxiv.org/abs/2402.03216",  # also: https://huggingface.co/datasets/Shitao/MLDR
         dataset={

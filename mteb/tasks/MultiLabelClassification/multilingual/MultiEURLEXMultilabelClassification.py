@@ -15,7 +15,7 @@ class MultiEURLEXMultilabelClassification(AbsTaskMultilabelClassification):
         },
         description="EU laws in 23 EU languages containing annotated labels for 21 EUROVOC concepts.",
         reference="https://huggingface.co/datasets/coastalcph/multi_eurlex",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         type="MultilabelClassification",
         eval_splits=["test"],
@@ -54,10 +54,10 @@ class MultiEURLEXMultilabelClassification(AbsTaskMultilabelClassification):
         sample_creation="found",
         bibtex_citation="""
 @InProceedings{chalkidis-etal-2021-multieurlex,
-  author = {Chalkidis, Ilias  
+  author = {Chalkidis, Ilias
                 and Fergadiotis, Manos
                 and Androutsopoulos, Ion},
-  title = {MultiEURLEX -- A multi-lingual and multi-label legal document 
+  title = {MultiEURLEX -- A multi-lingual and multi-label legal document
                classification dataset for zero-shot cross-lingual transfer},
   booktitle = {Proceedings of the 2021 Conference on Empirical Methods
                in Natural Language Processing},

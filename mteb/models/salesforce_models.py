@@ -1,14 +1,12 @@
 from __future__ import annotations
 
-from functools import partial
-
-from mteb.encoder_interface import PromptType
 from mteb.model_meta import ModelMeta, ScoringFunction
 from mteb.models.e5_instruct import E5_MISTRAL_TRAINING_DATA
 from mteb.models.instruct_wrapper import (
-    InstructSentenceTransformerWrapper,
+    InstructSentenceTransformerModel,
     instruct_wrapper,
 )
+from mteb.types import PromptType
 
 
 def instruction_template(
@@ -38,9 +36,8 @@ SFR_TRAINING_DATA = {  # inherits from e5
 }
 
 SFR_Embedding_2_R = ModelMeta(
-    loader=partial(  # type: ignore
-        instruct_wrapper,
-        model_name_or_path="Salesforce/SFR-Embedding-2_R",
+    loader=instruct_wrapper,
+    loader_kwargs=dict(
         instruction_template=instruction_template,
         attn="cccc",
         pooling_method="lasttoken",
@@ -78,9 +75,8 @@ SFR_Embedding_2_R = ModelMeta(
 )
 
 SFR_Embedding_Code_2B_R = ModelMeta(
-    loader=partial(  # type: ignore
-        InstructSentenceTransformerWrapper,
-        model_name_or_path="Salesforce/SFR-Embedding-Code-2B_R",
+    loader=InstructSentenceTransformerModel,
+    loader_kwargs=dict(
         instruction_template=instruction_template,
         attn="cccc",
         pooling_method="lasttoken",
@@ -99,7 +95,7 @@ SFR_Embedding_Code_2B_R = ModelMeta(
     license="cc-by-nc-4.0",
     max_tokens=8192,
     reference="https://huggingface.co/Salesforce/SFR-Embedding-Code-2B_R",
-    similarity_fn_name="cosine",
+    similarity_fn_name=ScoringFunction.COSINE,
     framework=["Sentence Transformers", "PyTorch"],
     use_instructions=True,
     adapted_from="google/gemma-2-2b-it",
@@ -109,9 +105,8 @@ SFR_Embedding_Code_2B_R = ModelMeta(
 )
 
 SFR_Embedding_Code_2B_R = ModelMeta(
-    loader=partial(  # type: ignore
-        InstructSentenceTransformerWrapper,
-        model_name="Salesforce/SFR-Embedding-Code-2B_R",
+    loader=InstructSentenceTransformerModel,
+    loader_kwargs=dict(
         instruction_template=instruction_template,
         attn="cccc",
         pooling_method="lasttoken",
@@ -130,7 +125,7 @@ SFR_Embedding_Code_2B_R = ModelMeta(
     license="cc-by-nc-4.0",
     max_tokens=8192,
     reference="https://huggingface.co/Salesforce/SFR-Embedding-Code-2B_R",
-    similarity_fn_name="cosine",
+    similarity_fn_name=ScoringFunction.COSINE,
     framework=["Sentence Transformers", "PyTorch"],
     use_instructions=True,
     adapted_from="google/gemma-2-2b-it",
@@ -140,9 +135,8 @@ SFR_Embedding_Code_2B_R = ModelMeta(
 )
 
 SFR_Embedding_Mistral = ModelMeta(
-    loader=partial(  # type: ignore
-        instruct_wrapper,
-        model_name_or_path="Salesforce/SFR-Embedding-Mistral",
+    loader=instruct_wrapper,
+    loader_kwargs=dict(
         instruction_template=instruction_template,
         attn="cccc",
         pooling_method="lasttoken",

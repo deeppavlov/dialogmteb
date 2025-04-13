@@ -250,7 +250,7 @@ class MTEB:
         overwrite_results: bool = False,
         raise_error: bool = True,
         co2_tracker: bool = True,
-        encode_kwargs: dict[str, Any] = {},
+        encode_kwargs: dict[str, Any] | None = None,
         **kwargs,
     ) -> list[TaskResult]:
         """Run the evaluation pipeline on the selected tasks.
@@ -276,6 +276,11 @@ class MTEB:
             A list of TaskResult objects, one for each task evaluated.
         """
         # update logging to account for different levels of Verbosity (similar to the command line)
+
+        if encode_kwargs is None:
+            encode_kwargs = {}
+
+        encode_kwargs["batch_size"] = encode_kwargs.get("batch_size", 32)
 
         if verbosity == 0:
             datasets.logging.set_verbosity(logging.CRITICAL)  # 40
@@ -533,23 +538,10 @@ class MTEB:
 
     @staticmethod
     def create_model_meta(model: Encoder) -> ModelMeta:
-        if hasattr(model, "mteb_model_meta"):
+        if hasattr(model, "mteb_model_meta") and model.mteb_model_meta is not None:
             meta = model.mteb_model_meta  # type: ignore
         else:
-            try:
-                meta = MTEB._get_model_meta(model)
-            except AttributeError:
-                logger.warning(
-                    "Could not find model metadata. Please set the model.mteb_model_meta attribute or if you are using "
-                    + "SentenceTransformers, please upgrade to version 3.0.0 to ensure that the model.mteb_model_meta "
-                    + "attribute is available."
-                )
-                meta = ModelMeta(
-                    name=None,
-                    revision=None,
-                    release_date=None,
-                    languages=None,
-                )
+            meta = MTEB._get_model_meta(model)
 
         # create a copy of the meta to avoid modifying the original object
         meta = deepcopy(meta)
@@ -644,6 +636,26 @@ class MTEB:
     def _get_model_meta(model: Encoder) -> ModelMeta:
         if isinstance(model, CrossEncoder):
             meta = model_meta_from_cross_encoder(model)
-        else:
+        elif isinstance(model, SentenceTransformer):
             meta = model_meta_from_sentence_transformers(model)
+        else:
+            meta = ModelMeta(
+                loader=None,
+                name=None,
+                revision=None,
+                release_date=None,
+                languages=None,
+                framework=[],
+                similarity_fn_name=None,
+                n_parameters=None,
+                memory_usage_mb=None,
+                max_tokens=None,
+                embed_dim=None,
+                license=None,
+                open_weights=None,
+                public_training_code=None,
+                public_training_data=None,
+                use_instructions=None,
+                training_datasets=None,
+            )
         return meta

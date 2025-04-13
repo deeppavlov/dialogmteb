@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from functools import partial
-
 import torch
 
 from mteb.model_meta import ModelMeta, ScoringFunction
@@ -31,9 +29,8 @@ E5_MISTRAL_TRAINING_DATA = {
 }
 
 e5_instruct = ModelMeta(
-    loader=partial(  # type: ignore
-        instruct_wrapper,
-        model_name_or_path="intfloat/multilingual-e5-large-instruct",
+    loader=instruct_wrapper,
+    loader_kwargs=dict(
         instruction_template=E5_INSTRUCTION,
         attn="cccc",
         pooling_method="mean",
@@ -46,7 +43,7 @@ e5_instruct = ModelMeta(
     open_weights=True,
     revision="baa7be480a7de1539afce709c8f13f833a510e0a",
     release_date=E5_PAPER_RELEASE_DATE,
-    framework=["GritLM", "PyTorch"],
+    framework=["GritLM", "PyTorch", "Sentence Transformers"],
     similarity_fn_name=ScoringFunction.COSINE,
     use_instructions=True,
     reference="https://huggingface.co/intfloat/multilingual-e5-large-instruct",
@@ -68,9 +65,8 @@ e5_instruct = ModelMeta(
 )
 
 e5_mistral = ModelMeta(
-    loader=partial(  # type: ignore
-        instruct_wrapper,
-        model_name_or_path="intfloat/e5-mistral-7b-instruct",
+    loader=instruct_wrapper,
+    loader_kwargs=dict(
         instruction_template=E5_INSTRUCTION,
         attn="cccc",
         pooling_method="lasttoken",
@@ -85,7 +81,7 @@ e5_mistral = ModelMeta(
     open_weights=True,
     revision="07163b72af1488142a360786df853f237b1a3ca1",
     release_date=E5_PAPER_RELEASE_DATE,
-    framework=["GritLM", "PyTorch"],
+    framework=["GritLM", "PyTorch", "Sentence Transformers"],
     similarity_fn_name=ScoringFunction.COSINE,
     use_instructions=True,
     reference="https://huggingface.co/intfloat/e5-mistral-7b-instruct",
@@ -101,7 +97,7 @@ e5_mistral = ModelMeta(
       journal={arXiv preprint arXiv:2401.00368},
       year={2023}
     }
-    
+
     @article{wang2022text,
       title={Text Embeddings by Weakly-Supervised Contrastive Pre-training},
       author={Wang, Liang and Yang, Nan and Huang, Xiaolong and Jiao, Binxing and Yang, Linjun and Jiang, Daxin and Majumder, Rangan and Wei, Furu},
@@ -116,9 +112,8 @@ e5_mistral = ModelMeta(
 )
 
 zeta_alpha_ai__Zeta_Alpha_E5_Mistral = ModelMeta(
-    loader=partial(  # type: ignore
-        instruct_wrapper,
-        model_name_or_path="zeta-alpha-ai/Zeta-Alpha-E5-Mistral",
+    loader=instruct_wrapper,
+    loader_kwargs=dict(
         instruction_template=E5_INSTRUCTION,
         attn="cccc",
         pooling_method="lasttoken",
@@ -140,7 +135,7 @@ zeta_alpha_ai__Zeta_Alpha_E5_Mistral = ModelMeta(
     open_weights=True,
     public_training_data=None,
     public_training_code=None,
-    framework=["PyTorch"],
+    framework=["PyTorch", "Sentence Transformers", "GritLM"],
     reference="https://huggingface.co/zeta-alpha-ai/Zeta-Alpha-E5-Mistral",
     similarity_fn_name=ScoringFunction.COSINE,
     use_instructions=True,

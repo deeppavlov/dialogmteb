@@ -24,109 +24,6 @@ except Exception:
     pass
 
 
-def use_torch_compile():
-    gpu_ok = False
-    if torch.cuda.is_available():
-        device_cap = torch.cuda.get_device_capability()
-        if device_cap in ((7, 0), (8, 0), (9, 0)):
-            gpu_ok = True
-
-    return gpu_ok
-
-
-def cos_sim(a: torch.Tensor, b: torch.Tensor):
-    """Calculate pairwise cosine similarities between two sets of vectors.
-
-    Computes the cosine similarity cos_sim(a[i], b[j]) for all i and j.
-
-    Return:
-        Matrix with res[i][j]  = cos_sim(a[i], b[j])
-    """
-    # Move tensor conversion outside the compiled function
-    # since compile works better with pure tensor operations
-    if not isinstance(a, torch.Tensor):
-        a = torch.tensor(a)
-    if not isinstance(b, torch.Tensor):
-        b = torch.tensor(b)
-
-    # The actual function to compile
-    def _cos_sim_core(a_tensor, b_tensor):
-        if len(a_tensor.shape) == 1:
-            a_tensor = a_tensor.unsqueeze(0)
-        if len(b_tensor.shape) == 1:
-            b_tensor = b_tensor.unsqueeze(0)
-
-        a_norm = torch.nn.functional.normalize(a_tensor, p=2, dim=1)
-        b_norm = torch.nn.functional.normalize(b_tensor, p=2, dim=1)
-        return torch.mm(a_norm, b_norm.transpose(0, 1))
-
-    # Compile the core function once
-    if (
-        hasattr(torch, "compile") and use_torch_compile()
-    ):  # Check if torch.compile is available
-        _cos_sim_core_compiled = torch.compile(_cos_sim_core)
-        return _cos_sim_core_compiled(a, b)
-    else:
-        return _cos_sim_core(a, b)
-
-
-def max_sim(a: np.ndarray, b: np.ndarray) -> np.ndarray:
-    """Computes the max-similarity max_sim(a[i], b[j]) for all i and j.
-        Works with a Tensor of the shape (batch_size, num_tokens, token_dim)
-
-    Return:
-        Matrix with res[i][j]  = max_sim(a[i], b[j])
-    """  # noqa: D402
-    if not isinstance(a, torch.Tensor):
-        a = torch.tensor(a, dtype=torch.float32)
-
-    if not isinstance(b, torch.Tensor):
-        b = torch.tensor(b, dtype=torch.float32)
-
-    if len(a.shape) == 2:
-        a = a.unsqueeze(0)
-
-    if len(b.shape) == 2:
-        b = b.unsqueeze(0)
-
-    scores = torch.einsum(
-        "ash,bth->abst",
-        a,
-        b,
-    )
-
-    return scores.max(axis=-1).values.sum(axis=-1)
-
-
-def dot_score(a: torch.Tensor, b: torch.Tensor):
-    """Computes the dot-product dot_prod(a[i], b[j]) for all i and j.
-    :return: Matrix with res[i][j]  = dot_prod(a[i], b[j])
-    """
-    # Move tensor conversion outside the compiled function
-    if not isinstance(a, torch.Tensor):
-        a = torch.tensor(a)
-    if not isinstance(b, torch.Tensor):
-        b = torch.tensor(b)
-
-    # The actual function to compile
-    def _dot_score_core(a_tensor, b_tensor):
-        if len(a_tensor.shape) == 1:
-            a_tensor = a_tensor.unsqueeze(0)
-        if len(b_tensor.shape) == 1:
-            b_tensor = b_tensor.unsqueeze(0)
-
-        return torch.mm(a_tensor, b_tensor.transpose(0, 1))
-
-    # Compile the core function once
-    if (
-        hasattr(torch, "compile") and use_torch_compile()
-    ):  # Check if torch.compile is available
-        _dot_score_core_compiled = torch.compile(_dot_score_core)
-        return _dot_score_core_compiled(a, b)
-    else:
-        return _dot_score_core(a, b)
-
-
 # From https://github.com/beir-cellar/beir/blob/f062f038c4bfd19a8ca942a9910b1e0d218759d4/beir/retrieval/custom_metrics.py#L4
 def mrr(
     qrels: dict[str, dict[str, int]],
@@ -216,7 +113,7 @@ def hole(
     results: dict[str, dict[str, float]],
     k_values: list[int],
     output_type: str = "mean",
-) -> tuple[dict[str, float]]:
+) -> dict[str, float]:
     Hole = {}
 
     for k in k_values:
@@ -444,46 +341,6 @@ def download(url: str, fname: str):
         for data in resp.iter_content(chunk_size=1024):
             size = file.write(data)
             bar.update(size)
-
-
-def convert_conv_history_to_query(conversations: list[list[str | dict]]) -> str:
-    conversations_converted = []
-
-    for conversation in conversations:
-        # if it's a list of strings, just join them
-        if isinstance(conversation[0], str):
-            conv_str = "; ".join(conversation)
-        # otherwise, it's a list of dictionaries, which we need to convert to strings
-        elif isinstance(conversation[0], dict):
-            conv = []
-            for i, turn in enumerate(conversation):
-                error_msg = (
-                    "When converting conversations lists of dictionary to string, each turn in the conversation "
-                    + "must be a dictionary with 'role' and 'content' keys"
-                )
-                if not isinstance(turn, dict):
-                    raise ValueError(f"Turn {i} is not a dictionary. " + error_msg)
-
-                # check for keys 'role' and 'content' in the dictionary, if not found, raise an error
-                if "role" not in turn:
-                    raise ValueError(
-                        "Key 'role' not found in the dictionary. " + error_msg
-                    )
-                if "content" not in turn:
-                    raise ValueError(
-                        "Key 'content' not found in the dictionary. " + error_msg
-                    )
-
-                conv.append(f"{turn['role']}: {turn['content']}")
-            conv_str = "; ".join(conv)
-        else:
-            raise ValueError(
-                "Conversations must be a list consisting of strings or dictionaries with 'role' and 'content' keys"
-            )
-
-        conversations_converted.append(conv_str)
-
-    return conversations_converted
 
 
 def confidence_scores(sim_scores: list[float]) -> dict[str, float]:

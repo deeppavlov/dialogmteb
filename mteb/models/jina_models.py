@@ -1,17 +1,17 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import Sequence
-from functools import partial
 from typing import Any
 
-import numpy as np
 import torch
 from sentence_transformers import __version__ as st_version
+from torch.utils.data import DataLoader
 
-from mteb.encoder_interface import PromptType
+from mteb.abstasks import TaskMetadata
 from mteb.model_meta import ModelMeta, ScoringFunction
 from mteb.models.sentence_transformer_wrapper import SentenceTransformerWrapper
+from mteb.requires_package import requires_package
+from mteb.types import Array, BatchedInput, PromptType
 
 logger = logging.getLogger(__name__)
 
@@ -132,7 +132,7 @@ class JinaWrapper(SentenceTransformerWrapper):
     def __init__(
         self,
         model: str,
-        revision: str | None = None,
+        revision: str,
         model_prompts: dict[str, str] | None = None,
         **kwargs,
     ) -> None:
@@ -140,38 +140,37 @@ class JinaWrapper(SentenceTransformerWrapper):
             raise RuntimeError(
                 f"sentence_transformers version {st_version} is lower than the required version 3.1.0"
             )
-        try:
-            import einops  # noqa: F401
-        except ImportError:
-            raise ImportError(
-                "To use the jina-embeddings-v3 models `einops` is required. Please install it with `pip install mteb[jina]`."
-            )
-        try:
-            import flash_attn  # noqa: F401
-        except ImportError:
-            logger.warning(
-                "Using flash_attn for jina-embeddings-v3 models is recommended. Please install it with `pip install mteb[flash_attention]`."
-                "Fallback to native implementation."
-            )
+        requires_package(self, "jina", model, "pip install 'mteb[jina]'")
+        import einops  # noqa: F401
+
+        requires_package(
+            self, "flash_attention", model, "pip install 'mteb[flash_attention]'"
+        )
+        import flash_attn  # noqa: F401
+
         super().__init__(model, revision, model_prompts, **kwargs)
 
     def encode(
         self,
-        sentences: Sequence[str],
+        inputs: DataLoader[BatchedInput],
         *,
-        task_name: str,
+        task_metadata: TaskMetadata,
+        hf_split: str,
+        hf_subset: str,
         prompt_type: PromptType | None = None,
         **kwargs: Any,
-    ) -> np.ndarray:
-        prompt_name = self.get_prompt_name(self.model_prompts, task_name, prompt_type)
+    ) -> Array:
+        prompt_name = self.get_prompt_name(task_metadata, prompt_type)
         if prompt_name:
             logger.info(
-                f"Using prompt_name={prompt_name} for task={task_name} prompt_type={prompt_type}"
+                f"Using prompt_name={prompt_name} for task={task_metadata.name} prompt_type={prompt_type}"
             )
         else:
             logger.info(
-                f"No model prompts found for task={task_name} prompt_type={prompt_type}"
+                f"No model prompts found for task={task_metadata.name} prompt_type={prompt_type}"
             )
+        sentences = [text for batch in inputs for text in batch["text"]]
+
         logger.info(f"Encoding {len(sentences)} sentences.")
 
         jina_task_name = self.model_prompts.get(prompt_name, None)
@@ -190,10 +189,8 @@ class JinaWrapper(SentenceTransformerWrapper):
 
 
 jina_embeddings_v3 = ModelMeta(
-    loader=partial(  # type: ignore
-        JinaWrapper,
-        model="jinaai/jina-embeddings-v3",
-        revision="215a6e121fa0183376388ac6b1ae230326bfeaed",
+    loader=JinaWrapper,  # type: ignore
+    loader_kwargs=dict(
         trust_remote_code=True,
         model_prompts={
             "Retrieval-query": "retrieval.query",
@@ -245,22 +242,20 @@ jina_embeddings_v3 = ModelMeta(
     adapted_from="XLM-RoBERTa",
     citation="""
     @misc{sturua2024jinaembeddingsv3multilingualembeddingstask,
-      title={jina-embeddings-v3: Multilingual Embeddings With Task LoRA}, 
+      title={jina-embeddings-v3: Multilingual Embeddings With Task LoRA},
       author={Saba Sturua and Isabelle Mohr and Mohammad Kalim Akram and Michael Günther and Bo Wang and Markus Krimmel and Feng Wang and Georgios Mastrapas and Andreas Koukounas and Andreas Koukounas and Nan Wang and Han Xiao},
       year={2024},
       eprint={2409.10173},
       archivePrefix={arXiv},
       primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2409.10173}, 
+      url={https://arxiv.org/abs/2409.10173},
     }
     """,
 )
 
 jina_embeddings_v2_base_en = ModelMeta(
-    loader=partial(
-        SentenceTransformerWrapper,
-        model_name="jinaai/jina-embeddings-v2-base-en",
-        revision="6e85f575bc273f1fd840a658067d0157933c83f0",
+    loader=SentenceTransformerWrapper,
+    loader_kwargs=dict(
         trust_remote_code=True,
     ),
     name="jinaai/jina-embeddings-v2-base-en",
@@ -316,10 +311,8 @@ jina_embeddings_v2_base_en = ModelMeta(
 )
 
 jina_embeddings_v2_small_en = ModelMeta(
-    loader=partial(
-        SentenceTransformerWrapper,
-        model_name="jinaai/jina-embeddings-v2-small-en",
-        revision="44e7d1d6caec8c883c2d4b207588504d519788d0",
+    loader=SentenceTransformerWrapper,
+    loader_kwargs=dict(
         trust_remote_code=True,
     ),
     name="jinaai/jina-embeddings-v2-small-en",
@@ -375,11 +368,7 @@ jina_embeddings_v2_small_en = ModelMeta(
 )
 
 jina_embedding_b_en_v1 = ModelMeta(
-    loader=partial(
-        SentenceTransformerWrapper,
-        model_name="jinaai/jina-embedding-b-en-v1",
-        revision="32aa658e5ceb90793454d22a57d8e3a14e699516",
-    ),
+    loader=SentenceTransformerWrapper,
     name="jinaai/jina-embedding-b-en-v1",
     languages=["eng-Latn"],
     open_weights=True,
@@ -429,11 +418,7 @@ jina_embedding_b_en_v1 = ModelMeta(
 )
 
 jina_embedding_s_en_v1 = ModelMeta(
-    loader=partial(
-        SentenceTransformerWrapper,
-        model_name="jinaai/jina-embedding-s-en-v1",
-        revision="5ac6cd473e2324c6d5f9e558a6a9f65abb57143e",
-    ),
+    loader=SentenceTransformerWrapper,
     name="jinaai/jina-embedding-s-en-v1",
     languages=["eng-Latn"],
     open_weights=True,

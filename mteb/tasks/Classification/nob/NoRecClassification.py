@@ -15,7 +15,7 @@ class NoRecClassification(AbsTaskClassification):
             "revision": "5b740b7c42c73d586420812a35745fc37118862f",
         },
         type="Classification",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         eval_splits=["test"],
         eval_langs=["nob-Latn"],
@@ -30,11 +30,11 @@ class NoRecClassification(AbsTaskClassification):
         bibtex_citation="""@inproceedings{velldal-etal-2018-norec,
     title = "{N}o{R}e{C}: The {N}orwegian Review Corpus",
     author = "Velldal, Erik  and
-      {\O}vrelid, Lilja  and
+      {\\O}vrelid, Lilja  and
       Bergem, Eivind Alexander  and
       Stadsnes, Cathrine  and
       Touileb, Samia  and
-      J{\o}rgensen, Fredrik",
+      J{\\o}rgensen, Fredrik",
     editor = "Calzolari, Nicoletta  and
       Choukri, Khalid  and
       Cieri, Christopher  and
@@ -44,7 +44,7 @@ class NoRecClassification(AbsTaskClassification):
       Isahara, Hitoshi  and
       Maegaard, Bente  and
       Mariani, Joseph  and
-      Mazo, H{\'e}l{\`e}ne  and
+      Mazo, H{\\'e}l{\\`e}ne  and
       Moreno, Asuncion  and
       Odijk, Jan  and
       Piperidis, Stelios  and

@@ -68,7 +68,7 @@ class MassiveIntentClassification(AbsTaskClassification):
         },
         description="MASSIVE: A 1M-Example Multilingual Natural Language Understanding Dataset with 51 Typologically-Diverse Languages",
         reference="https://arxiv.org/abs/2204.08582",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         type="Classification",
         eval_splits=["validation", "test"],
@@ -82,7 +82,7 @@ class MassiveIntentClassification(AbsTaskClassification):
         dialect=[],
         sample_creation="human-translated and localized",  # with the exception of the English data
         bibtex_citation="""@misc{fitzgerald2022massive,
-      title={MASSIVE: A 1M-Example Multilingual Natural Language Understanding Dataset with 51 Typologically-Diverse Languages}, 
+      title={MASSIVE: A 1M-Example Multilingual Natural Language Understanding Dataset with 51 Typologically-Diverse Languages},
       author={Jack FitzGerald and Christopher Hench and Charith Peris and Scott Mackie and Kay Rottmann and Ana Sanchez and Aaron Nash and Liam Urbach and Vishesh Kakarala and Richa Singh and Swetha Ranganath and Laurie Crist and Misha Britan and Wouter Leeuwis and Gokhan Tur and Prem Natarajan},
       year={2022},
       eprint={2204.08582},

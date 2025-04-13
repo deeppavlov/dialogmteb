@@ -24,7 +24,7 @@ class RedditClusteringP2P(AbsTaskClustering):
             "revision": "385e3cb46b4cfa89021f56c4380204149d0efe33",
         },
         type="Clustering",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         eval_splits=["test"],
         eval_langs=["eng-Latn"],
@@ -37,8 +37,8 @@ class RedditClusteringP2P(AbsTaskClustering):
         dialect=[],
         sample_creation="found",
         bibtex_citation="""@article{geigle:2021:arxiv,
-        author    = {Gregor Geigle and 
-                        Nils Reimers and 
+        author    = {Gregor Geigle and
+                        Nils Reimers and
                         Andreas R{\"u}ckl{\'e} and
                         Iryna Gurevych},
         title     = {TWEAC: Transformer with Extendable QA Agent Classifiers},
@@ -63,7 +63,7 @@ class RedditFastClusteringP2P(AbsTaskClusteringFast):
             "revision": "385e3cb46b4cfa89021f56c4380204149d0efe33",
         },
         type="Clustering",
-        category="t2t",
+        category="t2c",
         modalities=["text"],
         eval_splits=["test"],
         eval_langs=["eng-Latn"],
@@ -76,8 +76,8 @@ class RedditFastClusteringP2P(AbsTaskClusteringFast):
         dialect=[],
         sample_creation="found",
         bibtex_citation="""@article{geigle:2021:arxiv,
-        author    = {Gregor Geigle and 
-                        Nils Reimers and 
+        author    = {Gregor Geigle and
+                        Nils Reimers and
                         Andreas R{\"u}ckl{\'e} and
                         Iryna Gurevych},
         title     = {TWEAC: Transformer with Extendable QA Agent Classifiers},
