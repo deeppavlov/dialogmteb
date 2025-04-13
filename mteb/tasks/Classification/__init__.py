@@ -32,8 +32,10 @@ from .ell import GreekLegalCodeClassification
 from .eng import (
     AmazonPolarityClassification,
     ArxivClassification,
+    AtisIntentClassification,
     Banking77Classification,
     CanadaTaxCourtOutcomesLegalBenchClassification,
+    ClincIntentClassification,
     ContractNLIConfidentialityOfAgreementLegalBenchClassification,
     ContractNLIExplicitIdentificationLegalBenchClassification,
     ContractNLIInclusionOfVerballyConveyedInformationLegalBenchClassification,
@@ -159,6 +161,7 @@ from .eng import (
     TweetTopicSingleClassification,
     UCCVCommonLawLegalBenchClassification,
     UnfairTOSLegalBenchClassification,
+    ViraIntentClassification,
     WikipediaBiolumNeurochemClassification,
     WikipediaBioMetChemClassification,
     WikipediaChemEngSpecialtiesClassification,
@@ -622,4 +625,7 @@ __all__ = [
     "HindiDiscourseClassification",
     "SentimentAnalysisHindi",
     "MalayalamNewsClassification",
+    "AtisIntentClassification",
+    "ViraIntentClassification",
+    "ClincIntentClassification",
 ]

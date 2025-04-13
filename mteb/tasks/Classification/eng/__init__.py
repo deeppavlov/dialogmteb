@@ -2,11 +2,14 @@ from __future__ import annotations
 
 from .AmazonPolarityClassification import AmazonPolarityClassification
 from .ArxivClassification import ArxivClassification
+from .atis_intent_classification import AtisIntentClassification
 from .Banking77Classification import Banking77Classification
+from .clinc_classification import ClincIntentClassification
 from .DBpediaClassification import DBpediaClassification
 from .EmotionClassification import EmotionClassification
 from .FinancialPhrasebankClassification import FinancialPhrasebankClassification
 from .FrenkEnClassification import FrenkEnClassification
+from .hwu_intent_classification import HWUIntentClassification
 from .ImdbClassification import ImdbClassification
 from .LegalBenchClassification import (
     CanadaTaxCourtOutcomesLegalBenchClassification,
@@ -133,6 +136,7 @@ from .TweetSentimentExtractionClassification import (
     TweetSentimentExtractionClassification,
 )
 from .TweetTopicSingleClassification import TweetTopicSingleClassification
+from .vira_intent_classification import ViraIntentClassification
 from .WikipediaBiolumNeurochemClassification import (
     WikipediaBiolumNeurochemClassification,
 )
@@ -322,4 +326,8 @@ __all__ = [
     "Banking77Classification",
     "WikipediaCryobiologySeparationClassification",
     "WikipediaChemistryTopicsClassification",
+    "AtisIntentClassification",
+    "ViraIntentClassification",
+    "ClincIntentClassification",
+    "HWUIntentClassification",
 ]
