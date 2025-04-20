@@ -28,4 +28,3 @@ class ClincIntentClassification(AbsTaskClassification):
         sample_creation="machine-translated and verified",
         bibtex_citation="""""",
     )
-
