@@ -23,7 +23,7 @@ class ClincIntentClassification(AbsTaskClassification):
             "imbalanced": ["eng-Latn"],
         },
         main_score="accuracy",
-        date=("01-01-2019", "01-01-2019"),
+        date=("2019-01-01", "2019-01-01"),
         domains=["Financial", "Web", "Social"],
         task_subtypes=["Intent classification"],
         license="cc-by-3.0",
