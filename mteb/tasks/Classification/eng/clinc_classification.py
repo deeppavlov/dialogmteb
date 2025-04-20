@@ -48,4 +48,3 @@ class ClincIntentClassification(AbsTaskClassification):
         url = "https://www.aclweb.org/anthology/D19-1131"
     }""",
     )
-

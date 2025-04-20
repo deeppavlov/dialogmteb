@@ -19,7 +19,7 @@ class AtisIntentClassification(AbsTaskClassification):
         eval_splits=["test"],
         eval_langs=["eng-Latn"],
         main_score="accuracy",
-        date=("01-01-1990", "01-01-1990"),
+        date=("1990-01-01", "1990-01-01"),
         domains=["Spoken"],
         task_subtypes=["Intent classification"],
         license="not specified",
@@ -36,4 +36,3 @@ class AtisIntentClassification(AbsTaskClassification):
             url = "https://aclanthology.org/H90-1021/"
         }""",
     )
-
