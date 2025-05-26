@@ -659,6 +659,7 @@ from .Reranking import (
     VoyageMMarcoReranking,
     WebLINXCandidatesReranking,
     WikipediaRerankingMultilingual,
+    RuWebLINXCandidatesReranking
 )
 from .Retrieval import (
     FEVER,
@@ -933,6 +934,8 @@ from .Retrieval import (
     XPQARetrieval,
     XQuADRetrieval,
     ZacLegalTextRetrieval,
+    RuStatcanDialogueDatasetRetrieval,
+    RuFaithDialRetrieval
 )
 from .STS import (
     AFQMC,
@@ -1942,4 +1945,7 @@ __all__ = [
     "ZacLegalTextRetrieval",
     "mFollowIR",
     "mFollowIRCrossLingual",
+    "RuFaithDialRetrieval",
+    "RuStatcanDialogueDatasetRetrieval",
+    "RuWebLINXCandidatesReranking"
 ]

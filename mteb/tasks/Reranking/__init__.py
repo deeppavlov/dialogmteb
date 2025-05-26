@@ -13,7 +13,7 @@ from .eng import (
 from .fra import AlloprofReranking, SyntecReranking
 from .jpn import VoyageMMarcoReranking
 from .multilingual import ESCIReranking, MIRACLReranking, WikipediaRerankingMultilingual
-from .rus import RuBQReranking
+from .rus import RuBQReranking, RuWebLINXCandidatesReranking
 from .zho import CMedQAv1, CMedQAv2, MMarcoReranking, T2Reranking
 
 __all__ = [
@@ -36,4 +36,5 @@ __all__ = [
     "VoyageMMarcoReranking",
     "WebLINXCandidatesReranking",
     "WikipediaRerankingMultilingual",
+    "RuWebLINXCandidatesReranking",
 ]

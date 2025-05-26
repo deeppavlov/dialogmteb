@@ -258,7 +258,7 @@ from .pol import (
     SciFactPL,
     Touche2020PL,
 )
-from .rus import RiaNewsRetrieval, RiaNewsRetrievalHardNegatives, RuBQRetrieval
+from .rus import RiaNewsRetrieval, RiaNewsRetrievalHardNegatives, RuBQRetrieval, RuStatcanDialogueDatasetRetrieval, RuFaithDialRetrieval
 from .slk import SKQuadRetrieval, SlovakSumRetrieval
 from .spa import SpanishPassageRetrievalS2P, SpanishPassageRetrievalS2S
 from .swe import SwednRetrieval, SweFaqRetrieval
@@ -553,4 +553,6 @@ __all__ = [
     "XPQARetrieval",
     "XQuADRetrieval",
     "ZacLegalTextRetrieval",
+    "RuStatcanDialogueDatasetRetrieval",
+    "RuFaithDialRetrieval",
 ]
