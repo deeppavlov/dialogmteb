@@ -19,15 +19,15 @@ from mteb.encoder_interface import Encoder
 from mteb.types import PromptType
 
 from ..Evaluator import Evaluator
-from ..utils import (
+from ..retrieval_metrics import (
     confidence_scores,
-    download,
     hole,
     mrr,
     nAUC,
     recall_cap,
     top_k_accuracy,
 )
+from ..utils import download
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
@@ -327,7 +327,7 @@ class Any2AnyRetrievalEvaluator(Evaluator):
         output_type: str = "all",
     ) -> tuple[dict[str, float]]:
         if metric.lower() in ["mrr", "mrr@k", "mrr_cut"]:
-            metric_scores = mrr(qrels, results, k_values, output_type)
+            metric_scores = mrr(qrels, results, k_values)
 
         elif metric.lower() in ["recall_cap", "r_cap", "r_cap@k"]:
             metric_scores = recall_cap(qrels, results, k_values, output_type)

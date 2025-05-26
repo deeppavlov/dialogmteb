@@ -7,7 +7,8 @@ import torch
 from datasets import Dataset
 from torch.utils.data import DataLoader, default_collate
 
-from mteb.types import BatchedInput, Conversation
+from mteb.abstasks import TaskMetadata
+from mteb.types import BatchedInput, Conversation, ConversationTurn
 
 logger = logging.getLogger(__name__)
 
@@ -112,17 +113,27 @@ def create_dataloader_for_queries(
 
 
 def convert_conv_history_to_query(
-    conversations: list[list[str | Conversation]],
-) -> list[str]:
+    conversations: list[list[str] | Conversation],
+) -> tuple[list[str], list[Conversation]]:
     conversations_converted = []
+    parsed_conversations = []
 
     for conversation in conversations:
         # if it's a list of strings, just join them
-        if isinstance(conversation[0], str):
+        if isinstance(conversation, list) and isinstance(conversation[0], str):
             conv_str = "; ".join(conversation)
+            current_conversation = [
+                ConversationTurn(role="user", content=message)
+                for message in conversation
+            ]
+
+            logger.warning(
+                "Conversations are a list of strings. Used 'user' role for all turns."
+            )
         # otherwise, it's a list of dictionaries, which we need to convert to strings
-        elif isinstance(conversation[0], dict):
+        elif isinstance(conversation, list) and isinstance(conversation[0], dict):
             conv = []
+            current_conversation = []
             for i, turn in enumerate(conversation):
                 error_msg = (
                     "When converting conversations lists of dictionary to string, each turn in the conversation "
@@ -140,7 +151,9 @@ def convert_conv_history_to_query(
                     raise ValueError(
                         "Key 'content' not found in the dictionary. " + error_msg
                     )
-
+                current_conversation.append(
+                    ConversationTurn(role=turn["role"], content=turn["content"])
+                )
                 conv.append(f"{turn['role']}: {turn['content']}")
             conv_str = "; ".join(conv)
         else:
@@ -149,12 +162,13 @@ def convert_conv_history_to_query(
             )
 
         conversations_converted.append(conv_str)
+        parsed_conversations.append(current_conversation)
 
-    return conversations_converted
+    return conversations_converted, parsed_conversations
 
 
 def create_dataloader_for_queries_conversation(
-    queries: list[list[str | Conversation]],
+    queries: list[Conversation],
     instructions: list[str] | None = None,
     combine_query_and_instruction: Callable[[str, str], str] | None = None,
     **dataloader_kwargs,
@@ -170,9 +184,15 @@ def create_dataloader_for_queries_conversation(
     Returns:
         A dataloader with the queries.
     """
-    converted_queries = convert_conv_history_to_query(queries)
+    converted_queries, converted_conversation = convert_conv_history_to_query(queries)
     if instructions is None:
-        dataset = Dataset.from_dict({"text": converted_queries, "query": queries})
+        dataset = Dataset.from_dict(
+            {
+                "text": converted_queries,
+                "query": converted_queries,
+                "conversation": converted_conversation,
+            }
+        )
     else:
         dataset = Dataset.from_dict(
             {
@@ -181,7 +201,8 @@ def create_dataloader_for_queries_conversation(
                     for q, i in zip(converted_queries, instructions)
                 ],
                 "instruction": instructions,
-                "query": queries,
+                "query": converted_queries,
+                "conversation": converted_conversation,
             }
         )
     return torch.utils.data.DataLoader(dataset, **dataloader_kwargs)
@@ -265,3 +286,21 @@ def create_image_dataloader(
         collate_fn=collate_fn,
         shuffle=False,
     )
+
+
+def create_dataloader(
+    dataset: Dataset,
+    task_metadata: TaskMetadata,
+    input_column: str | None = None,
+    batch_size: int = 32,
+) -> DataLoader:
+    if "image" in task_metadata.modalities:
+        return create_image_dataloader(
+            (dataset.select_columns(input_column).rename_column(input_column, "image")),
+            batch_size=batch_size,
+        )
+    if "text" in task_metadata.modalities and input_column is not None:
+        return create_dataloader_from_texts(
+            dataset[input_column], batch_size=batch_size
+        )
+    return DataLoader(dataset, batch_size=batch_size)

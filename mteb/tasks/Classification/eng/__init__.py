@@ -2,14 +2,11 @@ from __future__ import annotations
 
 from .AmazonPolarityClassification import AmazonPolarityClassification
 from .ArxivClassification import ArxivClassification
-from .atis_intent_classification import AtisIntentClassification
 from .Banking77Classification import Banking77Classification
-from .clinc_classification import ClincIntentClassification
 from .DBpediaClassification import DBpediaClassification
 from .EmotionClassification import EmotionClassification
 from .FinancialPhrasebankClassification import FinancialPhrasebankClassification
 from .FrenkEnClassification import FrenkEnClassification
-from .hwu_intent_classification import HWUIntentClassification
 from .ImdbClassification import ImdbClassification
 from .LegalBenchClassification import (
     CanadaTaxCourtOutcomesLegalBenchClassification,
@@ -136,7 +133,6 @@ from .TweetSentimentExtractionClassification import (
     TweetSentimentExtractionClassification,
 )
 from .TweetTopicSingleClassification import TweetTopicSingleClassification
-from .vira_intent_classification import ViraIntentClassification
 from .WikipediaBiolumNeurochemClassification import (
     WikipediaBiolumNeurochemClassification,
 )
@@ -180,7 +176,9 @@ from .YahooAnswersTopicsClassification import YahooAnswersTopicsClassification
 from .YelpReviewFullClassification import YelpReviewFullClassification
 
 __all__ = [
-    "YahooAnswersTopicsClassification",
+    "AmazonPolarityClassification",
+    "ArxivClassification",
+    "Banking77Classification",
     "CUADAffiliateLicenseLicenseeLegalBenchClassification",
     "CUADAffiliateLicenseLicensorLegalBenchClassification",
     "CUADAntiAssignmentLegalBenchClassification",
@@ -235,6 +233,7 @@ __all__ = [
     "ContractNLISharingWithThirdPartiesLegalBenchClassification",
     "ContractNLISurvivalOfObligationsLegalBenchClassification",
     "CorporateLobbyingLegalBenchClassification",
+    "DBpediaClassification",
     "DefinitionClassificationLegalBenchClassification",
     "Diversity1LegalBenchClassification",
     "Diversity2LegalBenchClassification",
@@ -242,7 +241,11 @@ __all__ = [
     "Diversity4LegalBenchClassification",
     "Diversity5LegalBenchClassification",
     "Diversity6LegalBenchClassification",
+    "EmotionClassification",
+    "FinancialPhrasebankClassification",
+    "FrenkEnClassification",
     "FunctionOfDecisionSectionLegalBenchClassification",
+    "ImdbClassification",
     "InsurancePolicyInterpretationLegalBenchClassification",
     "InternationalCitizenshipQuestionsLegalBenchClassification",
     "JCrewBlockerLegalBenchClassification",
@@ -265,6 +268,7 @@ __all__ = [
     "LegalReasoningCausalityLegalBenchClassification",
     "MAUDLegalBenchClassification",
     "NYSJudicialEthicsLegalBenchClassification",
+    "NewsClassification",
     "OPP115DataRetentionLegalBenchClassification",
     "OPP115DataSecurityLegalBenchClassification",
     "OPP115DoNotTrackLegalBenchClassification",
@@ -277,7 +281,9 @@ __all__ = [
     "OralArgumentQuestionPurposeLegalBenchClassification",
     "OverrulingLegalBenchClassification",
     "PROALegalBenchClassification",
+    "PatentClassification",
     "PersonalJurisdictionLegalBenchClassification",
+    "PoemSentimentClassification",
     "SCDBPAccountabilityLegalBenchClassification",
     "SCDBPAuditsLegalBenchClassification",
     "SCDBPCertificationLegalBenchClassification",
@@ -288,46 +294,32 @@ __all__ = [
     "SCDDCertificationLegalBenchClassification",
     "SCDDTrainingLegalBenchClassification",
     "SCDDVerificationLegalBenchClassification",
+    "SDSEyeProtectionClassification",
+    "SDSGlovesClassification",
     "TelemarketingSalesRuleLegalBenchClassification",
     "TextualismToolDictionariesLegalBenchClassification",
     "TextualismToolPlainLegalBenchClassification",
-    "UCCVCommonLawLegalBenchClassification",
-    "UnfairTOSLegalBenchClassification",
-    "WikipediaChemEngSpecialtiesClassification",
-    "FinancialPhrasebankClassification",
-    "DBpediaClassification",
-    "WikipediaBiolumNeurochemClassification",
-    "WikipediaBioMetChemClassification",
-    "WikipediaIsotopesFissionClassification",
-    "WikipediaLuminescenceClassification",
-    "WikipediaChemFieldsClassification",
-    "FrenkEnClassification",
-    "TweetTopicSingleClassification",
-    "WikipediaOrganicInorganicClassification",
-    "WikipediaCrystallographyAnalyticalClassification",
-    "WikipediaTheoreticalAppliedClassification",
-    "WikipediaSaltsSemiconductorsClassification",
-    "AmazonPolarityClassification",
-    "NewsClassification",
     "ToxicChatClassification",
-    "SDSEyeProtectionClassification",
-    "YelpReviewFullClassification",
-    "WikipediaGreenhouseEnantiopureClassification",
-    "WikipediaSolidStateColloidalClassification",
     "ToxicConversationsClassification",
     "TweetSentimentExtractionClassification",
-    "PatentClassification",
-    "ImdbClassification",
-    "SDSGlovesClassification",
-    "WikipediaCompChemSpectroscopyClassification",
-    "ArxivClassification",
-    "EmotionClassification",
-    "PoemSentimentClassification",
-    "Banking77Classification",
-    "WikipediaCryobiologySeparationClassification",
+    "TweetTopicSingleClassification",
+    "UCCVCommonLawLegalBenchClassification",
+    "UnfairTOSLegalBenchClassification",
+    "WikipediaBioMetChemClassification",
+    "WikipediaBiolumNeurochemClassification",
+    "WikipediaChemEngSpecialtiesClassification",
+    "WikipediaChemFieldsClassification",
     "WikipediaChemistryTopicsClassification",
-    "AtisIntentClassification",
-    "ViraIntentClassification",
-    "ClincIntentClassification",
-    "HWUIntentClassification",
+    "WikipediaCompChemSpectroscopyClassification",
+    "WikipediaCryobiologySeparationClassification",
+    "WikipediaCrystallographyAnalyticalClassification",
+    "WikipediaGreenhouseEnantiopureClassification",
+    "WikipediaIsotopesFissionClassification",
+    "WikipediaLuminescenceClassification",
+    "WikipediaOrganicInorganicClassification",
+    "WikipediaSaltsSemiconductorsClassification",
+    "WikipediaSolidStateColloidalClassification",
+    "WikipediaTheoreticalAppliedClassification",
+    "YahooAnswersTopicsClassification",
+    "YelpReviewFullClassification",
 ]
