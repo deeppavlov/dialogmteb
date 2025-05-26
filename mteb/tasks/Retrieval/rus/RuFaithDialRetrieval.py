@@ -7,13 +7,12 @@ from mteb.abstasks.TaskMetadata import TaskMetadata
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
 
-class FaithDialRetrievalRu(AbsTaskRetrieval):
+class RuFaithDialRetrieval(AbsTaskRetrieval):
     metadata = TaskMetadata(
         name="FaithDial",
         dataset={
             "path": "DeepPavlov/FaithDial-ru",
             "revision": "ed49d9732196e96d5291e11cfa416083b8ff699e",
-            "trust_remote_code": True,
         },
         reference="https://mcgill-nlp.github.io/FaithDial",
         description=(
@@ -24,7 +23,7 @@ class FaithDialRetrievalRu(AbsTaskRetrieval):
             + "as the gold passage associated with these instances is non-ambiguous."
         ),
         type="Retrieval",
-        category="s2p",
+        category="t2t",
         modalities=["text"],
         eval_splits=["test"],
         eval_langs=["rus-Cyrl"],
@@ -35,8 +34,8 @@ class FaithDialRetrievalRu(AbsTaskRetrieval):
         license="cc-by-nc-sa-4.0",
         annotations_creators="human-annotated",
         dialect=[],
-        sample_creation="found",
-        bibtex_citation=r"""
+        sample_creation="machine-translated and verified",
+        bibtex_citation="""
 @article{dziri2022faithdial,
   author = {Dziri, Nouha and Kamalloo, Ehsan and Milton, Sivan and Zaiane, Osmar and Yu, Mo and Ponti, Edoardo M and Reddy, Siva},
   doi = {10.1162/tacl_a_00529},

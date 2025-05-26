@@ -62,7 +62,7 @@ def _load_statcan_data(
     return corpus, queries, relevant_docs
 
 
-class StatcanDialogueDatasetRetrievalRu(AbsTaskRetrieval):
+class RuStatcanDialogueDatasetRetrieval(AbsTaskRetrieval):
     metadata = TaskMetadata(
         name="StatcanDialogueDatasetRetrieval",
         description="A Dataset for Retrieving Data Tables through Conversations with Genuine Intents, available in English and French.",
@@ -83,7 +83,7 @@ class StatcanDialogueDatasetRetrievalRu(AbsTaskRetrieval):
         license="https://huggingface.co/datasets/McGill-NLP/statcan-dialogue-dataset-retrieval/blob/main/LICENSE.md",
         annotations_creators="derived",
         dialect=[],
-        sample_creation="found",
+        sample_creation="machine-translated and verified",
         bibtex_citation="""
 @inproceedings{lu-etal-2023-statcan,
     title = "The {S}tat{C}an Dialogue Dataset: Retrieving Data Tables through Conversations with Genuine Intents",
