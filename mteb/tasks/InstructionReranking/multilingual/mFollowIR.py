@@ -7,6 +7,7 @@ import datasets
 from mteb.abstasks.TaskMetadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
+from ....evaluation.evaluators.retrieval_metrics import evaluate_p_mrr_change
 
 logger = getLogger(__name__)
 
@@ -55,6 +56,7 @@ def load_data(
     relevant_docs = {lang: {EVAL_SPLIT: {}} for lang in langs}
     instructions = {lang: {EVAL_SPLIT: {}} for lang in langs}
     top_ranked = {lang: {EVAL_SPLIT: {}} for lang in langs}
+    qrel_diffs = {lang: {EVAL_SPLIT: {}} for lang in langs}
 
     for lang in langs:
         if "-" in lang:
@@ -125,7 +127,30 @@ def load_data(
         for row in top_ranked_data["top_ranked"]:
             top_ranked[lang][EVAL_SPLIT][row["query-id"]] = row["corpus-ids"]
 
-    return corpus, queries, instructions, relevant_docs, top_ranked
+        qrel_diff = datasets.load_dataset(
+            path,
+            f"qrel_diff-{loading_lang}",
+            split="qrel_diff",
+            cache_dir=cache_dir,
+            revision=revision,
+        )
+
+        qrel_diffs[lang][EVAL_SPLIT] = {
+            item["query-id"]: item["corpus-ids"] for item in qrel_diff
+        }
+
+    return corpus, queries, instructions, relevant_docs, top_ranked, qrel_diffs
+
+
+def load_qrel_diff(metadata: TaskMetadata, hf_subset: str) -> dict[str, list[str]]:
+    hf_subset = hf_subset.replace("eng-", "")
+    qrel_diff_ds = datasets.load_dataset(
+        metadata.dataset["path"],
+        f"qrel_diff-{hf_subset}",
+        split="qrel_diff",
+        revision=metadata.dataset["revision"],
+    )
+    return {item["query-id"]: item["corpus-ids"] for item in qrel_diff_ds}
 
 
 class mFollowIRCrossLingual(AbsTaskRetrieval):
@@ -150,12 +175,14 @@ class mFollowIRCrossLingual(AbsTaskRetrieval):
         annotations_creators="expert-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@article{weller2024mfollowir,
-  title={{mFollowIR: a Multilingual Benchmark for Instruction Following in Retrieval}},
-  author={Weller, Orion and Chang, Benjamin and Yang, Eugene and Yarmohammadi, Mahsa and Barham, Sam and MacAvaney, Sean and Cohan, Arman and Soldaini, Luca and Van Durme, Benjamin and Lawrie, Dawn},
-  journal={arXiv preprint TODO},
-  year={2024}
-}""",
+        bibtex_citation=r"""
+@article{weller2024mfollowir,
+  author = {Weller, Orion and Chang, Benjamin and Yang, Eugene and Yarmohammadi, Mahsa and Barham, Sam and MacAvaney, Sean and Cohan, Arman and Soldaini, Luca and Van Durme, Benjamin and Lawrie, Dawn},
+  journal = {arXiv preprint TODO},
+  title = {{mFollowIR: a Multilingual Benchmark for Instruction Following in Retrieval}},
+  year = {2024},
+}
+""",
     )
 
     def load_data(self, **kwargs):
@@ -168,6 +195,7 @@ class mFollowIRCrossLingual(AbsTaskRetrieval):
             self.instructions,
             self.relevant_docs,
             self.top_ranked,
+            self.qrels_diff,
         ) = load_data(
             path=self.metadata.dataset["path"],
             langs=self.metadata.eval_langs,
@@ -177,6 +205,21 @@ class mFollowIRCrossLingual(AbsTaskRetrieval):
         )
 
         self.data_loaded = True
+
+    def task_specific_scores(
+        self,
+        scores: dict[str, dict[str, float]],
+        qrels: dict[str, dict[str, int]],
+        results: dict[str, dict[str, float]],
+        hf_split: str,
+        hf_subset: str,
+    ) -> dict[str, float]:
+        return evaluate_p_mrr_change(
+            qrels,
+            results,
+            load_qrel_diff(self.metadata, hf_subset),
+            self.k_values,
+        )
 
 
 class mFollowIR(AbsTaskRetrieval):
@@ -201,12 +244,14 @@ class mFollowIR(AbsTaskRetrieval):
         annotations_creators="expert-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@article{weller2024mfollowir,
-  title={{mFollowIR: a Multilingual Benchmark for Instruction Following in Retrieval}},
-  author={Weller, Orion and Chang, Benjamin and Yang, Eugene and Yarmohammadi, Mahsa and Barham, Sam and MacAvaney, Sean and Cohan, Arman and Soldaini, Luca and Van Durme, Benjamin and Lawrie, Dawn},
-  journal={arXiv preprint TODO},
-  year={2024}
-}""",
+        bibtex_citation=r"""
+@article{weller2024mfollowir,
+  author = {Weller, Orion and Chang, Benjamin and Yang, Eugene and Yarmohammadi, Mahsa and Barham, Sam and MacAvaney, Sean and Cohan, Arman and Soldaini, Luca and Van Durme, Benjamin and Lawrie, Dawn},
+  journal = {arXiv preprint TODO},
+  title = {{mFollowIR: a Multilingual Benchmark for Instruction Following in Retrieval}},
+  year = {2024},
+}
+""",
     )
 
     def load_data(self, **kwargs):
@@ -219,6 +264,7 @@ class mFollowIR(AbsTaskRetrieval):
             self.instructions,
             self.relevant_docs,
             self.top_ranked,
+            self.qrels_diff,
         ) = load_data(
             path=self.metadata.dataset["path"],
             langs=self.metadata.eval_langs,
@@ -228,3 +274,18 @@ class mFollowIR(AbsTaskRetrieval):
         )
 
         self.data_loaded = True
+
+    def task_specific_scores(
+        self,
+        scores: dict[str, dict[str, float]],
+        qrels: dict[str, dict[str, int]],
+        results: dict[str, dict[str, float]],
+        hf_split: str,
+        hf_subset: str,
+    ) -> dict[str, float]:
+        return evaluate_p_mrr_change(
+            qrels,
+            results,
+            load_qrel_diff(self.metadata, hf_subset),
+            self.k_values,
+        )
