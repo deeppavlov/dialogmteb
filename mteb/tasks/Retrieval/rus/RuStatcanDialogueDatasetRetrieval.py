@@ -64,7 +64,7 @@ def _load_statcan_data(
 
 class RuStatcanDialogueDatasetRetrieval(AbsTaskRetrieval):
     metadata = TaskMetadata(
-        name="StatcanDialogueDatasetRetrieval",
+        name="RuStatcanDialogueDatasetRetrieval",
         description="A Dataset for Retrieving Data Tables through Conversations with Genuine Intents, available in English and French.",
         dataset={
             "path": "DeepPavlov/statcan-dialogue-dataset-retrieval-ru",

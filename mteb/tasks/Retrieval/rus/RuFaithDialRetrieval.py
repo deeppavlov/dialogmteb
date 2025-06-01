@@ -9,7 +9,7 @@ from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
 class RuFaithDialRetrieval(AbsTaskRetrieval):
     metadata = TaskMetadata(
-        name="FaithDial",
+        name="RuFaithDialRetrieval",
         dataset={
             "path": "DeepPavlov/FaithDial-ru",
             "revision": "ed49d9732196e96d5291e11cfa416083b8ff699e",
