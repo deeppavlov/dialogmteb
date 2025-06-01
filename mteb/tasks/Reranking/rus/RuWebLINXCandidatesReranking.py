@@ -61,7 +61,7 @@ class RuWebLINXCandidatesReranking(AbsTaskReranking):
 
         for split in self.metadata.eval_splits:
             self._datasets[split] = datasets.load_dataset(
-                split=split, **self.metadata["dataset"]
+                split=split, path="DeepPavlov/WebLINX-ru", revision="revision"
             )
 
         self.dataset = datasets.DatasetDict(
