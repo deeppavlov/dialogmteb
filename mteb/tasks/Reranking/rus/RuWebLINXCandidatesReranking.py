@@ -61,7 +61,7 @@ class RuWebLINXCandidatesReranking(AbsTaskReranking):
 
         for split in self.metadata.eval_splits:
             self._datasets[split] = datasets.load_dataset(
-                split=split, **self.metadata_dict["dataset"]
+                split=split, **self.metadata["dataset"]
             )
 
         self.dataset = datasets.DatasetDict(
