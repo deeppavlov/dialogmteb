@@ -4,10 +4,10 @@ import datasets
 
 from mteb.abstasks.TaskMetadata import TaskMetadata
 
-from ....abstasks.AbsTaskReranking import AbsTaskReranking
+from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
 
-class RuWebLINXCandidatesReranking(AbsTaskReranking):
+class RuWebLINXCandidatesReranking(AbsTaskRetrieval):
     metadata = TaskMetadata(
         name="RuWebLINXCandidatesReranking",
         description="WebLINX is a large-scale benchmark of 100K interactions across 2300 expert demonstrations of conversational web navigation. The reranking task focuses on finding relevant elements at every given step in the trajectory.",
