@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import datasets
 
+from mteb.abstasks.AbsTaskReranking import AbsTaskReranking
 from mteb.abstasks.TaskMetadata import TaskMetadata
 
-from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
-
-class RuWebLINXCandidatesReranking(AbsTaskRetrieval):
+class RuWebLINXCandidatesReranking(AbsTaskReranking):
     metadata = TaskMetadata(
         name="RuWebLINXCandidatesReranking",
         description="WebLINX is a large-scale benchmark of 100K interactions across 2300 expert demonstrations of conversational web navigation. The reranking task focuses on finding relevant elements at every given step in the trajectory.",
@@ -52,22 +51,3 @@ class RuWebLINXCandidatesReranking(AbsTaskRetrieval):
         self.dataset = self.dataset.rename_columns(
             {"query": "query_en", "query_ru": "query"}
         )
-
-    def load_data(self, **kwargs):
-        if self.data_loaded:
-            return
-
-        self._datasets = {}
-
-        for split in self.metadata.eval_splits:
-            self._datasets[split] = datasets.load_dataset(
-                split=split, path="DeepPavlov/WebLINX-ru", revision="fdc93113fd2d43ee6aae0fd59a53ebd7bc201287"
-            )
-
-        self.dataset = datasets.DatasetDict(
-            {split: self._datasets[split] for split in self.metadata.eval_splits}
-        )
-
-        self.dataset_transform()
-
-        self.data_loaded = True
