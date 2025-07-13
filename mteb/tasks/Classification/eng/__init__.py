@@ -174,6 +174,7 @@ from .WikipediaTheoreticalAppliedClassification import (
 )
 from .YahooAnswersTopicsClassification import YahooAnswersTopicsClassification
 from .YelpReviewFullClassification import YelpReviewFullClassification
+from .air_dialogue_classification import RuAirDialogueClassification
 
 __all__ = [
     "AmazonPolarityClassification",
@@ -322,4 +323,5 @@ __all__ = [
     "WikipediaTheoreticalAppliedClassification",
     "YahooAnswersTopicsClassification",
     "YelpReviewFullClassification",
+    "AirDialogueClassification",
 ]

@@ -13,6 +13,7 @@ from .RuReviewsClassification import RuReviewsClassification
 from .RuSciBenchGRNTIClassification import RuSciBenchGRNTIClassification
 from .RuSciBenchOECDClassification import RuSciBenchOECDClassification
 from .senti_ru_eval import SentiRuEval2016Classification
+from .air_dialogue_classification_ru import RuAirDialogueClassification
 
 __all__ = [
     "GeoreviewClassification",
@@ -26,4 +27,5 @@ __all__ = [
     "RuSciBenchOECDClassification",
     "RuToxicOKMLCUPClassification",
     "SentiRuEval2016Classification",
+    "RuAirDialogueClassification"
 ]
