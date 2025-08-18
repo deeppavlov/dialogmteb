@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import datasets
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
@@ -42,7 +42,7 @@ class CQADupstackWebmastersNLRetrieval(AbsTaskRetrieval):
   year = {2024},
 }
 """,
-        adapted_from=["CQADupstackWebmasters"],
+        adapted_from=["CQADupstackWebmastersRetrieval"],
     )
 
     def load_data(self, **kwargs):

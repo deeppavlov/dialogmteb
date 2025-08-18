@@ -6,7 +6,7 @@ import datasets
 from datasets import concatenate_datasets
 
 from mteb.abstasks.AbsTaskAnyClassification import AbsTaskAnyClassification
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 class CanadaTaxCourtOutcomesLegalBenchClassification(AbsTaskAnyClassification):
@@ -865,6 +865,7 @@ class CUADAffiliateLicenseLicenseeLegalBenchClassification(AbsTaskAnyClassificat
             "path": "nguha/legalbench",
             "name": "cuad_affiliate_license-licensee",
             "revision": "12ca3b695563788fead87a982ad1a068284413f4",
+            "trust_remote_code": True,
         },
         type="Classification",
         category="t2c",
@@ -4715,6 +4716,7 @@ class NYSJudicialEthicsLegalBenchClassification(AbsTaskAnyClassification):
             "path": "nguha/legalbench",
             "name": "nys_judicial_ethics",
             "revision": "12ca3b695563788fead87a982ad1a068284413f4",
+            "trust_remote_code": True,
         },
         type="Classification",
         category="t2c",
@@ -4762,6 +4764,7 @@ class OPP115DataRetentionLegalBenchClassification(AbsTaskAnyClassification):
             "path": "nguha/legalbench",
             "name": "opp115_data_retention",
             "revision": "12ca3b695563788fead87a982ad1a068284413f4",
+            "trust_remote_code": True,
         },
         type="Classification",
         category="t2c",

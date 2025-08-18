@@ -4,8 +4,7 @@ import datasets
 from datasets import Dataset, DatasetDict
 
 from mteb.abstasks.Image.AbsTaskAny2AnyRetrieval import AbsTaskAny2AnyRetrieval
-from mteb.abstasks.MultilingualTask import MultilingualTask
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _LANGS = {
     "en": ["eng-Latn"],
@@ -98,7 +97,7 @@ def _load_vdr_multilingual_data(
     return corpus_dataset_dict, queries_dataset_dict, relevant_docs_dataset_dict
 
 
-class VDRMultilingualRetrieval(MultilingualTask, AbsTaskAny2AnyRetrieval):
+class VDRMultilingualRetrieval(AbsTaskAny2AnyRetrieval):
     metadata = TaskMetadata(
         name="VDRMultilingualRetrieval",
         description="Multilingual Visual Document retrieval Dataset covering 5 languages: Italian, Spanish, English, French and German",
@@ -138,14 +137,12 @@ class VDRMultilingualRetrieval(MultilingualTask, AbsTaskAny2AnyRetrieval):
             return
 
         self.corpus, self.queries, self.relevant_docs = _load_vdr_multilingual_data(
-            path=self.metadata_dict["dataset"]["path"],
+            path=self.metadata.dataset["path"],
             langs=self.hf_subsets,
-            split=self.metadata_dict["eval_splits"][0],
+            split=_EVAL_SPLIT,
             cache_dir=kwargs.get("cache_dir", None),
-            revision=self.metadata_dict["dataset"].get("revision", None),
-            trust_remote_code=self.metadata_dict["dataset"].get(
-                "trust_remote_code", False
-            ),
+            revision=self.metadata.dataset.get("revision", None),
+            trust_remote_code=self.metadata.dataset.get("trust_remote_code", False),
         )
 
         self.data_loaded = True

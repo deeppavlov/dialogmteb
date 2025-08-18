@@ -13,8 +13,9 @@ from torch.utils.data import DataLoader
 
 import mteb
 import mteb.overview
-from mteb.abstasks import AbsTask, TaskMetadata
-from mteb.create_meta import generate_readme
+from mteb.abstasks import AbsTask
+from mteb.abstasks.task_metadata import TaskMetadata
+from mteb.cli.generate_readme import generate_readme
 from mteb.evaluation.MTEB import logger
 from mteb.types import Array, BatchedInput, PromptType
 
@@ -338,6 +339,16 @@ def test_prompt_name_passed_to_all_encodes_with_prompts(
         output_folder=tmp_path.as_posix(),
         overwrite_results=True,
     )
+
+
+@pytest.mark.parametrize("task_name", ["NQ-NL-query", "NQ-NL-passage"])
+def test_prompt_name_split_correctly(task_name: str, tmp_path: Path):
+    """Test that the task name is split correctly into task name and prompt type
+    for tasks with multiple `-` in their names.
+    """
+    mock_encocder = AbsMockEncoder()
+    mock_encocder.prompts = {task_name: task_name}
+    mock_encocder.validate_task_to_prompt_name()
 
 
 @pytest.mark.parametrize(

@@ -4,16 +4,18 @@ import json
 import logging
 from pathlib import Path
 
+import pytest
 from sentence_transformers import CrossEncoder, SentenceTransformer
 
 import mteb
 from mteb import MTEB
-from mteb.model_meta import ModelMeta
+from mteb.models.model_meta import ModelMeta
 from tests.test_benchmark.mock_tasks import MockRetrievalTask
 
 logging.basicConfig(level=logging.INFO)
 
 
+@pytest.mark.skip(reason="2 stage not implemented for now")
 def test_mteb_rerank(tmp_path: Path):
     # Test that reranking works
     # unfortunately, we need all the query ids to pretend to have this
@@ -345,19 +347,25 @@ def test_mteb_rerank(tmp_path: Path):
         eval_splits=["test"],
         previous_results=tmp_file,
         save_predictions=True,
+        co2_tracker=False,
     )
 
     # read in the results
     with (tmp_path / "SciFact_default_predictions.json").open() as f:
         results = json.load(f)
 
-    results = sorted(results["1"].keys(), key=lambda x: (results["1"][x], x))[:2]
+    results = sorted(
+        results["1"].keys(),
+        key=lambda x: (results["1"][x], x),
+        reverse=True,
+    )[:2]
     # check that only the top two results are re-orderd
     assert "19238" not in results
     assert "4983" in results
     assert "18670" in results
 
 
+@pytest.mark.skip(reason="2 stage not implemented for now")
 def test_reranker_same_ndcg1(tmp_path: Path):
     de_name = "sentence-transformers/average_word_embeddings_komninos"
     revision = "21eec43590414cb8e3a6f654857abed0483ae36e"

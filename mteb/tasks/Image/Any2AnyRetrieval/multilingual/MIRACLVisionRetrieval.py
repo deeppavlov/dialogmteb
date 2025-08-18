@@ -3,8 +3,7 @@ from __future__ import annotations
 import datasets
 
 from mteb.abstasks.Image.AbsTaskAny2AnyRetrieval import AbsTaskAny2AnyRetrieval
-from mteb.abstasks.MultilingualTask import MultilingualTask
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _EVAL_SPLIT = "default"
 
@@ -128,7 +127,7 @@ def _load_miracl_data(
     return corpus, queries, relevant_docs
 
 
-class MIRACLVisionRetrieval(MultilingualTask, AbsTaskAny2AnyRetrieval):
+class MIRACLVisionRetrieval(AbsTaskAny2AnyRetrieval):
     metadata = TaskMetadata(
         name="MIRACLVisionRetrieval",
         description="Retrieve associated pages according to questions.",
@@ -168,11 +167,11 @@ class MIRACLVisionRetrieval(MultilingualTask, AbsTaskAny2AnyRetrieval):
             return
 
         self.corpus, self.queries, self.relevant_docs = _load_miracl_data(
-            path=self.metadata_dict["dataset"]["path"],
-            splits=self.metadata_dict["eval_splits"],
+            path=self.metadata.dataset["path"],
+            splits=self.metadata.eval_splits[0],
             langs=self.hf_subsets,
             cache_dir=kwargs.get("cache_dir", None),
-            revision=self.metadata_dict["dataset"]["revision"],
+            revision=self.metadata.dataset["revision"],
         )
 
         self.data_loaded = True

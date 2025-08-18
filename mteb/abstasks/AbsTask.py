@@ -16,10 +16,15 @@ import transformers
 from datasets import Dataset, DatasetDict
 from sklearn.preprocessing import MultiLabelBinarizer
 
-from mteb.abstasks.stratification import _iterative_train_test_split
-from mteb.abstasks.TaskMetadata import TaskMetadata
-from mteb.encoder_interface import Encoder
+from mteb.abstasks._stratification import _iterative_train_test_split
+from mteb.abstasks.task_metadata import TaskMetadata
 from mteb.languages import LanguageScripts
+from mteb.models.models_protocols import (
+    CrossEncoderProtocol,
+    Encoder,
+    MTEBModels,
+    SearchProtocol,
+)
 from mteb.types import HFSubset, ScoresDict
 from mteb.types.statistics import DescriptiveStatistics
 
@@ -90,6 +95,9 @@ class AbsTask(ABC):
     hf_subsets: list[HFSubset]
     fast_loading: bool = False
 
+    support_cross_encoder: bool = False
+    support_search: bool = False
+
     def __init__(self, seed: int = 42, **kwargs: Any):
         """The init function. This is called primarily to set the seed.
 
@@ -118,7 +126,7 @@ class AbsTask(ABC):
 
     def evaluate(
         self,
-        model: Encoder,
+        model: MTEBModels,
         split: str = "test",
         subsets_to_run: list[HFSubset] | None = None,
         *,
@@ -135,6 +143,23 @@ class AbsTask(ABC):
             encode_kwargs: Additional keyword arguments that are passed to the model's `encode` method.
             kwargs: Additional keyword arguments that are passed to the _evaluate_subset method.
         """
+        if isinstance(model, CrossEncoderProtocol) and not self.support_cross_encoder:
+            raise TypeError(
+                f"Model {model} is a CrossEncoder, but this task {self.metadata.name} does not support CrossEncoders. "
+                "Please use a Encoder model instead."
+            )
+
+        # encoders might implement search protocols
+        if (
+            isinstance(model, SearchProtocol)
+            and not isinstance(model, Encoder)
+            and not self.support_search
+        ):
+            raise TypeError(
+                f"Model {model} is a SearchProtocol, but this task {self.metadata.name} does not support Search. "
+                "Please use a Encoder model instead."
+            )
+
         if not self.data_loaded:
             self.load_data()
 
@@ -171,7 +196,7 @@ class AbsTask(ABC):
     @abstractmethod
     def _evaluate_subset(
         self,
-        model: Encoder,
+        model: MTEBModels,
         data_split: Dataset,
         encode_kwargs: dict[str, Any],
         hf_split: str,
@@ -459,11 +484,12 @@ class AbsTask(ABC):
     def _push_dataset_to_hub(self, repo_name: str) -> None:
         raise NotImplementedError
 
-    def push_dataset_to_hub(self, repo_name: str) -> None:
+    def push_dataset_to_hub(self, repo_name: str, reupload: bool = False) -> None:
         """Push the dataset to the HuggingFace Hub.
 
         Args:
             repo_name: The name of the repository to push the dataset to.
+            reupload: If true, then `source_datasets` will be added to model card with source dataset.
 
         Example:
             >>> import mteb
@@ -480,8 +506,9 @@ class AbsTask(ABC):
         if not self.data_loaded:
             self.load_data()
 
-        self.metadata.push_dataset_card_to_hub(repo_name)
         self._push_dataset_to_hub(repo_name)
+        # dataset repo not creating when pushing card
+        self.metadata.push_dataset_card_to_hub(repo_name)
 
     @property
     def is_aggregate(

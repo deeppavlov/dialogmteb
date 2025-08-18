@@ -11,10 +11,11 @@ from sentence_transformers import CrossEncoder, SentenceTransformer
 from torch import Tensor
 from torch.utils.data import DataLoader
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 from mteb.load_results.task_results import Namespace
-from mteb.model_meta import ModelMeta
-from mteb.models import AbsEncoder, SentenceTransformerWrapper
+from mteb.models.abs_encoder import AbsEncoder
+from mteb.models.model_meta import ModelMeta
+from mteb.models.sentence_transformer_wrapper import SentenceTransformerEncoderWrapper
 from mteb.types import Array, BatchedInput, PromptType
 
 
@@ -194,7 +195,7 @@ class MockSentenceTransformersbf16Encoder(MockSentenceTransformer):
         return torch.randn(len(sentences), 10, dtype=torch.bfloat16)  # type: ignore
 
 
-class MockSentenceTransformerWrapper(SentenceTransformerWrapper):
+class MockSentenceTransformerWrapper(SentenceTransformerEncoderWrapper):
     def __init__(
         self,
         model: str | SentenceTransformer | CrossEncoder,

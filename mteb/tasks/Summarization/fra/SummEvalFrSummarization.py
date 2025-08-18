@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 from mteb.abstasks.AbsTaskSummarization import AbsTaskSummarization
-from mteb.abstasks.TaskMetadata import TaskMetadata
-from mteb.evaluation.evaluators.SummarizationEvaluator import (
+from mteb.abstasks.task_metadata import TaskMetadata
+from mteb.evaluation.evaluators.summarization_evaluator import (
     DeprecatedSummarizationEvaluator,
 )
 

@@ -1,24 +1,22 @@
 from __future__ import annotations
 
-from .AnySTSEvaluator import AnySTSEvaluator
-from .BitextMiningEvaluator import BitextMiningEvaluator
-from .ClassificationEvaluator import ClassificationEvaluator
-from .ClusteringEvaluator import ClusteringEvaluator
-from .Evaluator import Evaluator
+from .any_sts_evaluator import AnySTSEvaluator
+from .bitext_mining_evaluator import BitextMiningEvaluator
+from .classification_evaluator import ClassificationEvaluator
+from .clustering_evaluator import ClusteringEvaluator
+from .evaluator import Evaluator
 from .Image import (
     Any2AnyMultiChoiceEvaluator,
     Any2AnyRetrievalEvaluator,
-    ImageClusteringEvaluator,
     ImageTextPairClassificationEvaluator,
-    ZeroShotClassificationEvaluator,
 )
-from .model_classes import DenseRetrievalExactSearch
-from .PairClassificationEvaluator import PairClassificationEvaluator
-from .RetrievalEvaluator import RetrievalEvaluator
-from .SummarizationEvaluator import (
+from .pair_classification_evaluator import PairClassificationEvaluator
+from .retrieval_evaluator import RetrievalEvaluator
+from .summarization_evaluator import (
     DeprecatedSummarizationEvaluator,
     SummarizationEvaluator,
 )
+from .zeroshot_classification_evaluator import ZeroShotClassificationEvaluator
 
 __all__ = [
     "Evaluator",
@@ -26,13 +24,11 @@ __all__ = [
     "SummarizationEvaluator",
     "DeprecatedSummarizationEvaluator",
     "RetrievalEvaluator",
-    "DenseRetrievalExactSearch",
     "ClusteringEvaluator",
     "BitextMiningEvaluator",
     "PairClassificationEvaluator",
     "Any2AnyMultiChoiceEvaluator",
     "Any2AnyRetrievalEvaluator",
-    "ImageClusteringEvaluator",
     "ImageTextPairClassificationEvaluator",
     "ZeroShotClassificationEvaluator",
     "ClassificationEvaluator",
