@@ -11,11 +11,10 @@ from mteb.abstasks.aggregate_task_metadata import AggregateTaskMetadata
 if TYPE_CHECKING:
     from datasets import Dataset, DatasetDict
 
-    from mteb.abstasks.TaskMetadata import DescriptiveStatistics, HFSubset
-    from mteb.encoder_interface import Encoder
     from mteb.load_results.task_results import TaskResult
-
-    from .AbsTask import ScoresDict
+    from mteb.models.models_protocols import Encoder
+    from mteb.types import HFSubset, ScoresDict
+    from mteb.types.statistics import DescriptiveStatistics
 
 logger = logging.getLogger(__name__)
 
@@ -153,6 +152,10 @@ class AbsTaskAggregate(AbsTask):
         raise NotImplementedError(
             "Aggregate tasks does not implement a _calculate_metrics_from_split. Instead use the individual tasks."
         )
+
+    @property
+    def is_aggregate(self):  # Overrides the is_aggregate method on AbsTask
+        return True
 
     @property
     def eval_splits(self) -> list[str]:

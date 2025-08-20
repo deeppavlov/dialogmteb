@@ -3,7 +3,7 @@ from __future__ import annotations
 import datasets
 
 from mteb.abstasks.AbsTaskRetrieval import AbsTaskRetrieval
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _LANGUAGES = {
     "ar": ["ara-Arab"],
@@ -89,13 +89,14 @@ class MultiLongDocRetrieval(AbsTaskRetrieval):
         annotations_creators="LM-generated",  # gpt-3.5
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@misc{bge-m3,
-      title={BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},
-      author={Jianlv Chen and Shitao Xiao and Peitian Zhang and Kun Luo and Defu Lian and Zheng Liu},
-      year={2024},
-      eprint={2402.03216},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+        bibtex_citation=r"""
+@misc{bge-m3,
+  archiveprefix = {arXiv},
+  author = {Jianlv Chen and Shitao Xiao and Peitian Zhang and Kun Luo and Defu Lian and Zheng Liu},
+  eprint = {2402.03216},
+  primaryclass = {cs.CL},
+  title = {BGE M3-Embedding: Multi-Lingual, Multi-Functionality, Multi-Granularity Text Embeddings Through Self-Knowledge Distillation},
+  year = {2024},
 }
 """,
     )

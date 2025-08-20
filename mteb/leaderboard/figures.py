@@ -7,7 +7,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-from mteb.abstasks.TaskMetadata import TASK_TYPE
+from mteb.abstasks.task_metadata import TaskType
 
 
 def text_plot(text: str):
@@ -147,6 +147,7 @@ def performance_size_plot(df: pd.DataFrame) -> go.Figure:
             "model_text": False,
         },
         hover_name="Model",
+        color_continuous_scale=px.colors.sequential.Greens,
     )
     # Note: it's important that this comes before setting the size mode
     fig = add_size_guide(fig)
@@ -185,7 +186,7 @@ def performance_size_plot(df: pd.DataFrame) -> go.Figure:
 
 
 TOP_N = 5
-task_types = sorted(get_args(TASK_TYPE))
+task_types = sorted(get_args(TaskType))
 task_types.remove("InstructionRetrieval")
 # Not displayed, because the scores are negative,
 # doesn't work well with the radar chart.

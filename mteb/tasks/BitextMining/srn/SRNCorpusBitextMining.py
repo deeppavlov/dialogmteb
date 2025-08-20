@@ -5,7 +5,7 @@ from typing import Any
 import datasets
 
 from mteb.abstasks.AbsTaskBitextMining import AbsTaskBitextMining
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _LANGUAGES = {
     "nld_Latn": "nl",
@@ -45,12 +45,12 @@ class SRNCorpusBitextMining(AbsTaskBitextMining):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""
+        bibtex_citation=r"""
 @article{zwennicker2022towards,
-  title={Towards a general purpose machine translation system for Sranantongo},
-  author={Zwennicker, Just and Stap, David},
-  journal={arXiv preprint arXiv:2212.06383},
-  year={2022}
+  author = {Zwennicker, Just and Stap, David},
+  journal = {arXiv preprint arXiv:2212.06383},
+  title = {Towards a general purpose machine translation system for Sranantongo},
+  year = {2022},
 }
 """,
     )

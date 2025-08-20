@@ -1,11 +1,10 @@
 from __future__ import annotations
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.AbsTaskAnySTS import AbsTaskAnySTS
+from mteb.abstasks.task_metadata import TaskMetadata
 
-from ....abstasks.AbsTaskSTS import AbsTaskSTS
 
-
-class KlueSTS(AbsTaskSTS):
+class KlueSTS(AbsTaskAnySTS):
     metadata = TaskMetadata(
         name="KLUE-STS",
         dataset={
@@ -28,14 +27,16 @@ class KlueSTS(AbsTaskSTS):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@misc{park2021klue,
-      title={KLUE: Korean Language Understanding Evaluation},
-      author={Sungjoon Park and Jihyung Moon and Sungdong Kim and Won Ik Cho and Jiyoon Han and Jangwon Park and Chisung Song and Junseong Kim and Yongsook Song and Taehwan Oh and Joohong Lee and Juhyun Oh and Sungwon Lyu and Younghoon Jeong and Inkwon Lee and Sangwoo Seo and Dongjun Lee and Hyunwoo Kim and Myeonghwa Lee and Seongbo Jang and Seungwon Do and Sunkyoung Kim and Kyungtae Lim and Jongwon Lee and Kyumin Park and Jamin Shin and Seonghyun Kim and Lucy Park and Alice Oh and Jungwoo Ha and Kyunghyun Cho},
-      year={2021},
-      eprint={2105.09680},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
-}""",
+        bibtex_citation=r"""
+@misc{park2021klue,
+  archiveprefix = {arXiv},
+  author = {Sungjoon Park and Jihyung Moon and Sungdong Kim and Won Ik Cho and Jiyoon Han and Jangwon Park and Chisung Song and Junseong Kim and Yongsook Song and Taehwan Oh and Joohong Lee and Juhyun Oh and Sungwon Lyu and Younghoon Jeong and Inkwon Lee and Sangwoo Seo and Dongjun Lee and Hyunwoo Kim and Myeonghwa Lee and Seongbo Jang and Seungwon Do and Sunkyoung Kim and Kyungtae Lim and Jongwon Lee and Kyumin Park and Jamin Shin and Seonghyun Kim and Lucy Park and Alice Oh and Jungwoo Ha and Kyunghyun Cho},
+  eprint = {2105.09680},
+  primaryclass = {cs.CL},
+  title = {KLUE: Korean Language Understanding Evaluation},
+  year = {2021},
+}
+""",
     )
 
     min_score = 0
@@ -44,6 +45,7 @@ class KlueSTS(AbsTaskSTS):
     def dataset_transform(self):
         # In the case of KLUE STS, score value is nested within the `labels` field.
         # We need to extract the `score` and move it outside of the `labels` field for access.
-        self.dataset["validation"] = self.dataset["validation"].map(
-            lambda example: {**example, "score": example["labels"]["label"]}
-        )
+        for split in self.dataset:
+            self.dataset[split] = self.dataset[split].map(
+                lambda example: {**example, "score": example["labels"]["label"]}
+            )

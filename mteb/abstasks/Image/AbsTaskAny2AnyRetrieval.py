@@ -12,10 +12,11 @@ import tqdm
 from datasets import Dataset, Features, Value, concatenate_datasets, load_dataset
 from PIL import Image
 
-from mteb.abstasks.TaskMetadata import DescriptiveStatistics
+from mteb.types import ScoresDict
+from mteb.types.statistics import DescriptiveStatistics
 
 from ...evaluation.evaluators import Any2AnyRetrievalEvaluator
-from ..AbsTask import AbsTask, ScoresDict
+from ..AbsTask import AbsTask
 
 logger = logging.getLogger(__name__)
 
@@ -434,7 +435,7 @@ class AbsTaskAny2AnyRetrieval(AbsTask):
             errors_save_path = (
                 output_folder / f"{self.metadata.name}_{hf_subset}_errors.json"
             )
-            with open(errors_save_path, "w") as f:
+            with errors_save_path.open("w") as f:
                 json.dump(errors, f)
 
         return scores

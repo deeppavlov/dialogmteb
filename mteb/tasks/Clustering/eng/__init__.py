@@ -11,6 +11,7 @@ from .BiorxivClusteringP2P import BiorxivClusteringP2P, BiorxivClusteringP2PFast
 from .BiorxivClusteringS2S import BiorxivClusteringS2S, BiorxivClusteringS2SFast
 from .BuiltBenchClusteringP2P import BuiltBenchClusteringP2P
 from .BuiltBenchClusteringS2S import BuiltBenchClusteringS2S
+from .ClusTrecCovid import ClusTrecCovid
 from .MedrxivClusteringP2P import MedrxivClusteringP2P, MedrxivClusteringP2PFast
 from .MedrxivClusteringS2S import MedrxivClusteringS2S, MedrxivClusteringS2SFast
 from .RedditClustering import RedditClustering, RedditFastClusteringS2S
@@ -34,34 +35,35 @@ from .WikipediaChemistrySpecialtiesClustering import (
 from .WikipediaChemistryTopicsClustering import WikipediaChemistryTopicsClustering
 
 __all__ = [
-    "BuiltBenchClusteringP2P",
-    "MedrxivClusteringS2S",
-    "MedrxivClusteringS2SFast",
-    "BiorxivClusteringS2S",
-    "BiorxivClusteringS2SFast",
-    "StackExchangeClustering",
-    "StackExchangeClusteringFast",
-    "RedditClustering",
-    "RedditFastClusteringS2S",
-    "ArxivClusteringS2S",
-    "ArxivClusteringP2P",
-    "ArxivClusteringP2PFast",
-    "MedrxivClusteringP2P",
-    "MedrxivClusteringP2PFast",
-    "WikipediaChemistryTopicsClustering",
-    "WikiCitiesClustering",
-    "BiorxivClusteringP2P",
-    "BiorxivClusteringP2PFast",
-    "TwentyNewsgroupsClustering",
-    "TwentyNewsgroupsClusteringFast",
     "ArXivHierarchicalClusteringP2P",
     "ArXivHierarchicalClusteringS2S",
-    "BuiltBenchClusteringS2S",
-    "WikipediaChemistrySpecialtiesClustering",
+    "ArxivClusteringP2P",
+    "ArxivClusteringP2PFast",
+    "ArxivClusteringS2S",
     "BigPatentClustering",
     "BigPatentClusteringFast",
-    "StackExchangeClusteringP2P",
-    "StackExchangeClusteringP2PFast",
+    "BiorxivClusteringP2P",
+    "BiorxivClusteringP2PFast",
+    "BiorxivClusteringS2S",
+    "BiorxivClusteringS2SFast",
+    "BuiltBenchClusteringP2P",
+    "BuiltBenchClusteringS2S",
+    "MedrxivClusteringP2P",
+    "MedrxivClusteringP2PFast",
+    "MedrxivClusteringS2S",
+    "MedrxivClusteringS2SFast",
+    "RedditClustering",
     "RedditClusteringP2P",
     "RedditFastClusteringP2P",
+    "RedditFastClusteringS2S",
+    "StackExchangeClustering",
+    "StackExchangeClusteringFast",
+    "StackExchangeClusteringP2P",
+    "StackExchangeClusteringP2PFast",
+    "TwentyNewsgroupsClustering",
+    "TwentyNewsgroupsClusteringFast",
+    "WikiCitiesClustering",
+    "WikipediaChemistrySpecialtiesClustering",
+    "WikipediaChemistryTopicsClustering",
+    "ClusTrecCovid",
 ]

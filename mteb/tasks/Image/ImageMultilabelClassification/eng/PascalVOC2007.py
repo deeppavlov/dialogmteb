@@ -3,7 +3,7 @@ from __future__ import annotations
 from mteb.abstasks.Image.AbsTaskImageMultilabelClassification import (
     AbsTaskImageMultilabelClassification,
 )
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 # NOTE: In the paper, this is grouped with linear probe tasks.
@@ -35,17 +35,18 @@ class VOC2007Classification(AbsTaskImageMultilabelClassification):
         dialect=[],
         modalities=["image"],
         sample_creation="created",
-        bibtex_citation="""@Article{Everingham10,
-            author = "Everingham, M. and Van~Gool, L. and Williams, C. K. I. and Winn, J. and Zisserman, A.",
-            title = "The Pascal Visual Object Classes (VOC) Challenge",
-            journal = "International Journal of Computer Vision",
-            volume = "88",
-            year = "2010",
-            number = "2",
-            month = jun,
-            pages = "303--338",
-        }
-        """,
+        bibtex_citation=r"""
+@article{Everingham10,
+  author = {Everingham, M. and Van~Gool, L. and Williams, C. K. I. and Winn, J. and Zisserman, A.},
+  journal = {International Journal of Computer Vision},
+  month = jun,
+  number = {2},
+  pages = {303--338},
+  title = {The Pascal Visual Object Classes (VOC) Challenge},
+  volume = {88},
+  year = {2010},
+}
+""",
     )
 
     # Override default column name in the subclass

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mteb.abstasks.Image.AbsTaskAny2AnyRetrieval import AbsTaskAny2AnyRetrieval
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 class CUB200I2I(AbsTaskAny2AnyRetrieval):
@@ -26,13 +26,14 @@ class CUB200I2I(AbsTaskAny2AnyRetrieval):
         dialect=[],
         modalities=["image"],
         sample_creation="created",
-        bibtex_citation="""@article{article,
-        author = {Welinder, Peter and Branson, Steve and Mita, Takeshi and Wah, Catherine and Schroff, Florian and Belongie, Serge and Perona, Pietro},
-        year = {2010},
-        month = {09},
-        pages = {},
-        title = {Caltech-UCSD Birds 200}
-        }
-        """,
+        bibtex_citation=r"""
+@article{article,
+  author = {Welinder, Peter and Branson, Steve and Mita, Takeshi and Wah, Catherine and Schroff, Florian and Belongie, Serge and Perona, Pietro},
+  month = {09},
+  pages = {},
+  title = {Caltech-UCSD Birds 200},
+  year = {2010},
+}
+""",
     )
     skip_first_result = True

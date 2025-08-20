@@ -16,15 +16,19 @@ import transformers
 from datasets import Dataset, DatasetDict
 from sklearn.preprocessing import MultiLabelBinarizer
 
-from mteb.abstasks.stratification import _iterative_train_test_split
-from mteb.abstasks.TaskMetadata import DescriptiveStatistics, HFSubset, TaskMetadata
-from mteb.encoder_interface import Encoder
+from mteb.abstasks._stratification import _iterative_train_test_split
+from mteb.abstasks.task_metadata import TaskMetadata
 from mteb.languages import LanguageScripts
+from mteb.models.models_protocols import (
+    CrossEncoderProtocol,
+    Encoder,
+    MTEBModels,
+    SearchProtocol,
+)
+from mteb.types import HFSubset, ScoresDict
+from mteb.types.statistics import DescriptiveStatistics
 
 logger = logging.getLogger(__name__)
-
-ScoresDict = dict[str, Any]
-# ^ e.g {'main_score': 0.5, 'hf_subset': 'en-de', 'languages': ['eng-Latn', 'deu-Latn']}
 
 
 def set_seed(seed: int) -> tuple[random.Random, np.random.Generator]:
@@ -77,6 +81,9 @@ class AbsTask(ABC):
         fast_loading: (Not recommended to use) Denotes if the task should be loaded using the fast loading method.
             This is only possible if the dataset have a "default" config. We don't recommend to use this method, and suggest to use different subsets for loading datasets.
             This was used only for historical reasons and will be removed in the future.
+        data_loaded: Denotes if the dataset is loaded or not. This is used to avoid loading the dataset multiple times.
+        seed: The random seed used for reproducibility.
+        hf_subsets: The list of Huggingface subsets to use.
     """
 
     metadata: TaskMetadata
@@ -85,8 +92,11 @@ class AbsTask(ABC):
     superseded_by: str | None = None
     dataset: dict[HFSubset, DatasetDict] | None = None  # type: ignore
     data_loaded: bool = False
-    hf_subsets: list[HFSubset] | None = None
+    hf_subsets: list[HFSubset]
     fast_loading: bool = False
+
+    support_cross_encoder: bool = False
+    support_search: bool = False
 
     def __init__(self, seed: int = 42, **kwargs: Any):
         """The init function. This is called primarily to set the seed.
@@ -116,7 +126,7 @@ class AbsTask(ABC):
 
     def evaluate(
         self,
-        model: Encoder,
+        model: MTEBModels,
         split: str = "test",
         subsets_to_run: list[HFSubset] | None = None,
         *,
@@ -133,6 +143,23 @@ class AbsTask(ABC):
             encode_kwargs: Additional keyword arguments that are passed to the model's `encode` method.
             kwargs: Additional keyword arguments that are passed to the _evaluate_subset method.
         """
+        if isinstance(model, CrossEncoderProtocol) and not self.support_cross_encoder:
+            raise TypeError(
+                f"Model {model} is a CrossEncoder, but this task {self.metadata.name} does not support CrossEncoders. "
+                "Please use a Encoder model instead."
+            )
+
+        # encoders might implement search protocols
+        if (
+            isinstance(model, SearchProtocol)
+            and not isinstance(model, Encoder)
+            and not self.support_search
+        ):
+            raise TypeError(
+                f"Model {model} is a SearchProtocol, but this task {self.metadata.name} does not support Search. "
+                "Please use a Encoder model instead."
+            )
+
         if not self.data_loaded:
             self.load_data()
 
@@ -149,7 +176,7 @@ class AbsTask(ABC):
 
         for hf_subset in hf_subsets:
             logger.info(
-                f"\nTask: {self.metadata.name}, split: {split}, subset: {hf_subset}. Running..."
+                f"Task: {self.metadata.name}, split: {split}, subset: {hf_subset}. Running..."
             )
             if hf_subset not in self.dataset and hf_subset == "default":
                 data_split = self.dataset[split]
@@ -169,8 +196,8 @@ class AbsTask(ABC):
     @abstractmethod
     def _evaluate_subset(
         self,
-        model: Encoder,
-        data_split: DatasetDict | Dataset,
+        model: MTEBModels,
+        data_split: Dataset,
         encode_kwargs: dict[str, Any],
         hf_split: str,
         hf_subset: str,
@@ -273,17 +300,20 @@ class AbsTask(ABC):
         self, overwrite_results: bool = False
     ) -> dict[str, DescriptiveStatistics | dict[str, DescriptiveStatistics]]:
         """Calculates descriptive statistics from the dataset by calling `_calculate_metrics_from_split`."""
+        from mteb.abstasks import AbsTaskAnyClassification
+
         if self.metadata.descriptive_stat_path.exists() and not overwrite_results:
             logger.info("Loading metadata descriptive statistics from cache.")
             return self.metadata.descriptive_stats
 
-        self.load_data()
+        if not self.data_loaded:
+            self.load_data()
 
         descriptive_stats = {}
         hf_subset_stat = "hf_subset_descriptive_stats"
         eval_splits = self.metadata.eval_splits
-        if self.metadata.type in ["Classification", "MultilabelClassification"]:
-            eval_splits += ["train"]
+        if isinstance(self, AbsTaskAnyClassification):
+            eval_splits.append(self.train_split)
 
         pbar_split = tqdm.tqdm(eval_splits, desc="Processing Splits...")
         for split in pbar_split:
@@ -408,15 +438,28 @@ class AbsTask(ABC):
     def _add_main_score(self, scores: dict[HFSubset, ScoresDict]) -> None:
         scores["main_score"] = scores[self.metadata.main_score]
 
-    def _upload_dataset_to_hub(self, repo_name: str, fields: list[str]) -> None:
+    def _upload_dataset_to_hub(
+        self, repo_name: str, fields: list[str] | dict[str, str]
+    ) -> None:
         if self.metadata.is_multilingual:
             for config in self.metadata.eval_langs:
                 logger.info(f"Converting {config} of {self.metadata.name}")
                 sentences = {}
                 for split in self.dataset[config]:
-                    sentences[split] = Dataset.from_dict(
-                        {field: self.dataset[config][split][field] for field in fields}
-                    )
+                    if isinstance(fields, dict):
+                        sentences[split] = Dataset.from_dict(
+                            {
+                                mapped_name: self.dataset[config][split][original_name]
+                                for original_name, mapped_name in fields.items()
+                            }
+                        )
+                    else:
+                        sentences[split] = Dataset.from_dict(
+                            {
+                                field: self.dataset[config][split][field]
+                                for field in fields
+                            }
+                        )
                 sentences = DatasetDict(sentences)
                 sentences.push_to_hub(
                     repo_name, config, commit_message=f"Add {config} dataset"
@@ -424,25 +467,55 @@ class AbsTask(ABC):
         else:
             sentences = {}
             for split in self.dataset:
-                sentences[split] = Dataset.from_dict(
-                    {field: self.dataset[split][field] for field in fields}
-                )
+                if isinstance(fields, dict):
+                    sentences[split] = Dataset.from_dict(
+                        {
+                            mapped_name: self.dataset[split][original_name]
+                            for original_name, mapped_name in fields.items()
+                        }
+                    )
+                else:
+                    sentences[split] = Dataset.from_dict(
+                        {field: self.dataset[split][field] for field in fields}
+                    )
             sentences = DatasetDict(sentences)
             sentences.push_to_hub(repo_name, commit_message="Add dataset")
 
     def _push_dataset_to_hub(self, repo_name: str) -> None:
         raise NotImplementedError
 
-    def push_dataset_to_hub(self, repo_name: str) -> None:
+    def push_dataset_to_hub(self, repo_name: str, reupload: bool = False) -> None:
         """Push the dataset to the HuggingFace Hub.
 
         Args:
             repo_name: The name of the repository to push the dataset to.
+            reupload: If true, then `source_datasets` will be added to model card with source dataset.
+
+        Example:
+            >>> import mteb
+            >>> task = mteb.get_task("Caltech101")
+            >>> repo_name = f"myorg/{task.metadata.name}"
+            >>> task.load_data() # ensure that the dataset can load
+            >>>
+            >>> # Create the repo on HuggingFace Hub if it does not exist
+            >>> from huggingface_hub import create_repo
+            >>> create_repo(repo_name, repo_type="dataset")
+            >>> # Push the dataset to the Hub
+            >>> task.push_dataset_to_hub(repo_name)
         """
         if not self.data_loaded:
             self.load_data()
 
         self._push_dataset_to_hub(repo_name)
+        # dataset repo not creating when pushing card
+        self.metadata.push_dataset_card_to_hub(repo_name)
+
+    @property
+    def is_aggregate(
+        self,
+    ) -> bool:  # Overrided by subclasses (AbsTaskAggregate) that are aggregate
+        """Whether the task is aggregate. Subclasses that are aggregate should override this with `True`."""
+        return False
 
     @property
     def eval_splits(self) -> list[str]:
@@ -470,3 +543,14 @@ class AbsTask(ABC):
 
     def __hash__(self) -> int:
         return hash(self.metadata)
+
+    def unload_data(self) -> None:
+        """Unloads the dataset from memory"""
+        if self.data_loaded:
+            self.dataset = None
+            self.data_loaded = False
+            logger.info(f"Unloaded dataset {self.metadata.name} from memory.")
+        else:
+            logger.warning(
+                f"Dataset {self.metadata.name} is not loaded, cannot unload it."
+            )

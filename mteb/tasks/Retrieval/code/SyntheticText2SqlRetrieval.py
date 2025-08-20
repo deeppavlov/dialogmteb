@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mteb.abstasks.AbsTaskRetrieval import AbsTaskRetrieval
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _EVAL_SPLIT = "test"
 
@@ -28,11 +28,13 @@ class SyntheticText2SQLRetrieval(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@software{gretel-synthetic-text-to-sql-2024,
-          author = {Meyer, Yev and Emadi, Marjan and Nathawani, Dhruv and Ramaswamy, Lipika and Boyd, Kendrick and Van Segbroeck, Maarten and Grossman, Matthew and Mlocek, Piotr and Newberry, Drew},
-          title = {{Synthetic-Text-To-SQL}: A synthetic dataset for training language models to generate SQL queries from natural language prompts},
-          month = {April},
-          year = {2024},
-          url = {https://huggingface.co/datasets/gretelai/synthetic-text-to-sql}
-        }""",
+        bibtex_citation=r"""
+@software{gretel-synthetic-text-to-sql-2024,
+  author = {Meyer, Yev and Emadi, Marjan and Nathawani, Dhruv and Ramaswamy, Lipika and Boyd, Kendrick and Van Segbroeck, Maarten and Grossman, Matthew and Mlocek, Piotr and Newberry, Drew},
+  month = {April},
+  title = {{Synthetic-Text-To-SQL}: A synthetic dataset for training language models to generate SQL queries from natural language prompts},
+  url = {https://huggingface.co/datasets/gretelai/synthetic-text-to-sql},
+  year = {2024},
+}
+""",
     )

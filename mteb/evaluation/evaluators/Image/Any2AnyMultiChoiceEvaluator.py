@@ -13,15 +13,15 @@ import torch
 from datasets import Dataset
 from PIL import Image
 
-from mteb.abstasks import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 from mteb.create_dataloaders import create_image_dataloader
-from mteb.encoder_interface import Encoder
+from mteb.models.models_protocols import Encoder
 from mteb.types import PromptType
 
-from ..Evaluator import Evaluator
-from ..utils import (
+from .._download import download
+from ..evaluator import Evaluator
+from ..retrieval_metrics import (
     confidence_scores,
-    download,
     hole,
     mrr,
     nAUC,
@@ -337,7 +337,7 @@ class Any2AnyMultiChoiceEvaluator(Evaluator):
         output_type: str = "all",
     ) -> tuple[dict[str, float]]:
         if metric.lower() in ["mrr", "mrr@k", "mrr_cut"]:
-            metric_scores = mrr(qrels, results, k_values, output_type)
+            metric_scores = mrr(qrels, results, k_values)
 
         elif metric.lower() in ["recall_cap", "r_cap", "r_cap@k"]:
             metric_scores = recall_cap(qrels, results, k_values, output_type)

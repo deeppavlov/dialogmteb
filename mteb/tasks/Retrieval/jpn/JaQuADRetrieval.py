@@ -3,7 +3,7 @@ from __future__ import annotations
 from datasets import load_dataset
 
 from mteb.abstasks.AbsTaskRetrieval import AbsTaskRetrieval
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 class JaQuADRetrieval(AbsTaskRetrieval):
@@ -29,14 +29,16 @@ class JaQuADRetrieval(AbsTaskRetrieval):
         annotations_creators="human-annotated",
         dialect=None,
         sample_creation="found",
-        bibtex_citation="""@misc{so2022jaquad,
-    title={{JaQuAD: Japanese Question Answering Dataset for Machine Reading Comprehension}},
-    author={ByungHoon So and Kyuhong Byun and Kyungwon Kang and Seongjin Cho},
-    year={2022},
-    eprint={2202.01764},
-    archivePrefix={arXiv},
-    primaryClass={cs.CL}
-}""",
+        bibtex_citation=r"""
+@misc{so2022jaquad,
+  archiveprefix = {arXiv},
+  author = {ByungHoon So and Kyuhong Byun and Kyungwon Kang and Seongjin Cho},
+  eprint = {2202.01764},
+  primaryclass = {cs.CL},
+  title = {{JaQuAD: Japanese Question Answering Dataset for Machine Reading Comprehension}},
+  year = {2022},
+}
+""",
     )
 
     def load_data(self, **kwargs):

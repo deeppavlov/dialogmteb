@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskPairClassification import AbsTaskPairClassification
 
@@ -36,14 +36,16 @@ class PawsXPairClassification(AbsTaskPairClassification):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="human-translated",
-        bibtex_citation="""@misc{yang2019pawsx,
-      title={PAWS-X: A Cross-lingual Adversarial Dataset for Paraphrase Identification},
-      author={Yinfei Yang and Yuan Zhang and Chris Tar and Jason Baldridge},
-      year={2019},
-      eprint={1908.11828},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
-}""",
+        bibtex_citation=r"""
+@misc{yang2019pawsx,
+  archiveprefix = {arXiv},
+  author = {Yinfei Yang and Yuan Zhang and Chris Tar and Jason Baldridge},
+  eprint = {1908.11828},
+  primaryclass = {cs.CL},
+  title = {PAWS-X: A Cross-lingual Adversarial Dataset for Paraphrase Identification},
+  year = {2019},
+}
+""",
     )
 
     def dataset_transform(self):

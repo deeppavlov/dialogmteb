@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mteb.abstasks.Image.AbsTaskAny2AnyRetrieval import AbsTaskAny2AnyRetrieval
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 class Fashion200kI2TRetrieval(AbsTaskAny2AnyRetrieval):
@@ -26,13 +26,15 @@ class Fashion200kI2TRetrieval(AbsTaskAny2AnyRetrieval):
         dialect=[],
         modalities=["text", "image"],
         sample_creation="created",
-        bibtex_citation="""@inproceedings{han2017automatic,
-  title={Automatic spatially-aware fashion concept discovery},
-  author={Han, Xintong and Wu, Zuxuan and Huang, Phoenix X and Zhang, Xiao and Zhu, Menglong and Li, Yuan and Zhao, Yang and Davis, Larry S},
-  booktitle={Proceedings of the IEEE international conference on computer vision},
-  pages={1463--1471},
-  year={2017}
-}""",
+        bibtex_citation=r"""
+@inproceedings{han2017automatic,
+  author = {Han, Xintong and Wu, Zuxuan and Huang, Phoenix X and Zhang, Xiao and Zhu, Menglong and Li, Yuan and Zhao, Yang and Davis, Larry S},
+  booktitle = {Proceedings of the IEEE international conference on computer vision},
+  pages = {1463--1471},
+  title = {Automatic spatially-aware fashion concept discovery},
+  year = {2017},
+}
+""",
         prompt={
             "query": "Based on the following fashion description, retrieve the best matching image."
         },

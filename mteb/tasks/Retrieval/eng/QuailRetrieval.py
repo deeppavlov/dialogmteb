@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
@@ -28,20 +28,22 @@ class Quail(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@article{xiao2024rar,
-  title={RAR-b: Reasoning as Retrieval Benchmark},
-  author={Xiao, Chenghao and Hudson, G Thomas and Moubayed, Noura Al},
-  journal={arXiv preprint arXiv:2404.06347},
-  year={2024}
-}
+        bibtex_citation=r"""
 @inproceedings{rogers2020getting,
-  title={Getting closer to AI complete question answering: A set of prerequisite real tasks},
-  author={Rogers, Anna and Kovaleva, Olga and Downey, Matthew and Rumshisky, Anna},
-  booktitle={Proceedings of the AAAI conference on artificial intelligence},
-  volume={34},
-  number={05},
-  pages={8722--8731},
-  year={2020}
+  author = {Rogers, Anna and Kovaleva, Olga and Downey, Matthew and Rumshisky, Anna},
+  booktitle = {Proceedings of the AAAI conference on artificial intelligence},
+  number = {05},
+  pages = {8722--8731},
+  title = {Getting closer to AI complete question answering: A set of prerequisite real tasks},
+  volume = {34},
+  year = {2020},
+}
+
+@article{xiao2024rar,
+  author = {Xiao, Chenghao and Hudson, G Thomas and Moubayed, Noura Al},
+  journal = {arXiv preprint arXiv:2404.06347},
+  title = {RAR-b: Reasoning as Retrieval Benchmark},
+  year = {2024},
 }
 """,
         prompt={

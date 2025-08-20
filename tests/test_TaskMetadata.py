@@ -3,15 +3,15 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from mteb.abstasks import AbsTask, AbsTaskAny2AnyRetrieval, TaskMetadata
+from mteb.abstasks import AbsTask, AbsTaskAny2AnyRetrieval
 from mteb.abstasks.aggregated_task import AbsTaskAggregate
+from mteb.abstasks.task_metadata import TaskMetadata
 from mteb.overview import get_tasks
 
 # Historic datasets without filled metadata. Do NOT add new datasets to this list.
 _HISTORIC_DATASETS = [
     "PolEmo2.0-IN",
     "PolEmo2.0-OUT",
-    "AllegroReviews",
     "PAC",
     "TNews",
     "IFlyTek",
@@ -25,7 +25,6 @@ _HISTORIC_DATASETS = [
     "TenKGnadClusteringS2S",
     "ArxivClusteringP2P",
     "ArxivClusteringS2S",
-    "BigPatentClustering",
     "RedditClustering",
     "RedditClusteringP2P",
     "StackExchangeClustering",
@@ -51,8 +50,6 @@ _HISTORIC_DATASETS = [
     "TwitterHjerneRetrieval",
     "GerDaLIR",
     "GerDaLIRSmall",
-    "GermanDPR",
-    "GermanQuAD-Retrieval",
     "LegalQuAD",
     "AILACasedocs",
     "AILAStatutes",
@@ -178,6 +175,23 @@ _HISTORIC_DATASETS = [
     "TamilNewsClassification",
     "TenKGnadClusteringP2P.v2",
     "TenKGnadClusteringS2S.v2",
+    "ClimateFEVERHardNegatives",
+    "DBPediaHardNegatives",
+    "FEVERHardNegatives",
+    "HotpotQAHardNegatives",
+    "MSMARCOHardNegatives",
+    "NQHardNegatives",
+    "QuoraRetrievalHardNegatives",
+    "TopiOCQAHardNegatives",
+    "MIRACLRetrievalHardNegatives",
+    "NeuCLIR2022RetrievalHardNegatives",
+    "NeuCLIR2023RetrievalHardNegatives",
+    "DBPedia-PLHardNegatives",
+    "HotpotQA-PLHardNegatives",
+    "MSMARCO-PLHardNegatives",
+    "NQ-PLHardNegatives",
+    "Quora-PLHardNegatives",
+    "RiaNewsRetrievalHardNegatives",
     "SynPerChatbotConvSAClassification",
     "CQADupstackRetrieval-Fa",
     "IndicXnliPairClassification",

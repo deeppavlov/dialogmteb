@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mteb.abstasks.Image.AbsTaskAny2AnyRetrieval import AbsTaskAny2AnyRetrieval
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 class RP2kI2IRetrieval(AbsTaskAny2AnyRetrieval):
@@ -26,12 +26,13 @@ class RP2kI2IRetrieval(AbsTaskAny2AnyRetrieval):
         dialect=[],
         modalities=["image"],
         sample_creation="created",
-        bibtex_citation="""@article{peng2020rp2k,
-  title={RP2K: A large-scale retail product dataset for fine-grained image classification},
-  author={Peng, Jingtian and Xiao, Chang and Li, Yifan},
-  journal={arXiv preprint arXiv:2006.12634},
-  year={2020}
+        bibtex_citation=r"""
+@article{peng2020rp2k,
+  author = {Peng, Jingtian and Xiao, Chang and Li, Yifan},
+  journal = {arXiv preprint arXiv:2006.12634},
+  title = {RP2K: A large-scale retail product dataset for fine-grained image classification},
+  year = {2020},
 }
-        """,
+""",
     )
     skip_first_result = True

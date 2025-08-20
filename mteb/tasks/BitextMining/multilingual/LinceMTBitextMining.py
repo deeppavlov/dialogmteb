@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mteb.abstasks.AbsTaskBitextMining import AbsTaskBitextMining
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _LANGUAGES = {
     "eng-eng_hin": ["eng-Latn", "hin-Latn"],
@@ -30,13 +30,13 @@ class LinceMTBitextMining(AbsTaskBitextMining):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""
-        @inproceedings{aguilar2020lince,
-        title={LinCE: A Centralized Benchmark for Linguistic Code-switching Evaluation},
-        author={Aguilar, Gustavo and Kar, Sudipta and Solorio, Thamar},
-        booktitle={Proceedings of the Twelfth Language Resources and Evaluation Conference},
-        pages={1803--1813},
-        year={2020}
-        }
-        """,
+        bibtex_citation=r"""
+@inproceedings{aguilar2020lince,
+  author = {Aguilar, Gustavo and Kar, Sudipta and Solorio, Thamar},
+  booktitle = {Proceedings of the Twelfth Language Resources and Evaluation Conference},
+  pages = {1803--1813},
+  title = {LinCE: A Centralized Benchmark for Linguistic Code-switching Evaluation},
+  year = {2020},
+}
+""",
     )

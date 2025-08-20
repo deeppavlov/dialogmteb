@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from mteb.abstasks.Image.AbsTaskZeroShotClassification import (
-    AbsTaskZeroShotClassification,
+from mteb.abstasks.AbsTaskAnyZeroShotClassification import (
+    AbsTaskAnyZeroShotClassification,
 )
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class UCF101ZeroShotClassification(AbsTaskZeroShotClassification):
+class UCF101ZeroShotClassification(AbsTaskAnyZeroShotClassification):
     metadata = TaskMetadata(
         name="UCF101ZeroShot",
         description="""UCF101 is an action recognition data set of realistic
@@ -33,17 +33,19 @@ version train/test list.""",
         license="not specified",
         annotations_creators="derived",
         dialect=[],
-        modalities=["image"],
+        modalities=["image", "text"],
         sample_creation="created",
-        bibtex_citation="""@misc{soomro2012ucf101dataset101human,
-      title={UCF101: A Dataset of 101 Human Actions Classes From Videos in The Wild},
-      author={Khurram Soomro and Amir Roshan Zamir and Mubarak Shah},
-      year={2012},
-      eprint={1212.0402},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/1212.0402},
-}""",
+        bibtex_citation=r"""
+@misc{soomro2012ucf101dataset101human,
+  archiveprefix = {arXiv},
+  author = {Khurram Soomro and Amir Roshan Zamir and Mubarak Shah},
+  eprint = {1212.0402},
+  primaryclass = {cs.CV},
+  title = {UCF101: A Dataset of 101 Human Actions Classes From Videos in The Wild},
+  url = {https://arxiv.org/abs/1212.0402},
+  year = {2012},
+}
+""",
     )
 
     def get_candidate_labels(self) -> list[str]:

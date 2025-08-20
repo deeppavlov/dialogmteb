@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mteb.abstasks.AbsTaskBitextMining import AbsTaskBitextMining
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _LANGUAGES = {
     "eng-eng_hin": ["eng-Latn", "hin-Latn"],
@@ -30,13 +30,13 @@ class PhincBitextMining(AbsTaskBitextMining):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""
-        @inproceedings{srivastava2020phinc,
-        title={PHINC: A Parallel Hinglish Social Media Code-Mixed Corpus for Machine Translation},
-        author={Srivastava, Vivek and Singh, Mayank},
-        booktitle={Proceedings of the Sixth Workshop on Noisy User-generated Text (W-NUT 2020)},
-        pages={41--49},
-        year={2020}
-        }
-        """,
+        bibtex_citation=r"""
+@inproceedings{srivastava2020phinc,
+  author = {Srivastava, Vivek and Singh, Mayank},
+  booktitle = {Proceedings of the Sixth Workshop on Noisy User-generated Text (W-NUT 2020)},
+  pages = {41--49},
+  title = {PHINC: A Parallel Hinglish Social Media Code-Mixed Corpus for Machine Translation},
+  year = {2020},
+}
+""",
     )

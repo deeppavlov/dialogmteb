@@ -1,53 +1,35 @@
 from __future__ import annotations
 
-from .BitextMiningEvaluator import BitextMiningEvaluator
-from .ClassificationEvaluator import (
-    dot_distance,
-    kNNClassificationEvaluator,
-    logRegClassificationEvaluator,
-)
-from .ClusteringEvaluator import ClusteringEvaluator
-from .Evaluator import Evaluator
+from .any_sts_evaluator import AnySTSEvaluator
+from .bitext_mining_evaluator import BitextMiningEvaluator
+from .classification_evaluator import ClassificationEvaluator
+from .clustering_evaluator import ClusteringEvaluator
+from .evaluator import Evaluator
 from .Image import (
     Any2AnyMultiChoiceEvaluator,
     Any2AnyRetrievalEvaluator,
-    ImageClusteringEvaluator,
-    ImagekNNClassificationEvaluator,
-    ImagekNNClassificationEvaluatorPytorch,
-    ImagelogRegClassificationEvaluator,
     ImageTextPairClassificationEvaluator,
-    VisualSTSEvaluator,
-    ZeroShotClassificationEvaluator,
 )
-from .model_classes import DenseRetrievalExactSearch
-from .PairClassificationEvaluator import PairClassificationEvaluator
-from .RetrievalEvaluator import RetrievalEvaluator
-from .STSEvaluator import STSEvaluator
-from .SummarizationEvaluator import (
+from .pair_classification_evaluator import PairClassificationEvaluator
+from .retrieval_evaluator import RetrievalEvaluator
+from .summarization_evaluator import (
     DeprecatedSummarizationEvaluator,
     SummarizationEvaluator,
 )
+from .zeroshot_classification_evaluator import ZeroShotClassificationEvaluator
 
 __all__ = [
     "Evaluator",
-    "STSEvaluator",
+    "AnySTSEvaluator",
     "SummarizationEvaluator",
     "DeprecatedSummarizationEvaluator",
     "RetrievalEvaluator",
-    "DenseRetrievalExactSearch",
     "ClusteringEvaluator",
     "BitextMiningEvaluator",
     "PairClassificationEvaluator",
-    "kNNClassificationEvaluator",
-    "logRegClassificationEvaluator",
-    "dot_distance",
     "Any2AnyMultiChoiceEvaluator",
     "Any2AnyRetrievalEvaluator",
-    "ImagekNNClassificationEvaluator",
-    "ImagelogRegClassificationEvaluator",
-    "ImagekNNClassificationEvaluatorPytorch",
-    "ImageClusteringEvaluator",
     "ImageTextPairClassificationEvaluator",
-    "VisualSTSEvaluator",
     "ZeroShotClassificationEvaluator",
+    "ClassificationEvaluator",
 ]

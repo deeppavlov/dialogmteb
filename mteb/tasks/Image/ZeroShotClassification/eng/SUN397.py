@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from mteb.abstasks.Image.AbsTaskZeroShotClassification import (
-    AbsTaskZeroShotClassification,
+from mteb.abstasks.AbsTaskAnyZeroShotClassification import (
+    AbsTaskAnyZeroShotClassification,
 )
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class SUN397ZeroShotClassification(AbsTaskZeroShotClassification):
+class SUN397ZeroShotClassification(AbsTaskAnyZeroShotClassification):
     metadata = TaskMetadata(
         name="SUN397ZeroShot",
         description="Large scale scene recognition in 397 categories.",
@@ -31,16 +31,18 @@ class SUN397ZeroShotClassification(AbsTaskZeroShotClassification):
         dialect=[],
         modalities=["image", "text"],
         sample_creation="created",
-        bibtex_citation="""@INPROCEEDINGS{5539970,
-        author={Xiao, Jianxiong and Hays, James and Ehinger, Krista A. and Oliva, Aude and Torralba, Antonio},
-        booktitle={2010 IEEE Computer Society Conference on Computer Vision and Pattern Recognition},
-        title={SUN database: Large-scale scene recognition from abbey to zoo},
-        year={2010},
-        volume={},
-        number={},
-        pages={3485-3492},
-        doi={10.1109/CVPR.2010.5539970}}
-        """,
+        bibtex_citation=r"""
+@inproceedings{5539970,
+  author = {Xiao, Jianxiong and Hays, James and Ehinger, Krista A. and Oliva, Aude and Torralba, Antonio},
+  booktitle = {2010 IEEE Computer Society Conference on Computer Vision and Pattern Recognition},
+  doi = {10.1109/CVPR.2010.5539970},
+  number = {},
+  pages = {3485-3492},
+  title = {SUN database: Large-scale scene recognition from abbey to zoo},
+  volume = {},
+  year = {2010},
+}
+""",
     )
 
     def get_candidate_labels(self) -> list[str]:

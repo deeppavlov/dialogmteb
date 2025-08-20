@@ -4,11 +4,11 @@ import random
 
 from datasets import Dataset, DatasetDict
 
-from mteb.abstasks.AbsTaskClustering import AbsTaskClustering
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.AbsTaskAnyClustering import AbsTaskAnyClustering
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class ArxivClusteringP2P(AbsTaskClustering):
+class ArxivClusteringP2P(AbsTaskAnyClustering):
     superseded_by = "ArXivHierarchicalClusteringP2P"
 
     metadata = TaskMetadata(
@@ -32,19 +32,21 @@ class ArxivClusteringP2P(AbsTaskClustering):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@misc{arxiv_org_submitters_2024,
-    title={arXiv Dataset},
-    url={https://www.kaggle.com/dsv/7548853},
-    DOI={10.34740/KAGGLE/DSV/7548853},
-    publisher={Kaggle},
-    author={arXiv.org submitters},
-    year={2024}
-}""",
+        bibtex_citation=r"""
+@misc{arxiv_org_submitters_2024,
+  author = {arXiv.org submitters},
+  doi = {10.34740/KAGGLE/DSV/7548853},
+  publisher = {Kaggle},
+  title = {arXiv Dataset},
+  url = {https://www.kaggle.com/dsv/7548853},
+  year = {2024},
+}
+""",
         prompt="Identify the main and secondary category of Arxiv papers based on the titles and abstracts",
     )
 
 
-class ArxivClusteringP2PFast(AbsTaskClustering):
+class ArxivClusteringP2PFast(AbsTaskAnyClustering):
     superseded_by = "ArXivHierarchicalClusteringP2P"
     # a faster version of the dataset, since it does not sample from the same distribution we can't use the AbsTaskClusteringFast, instead we
     # simply downsample each cluster.
@@ -70,14 +72,16 @@ class ArxivClusteringP2PFast(AbsTaskClustering):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@misc{arxiv_org_submitters_2024,
-    title={arXiv Dataset},
-    url={https://www.kaggle.com/dsv/7548853},
-    DOI={10.34740/KAGGLE/DSV/7548853},
-    publisher={Kaggle},
-    author={arXiv.org submitters},
-    year={2024}
-}""",  # None found
+        bibtex_citation=r"""
+@misc{arxiv_org_submitters_2024,
+  author = {arXiv.org submitters},
+  doi = {10.34740/KAGGLE/DSV/7548853},
+  publisher = {Kaggle},
+  title = {arXiv Dataset},
+  url = {https://www.kaggle.com/dsv/7548853},
+  year = {2024},
+}
+""",  # None found
         prompt="Identify the main and secondary category of Arxiv papers based on the titles and abstracts",
         adapted_from=["ArxivClusteringP2P"],
     )

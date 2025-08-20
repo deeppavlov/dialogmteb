@@ -3,7 +3,7 @@ from __future__ import annotations
 import datasets
 
 from mteb.abstasks.AbsTaskPairClassification import AbsTaskPairClassification
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 class FarsTail(AbsTaskPairClassification):
@@ -28,14 +28,16 @@ class FarsTail(AbsTaskPairClassification):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@article{amirkhani2023farstail,
-        title={FarsTail: a Persian natural language inference dataset},
-        author={Amirkhani, Hossein and AzariJafari, Mohammad and Faridan-Jahromi, Soroush and Kouhkan, Zeinab and Pourjafari, Zohreh and Amirak, Azadeh},
-        journal={Soft Computing},
-        year={2023},
-        publisher={Springer},
-        doi={10.1007/s00500-023-08959-3}
-        }""",  # after removing neutral
+        bibtex_citation=r"""
+@article{amirkhani2023farstail,
+  author = {Amirkhani, Hossein and AzariJafari, Mohammad and Faridan-Jahromi, Soroush and Kouhkan, Zeinab and Pourjafari, Zohreh and Amirak, Azadeh},
+  doi = {10.1007/s00500-023-08959-3},
+  journal = {Soft Computing},
+  publisher = {Springer},
+  title = {FarsTail: a Persian natural language inference dataset},
+  year = {2023},
+}
+""",  # after removing neutral
     )
 
     def load_data(self, **kwargs):

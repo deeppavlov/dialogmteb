@@ -3,7 +3,7 @@ from __future__ import annotations
 import datasets
 
 from mteb.abstasks.AbsTaskBitextMining import AbsTaskBitextMining
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 class DiaBLaBitextMining(AbsTaskBitextMining):
@@ -32,15 +32,15 @@ class DiaBLaBitextMining(AbsTaskBitextMining):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="created",
-        bibtex_citation="""
-        @inproceedings{gonzalez2019diabla,
-        title={DiaBLa: A Corpus of Bilingual Spontaneous Written Dialogues for Machine Translation},
-        author={González, Matilde and García, Clara and Sánchez, Lucía},
-        booktitle={Proceedings of the 12th Language Resources and Evaluation Conference},
-        pages={4192--4198},
-        year={2019}
-        }
-        """,
+        bibtex_citation=r"""
+@inproceedings{gonzalez2019diabla,
+  author = {González, Matilde and García, Clara and Sánchez, Lucía},
+  booktitle = {Proceedings of the 12th Language Resources and Evaluation Conference},
+  pages = {4192--4198},
+  title = {DiaBLa: A Corpus of Bilingual Spontaneous Written Dialogues for Machine Translation},
+  year = {2019},
+}
+""",
     )
 
     def load_data(self, **kwargs):

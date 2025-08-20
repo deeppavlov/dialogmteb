@@ -8,17 +8,18 @@ from collections import Counter, defaultdict
 
 import pandas as pd
 
-from mteb.abstasks import AbsTask, AbsTaskMultilabelClassification
+from mteb.abstasks import (
+    AbsTask,
+    AbsTaskMultilabelClassification,
+)
 from mteb.abstasks.AbsTaskReranking import AbsTaskReranking
-from mteb.abstasks.TaskMetadata import TASK_CATEGORY, TASK_DOMAIN, TASK_TYPE
-from mteb.custom_validators import MODALITIES
+from mteb.abstasks.task_metadata import TaskCategory, TaskDomain, TaskType
 from mteb.languages import (
     ISO_TO_LANGUAGE,
     ISO_TO_SCRIPT,
-    path_to_lang_codes,
-    path_to_lang_scripts,
 )
 from mteb.tasks import *  # import all tasks
+from mteb.types import Modalities
 
 logger = logging.getLogger(__name__)
 
@@ -79,14 +80,14 @@ SIMILAR_TASKS = create_similar_tasks()
 def check_is_valid_script(script: str) -> None:
     if script not in ISO_TO_SCRIPT:
         raise ValueError(
-            f"Invalid script code: {script}, you can find valid ISO 15924 codes in {path_to_lang_scripts}"
+            f"Invalid script code: '{script}', you can see valid ISO 15924 codes using `from mteb.languages import ISO_TO_SCRIPT`."
         )
 
 
 def check_is_valid_language(lang: str) -> None:
     if lang not in ISO_TO_LANGUAGE:
         raise ValueError(
-            f"Invalid language code: {lang}, you can find valid ISO 639-3 codes in {path_to_lang_codes}"
+            f"Invalid language code: '{lang}', you can see valid ISO 639-3 codes using `from mteb.langauges import ISO_TO_LANGUAGE`."
         )
 
 
@@ -109,11 +110,11 @@ def filter_tasks_by_script(tasks: list[AbsTask], script: list[str]) -> list[AbsT
 
 
 def filter_tasks_by_domains(
-    tasks: list[AbsTask], domains: list[TASK_DOMAIN]
+    tasks: list[AbsTask], domains: list[TaskDomain]
 ) -> list[AbsTask]:
     domains_to_keep = set(domains)
 
-    def _convert_to_set(domain: list[TASK_DOMAIN] | None) -> set:
+    def _convert_to_set(domain: list[TaskDomain] | None) -> set:
         return set(domain) if domain is not None else set()
 
     return [
@@ -124,14 +125,14 @@ def filter_tasks_by_domains(
 
 
 def filter_tasks_by_task_types(
-    tasks: list[AbsTask], task_types: list[TASK_TYPE]
+    tasks: list[AbsTask], task_types: list[TaskType]
 ) -> list[AbsTask]:
     _task_types = set(task_types)
     return [t for t in tasks if t.metadata.type in _task_types]
 
 
 def filter_task_by_categories(
-    tasks: list[AbsTask], categories: list[TASK_CATEGORY]
+    tasks: list[AbsTask], categories: list[TaskCategory]
 ) -> list[AbsTask]:
     _categories = set(categories)
     return [t for t in tasks if t.metadata.category in _categories]
@@ -139,7 +140,7 @@ def filter_task_by_categories(
 
 def filter_tasks_by_modalities(
     tasks: list[AbsTask],
-    modalities: list[MODALITIES],
+    modalities: list[Modalities],
     exclude_modality_filter: bool = False,
 ) -> list[AbsTask]:
     _modalities = set(modalities)
@@ -147,6 +148,15 @@ def filter_tasks_by_modalities(
         return [t for t in tasks if set(t.modalities) == _modalities]
     else:
         return [t for t in tasks if _modalities.intersection(t.modalities)]
+
+
+def filter_aggregate_tasks(tasks: list[AbsTask]) -> list[AbsTask]:
+    """Returns input tasks that are *not* aggregate.
+
+    Args:
+        tasks: A list of tasks to filter.
+    """
+    return [t for t in tasks if not t.is_aggregate]
 
 
 class MTEBTasks(tuple):
@@ -285,14 +295,15 @@ def get_tasks(
     *,
     languages: list[str] | None = None,
     script: list[str] | None = None,
-    domains: list[TASK_DOMAIN] | None = None,
-    task_types: list[TASK_TYPE] | None = None,
-    categories: list[TASK_CATEGORY] | None = None,
+    domains: list[TaskDomain] | None = None,
+    task_types: list[TaskType] | None = None,
+    categories: list[TaskCategory] | None = None,
     exclude_superseded: bool = True,
     eval_splits: list[str] | None = None,
     exclusive_language_filter: bool = False,
-    modalities: list[MODALITIES] | None = None,
+    modalities: list[Modalities] | None = None,
     exclusive_modality_filter: bool = False,
+    exclude_aggregate: bool = False,
 ) -> MTEBTasks:
     """Get a list of tasks based on the specified filters.
 
@@ -314,6 +325,7 @@ def get_tasks(
         exclusive_modality_filter: If True, only keep tasks where _all_ filter modalities are included in the
             task's modalities and ALL task modalities are in filter modalities (exact match).
             If False, keep tasks if _any_ of the task's modalities match the filter modalities.
+        exclude_aggregate: If True, exclude aggregate tasks. If False, both aggregate and non-aggregate tasks are returned.
 
     Returns:
         A list of all initialized tasks objects which pass all of the filters (AND operation).
@@ -364,8 +376,13 @@ def get_tasks(
         _tasks = filter_tasks_by_modalities(
             _tasks, modalities, exclusive_modality_filter
         )
+    if exclude_aggregate:
+        _tasks = filter_aggregate_tasks(_tasks)
 
     return MTEBTasks(_tasks)
+
+
+_TASK_RENAMES = {"PersianTextTone": "SynPerTextToneClassification"}
 
 
 def get_task(
@@ -375,7 +392,7 @@ def get_task(
     eval_splits: list[str] | None = None,
     hf_subsets: list[str] | None = None,
     exclusive_language_filter: bool = False,
-    modalities: list[MODALITIES] | None = None,
+    modalities: list[Modalities] | None = None,
     exclusive_modality_filter: bool = False,
 ) -> AbsTask:
     """Get a task by name.
@@ -401,6 +418,12 @@ def get_task(
     Examples:
         >>> get_task("BornholmBitextMining")
     """
+    if task_name in _TASK_RENAMES:
+        _task_name = _TASK_RENAMES[task_name]
+        logger.warning(
+            f"The task with the given name '{task_name}' has been renamed to '{_task_name}'. To prevent this warning use the new name."
+        )
+
     if task_name not in TASKS_REGISTRY:
         close_matches = difflib.get_close_matches(task_name, TASKS_REGISTRY.keys())
         if close_matches:

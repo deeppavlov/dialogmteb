@@ -5,17 +5,17 @@ import itertools
 import numpy as np
 from datasets import Dataset, DatasetDict
 
-from mteb.abstasks.AbsTaskClustering import AbsTaskClustering
+from mteb.abstasks.AbsTaskAnyClustering import AbsTaskAnyClustering
 from mteb.abstasks.AbsTaskClusteringFast import (
     AbsTaskClusteringFast,
     check_label_distribution,
 )
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 NUM_SAMPLES = 2048
 
 
-class BlurbsClusteringS2S(AbsTaskClustering):
+class BlurbsClusteringS2S(AbsTaskAnyClustering):
     superseded_by = "BlurbsClusteringS2S.v2"
 
     metadata = TaskMetadata(
@@ -33,19 +33,21 @@ class BlurbsClusteringS2S(AbsTaskClustering):
         eval_langs=["deu-Latn"],
         main_score="v_measure",
         date=None,
-        domains=None,
+        domains=["Written"],
         task_subtypes=None,
         license=None,
         annotations_creators=None,
         dialect=None,
         sample_creation=None,
-        bibtex_citation="""@inproceedings{Remus2019GermEval2T,
-  title={GermEval 2019 Task 1: Hierarchical Classification of Blurbs},
-  author={Steffen Remus and Rami Aly and Chris Biemann},
-  booktitle={Conference on Natural Language Processing},
-  year={2019},
-  url={https://api.semanticscholar.org/CorpusID:208334484}
-}""",
+        bibtex_citation=r"""
+@inproceedings{Remus2019GermEval2T,
+  author = {Steffen Remus and Rami Aly and Chris Biemann},
+  booktitle = {Conference on Natural Language Processing},
+  title = {GermEval 2019 Task 1: Hierarchical Classification of Blurbs},
+  url = {https://api.semanticscholar.org/CorpusID:208334484},
+  year = {2019},
+}
+""",
     )
 
 
@@ -80,13 +82,15 @@ class BlurbsClusteringS2SFast(AbsTaskClusteringFast):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@inproceedings{Remus2019GermEval2T,
-  title={GermEval 2019 Task 1: Hierarchical Classification of Blurbs},
-  author={Steffen Remus and Rami Aly and Chris Biemann},
-  booktitle={Conference on Natural Language Processing},
-  year={2019},
-  url={https://api.semanticscholar.org/CorpusID:208334484}
-}""",
+        bibtex_citation=r"""
+@inproceedings{Remus2019GermEval2T,
+  author = {Steffen Remus and Rami Aly and Chris Biemann},
+  booktitle = {Conference on Natural Language Processing},
+  title = {GermEval 2019 Task 1: Hierarchical Classification of Blurbs},
+  url = {https://api.semanticscholar.org/CorpusID:208334484},
+  year = {2019},
+}
+""",
         adapted_from=["BlurbsClusteringS2S"],
     )
 

@@ -3,15 +3,15 @@ from __future__ import annotations
 import datasets
 import numpy as np
 
-from mteb.abstasks.AbsTaskClustering import AbsTaskClustering
+from mteb.abstasks.AbsTaskAnyClustering import AbsTaskAnyClustering
 from mteb.abstasks.AbsTaskClusteringFast import (
     AbsTaskClusteringFast,
     check_label_distribution,
 )
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class AlloProfClusteringP2P(AbsTaskClustering):
+class AlloProfClusteringP2P(AbsTaskAnyClustering):
     superseded_by = "AlloProfClusteringP2P.v2"
 
     metadata = TaskMetadata(
@@ -30,23 +30,25 @@ class AlloProfClusteringP2P(AbsTaskClustering):
         eval_splits=["test"],
         eval_langs=["fra-Latn"],
         main_score="v_measure",
-        date=None,
-        domains=None,
-        task_subtypes=None,
-        license=None,
-        annotations_creators=None,
+        date=("1996-01-01", "2023-04-14"),
+        domains=["Encyclopaedic", "Written"],
+        task_subtypes=["Thematic clustering"],
+        license="mit",
+        annotations_creators="human-annotated",
         dialect=None,
-        sample_creation=None,
-        bibtex_citation="""@misc{lef23,
-  doi = {10.48550/ARXIV.2302.07738},
-  url = {https://arxiv.org/abs/2302.07738},
+        sample_creation="found",
+        bibtex_citation=r"""
+@misc{lef23,
   author = {Lefebvre-Brossard, Antoine and Gazaille, Stephane and Desmarais, Michel C.},
+  copyright = {Creative Commons Attribution Non Commercial Share Alike 4.0 International},
+  doi = {10.48550/ARXIV.2302.07738},
   keywords = {Computation and Language (cs.CL), Information Retrieval (cs.IR), Machine Learning (cs.LG), FOS: Computer and information sciences, FOS: Computer and information sciences},
-  title = {Alloprof: a new French question-answer education dataset and its use in an information retrieval case study},
   publisher = {arXiv},
+  title = {Alloprof: a new French question-answer education dataset and its use in an information retrieval case study},
+  url = {https://arxiv.org/abs/2302.07738},
   year = {2023},
-  copyright = {Creative Commons Attribution Non Commercial Share Alike 4.0 International}
-}""",
+}
+""",
     )
 
     def create_description(self, example):
@@ -95,15 +97,16 @@ class AlloProfClusteringP2PFast(AbsTaskClusteringFast):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@misc{lef23,
-  doi = {10.48550/ARXIV.2302.07738},
-  url = {https://arxiv.org/abs/2302.07738},
+        bibtex_citation=r"""
+@misc{lef23,
   author = {Lefebvre-Brossard, Antoine and Gazaille, Stephane and Desmarais, Michel C.},
+  copyright = {Creative Commons Attribution Non Commercial Share Alike 4.0 International},
+  doi = {10.48550/ARXIV.2302.07738},
   keywords = {Computation and Language (cs.CL), Information Retrieval (cs.IR), Machine Learning (cs.LG), FOS: Computer and information sciences, FOS: Computer and information sciences},
-  title = {Alloprof: a new French question-answer education dataset and its use in an information retrieval case study},
   publisher = {arXiv},
+  title = {Alloprof: a new French question-answer education dataset and its use in an information retrieval case study},
+  url = {https://arxiv.org/abs/2302.07738},
   year = {2023},
-  copyright = {Creative Commons Attribution Non Commercial Share Alike 4.0 International}
 }
 """,
         adapted_from=["AlloProfClusteringP2P"],

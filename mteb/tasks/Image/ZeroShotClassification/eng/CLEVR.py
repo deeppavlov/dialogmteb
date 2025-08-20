@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from mteb.abstasks.Image.AbsTaskZeroShotClassification import (
-    AbsTaskZeroShotClassification,
+from mteb.abstasks.AbsTaskAnyZeroShotClassification import (
+    AbsTaskAnyZeroShotClassification,
 )
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class CLEVR(AbsTaskZeroShotClassification):
+class CLEVR(AbsTaskAnyZeroShotClassification):
     metadata = TaskMetadata(
         name="CLEVRZeroShot",
         description="CLEVR closest object distance identification task.",
@@ -28,17 +28,18 @@ class CLEVR(AbsTaskZeroShotClassification):
         dialect=[],
         modalities=["text", "image"],
         sample_creation="created",
-        bibtex_citation="""\
-@InProceedings{Johnson_2017_CVPR,
-author = {Johnson, Justin and Hariharan, Bharath and van der Maaten, Laurens and Fei-Fei, Li and Lawrence Zitnick, C. and Girshick, Ross},
-title = {CLEVR: A Diagnostic Dataset for Compositional Language and Elementary Visual Reasoning},
-booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
-month = {July},
-year = {2017}
-}""",
+        bibtex_citation=r"""
+@inproceedings{Johnson_2017_CVPR,
+  author = {Johnson, Justin and Hariharan, Bharath and van der Maaten, Laurens and Fei-Fei, Li and Lawrence Zitnick, C. and Girshick, Ross},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  month = {July},
+  title = {CLEVR: A Diagnostic Dataset for Compositional Language and Elementary Visual Reasoning},
+  year = {2017},
+}
+""",
     )
 
-    image_column_name: str = "webp"
+    input_column_name: str = "webp"
     label_column_name: str = "cls"
 
     def get_candidate_labels(self) -> list[str]:
@@ -54,7 +55,7 @@ year = {2017}
         return [f"{c} shapes." for c in labels]
 
 
-class CLEVRCount(AbsTaskZeroShotClassification):
+class CLEVRCount(AbsTaskAnyZeroShotClassification):
     metadata = TaskMetadata(
         name="CLEVRCountZeroShot",
         description="CLEVR count objects task.",
@@ -76,17 +77,18 @@ class CLEVRCount(AbsTaskZeroShotClassification):
         dialect=[],
         modalities=["text", "image"],
         sample_creation="created",
-        bibtex_citation="""\
-@InProceedings{Johnson_2017_CVPR,
-author = {Johnson, Justin and Hariharan, Bharath and van der Maaten, Laurens and Fei-Fei, Li and Lawrence Zitnick, C. and Girshick, Ross},
-title = {CLEVR: A Diagnostic Dataset for Compositional Language and Elementary Visual Reasoning},
-booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
-month = {July},
-year = {2017}
-}""",
+        bibtex_citation=r"""
+@inproceedings{Johnson_2017_CVPR,
+  author = {Johnson, Justin and Hariharan, Bharath and van der Maaten, Laurens and Fei-Fei, Li and Lawrence Zitnick, C. and Girshick, Ross},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  month = {July},
+  title = {CLEVR: A Diagnostic Dataset for Compositional Language and Elementary Visual Reasoning},
+  year = {2017},
+}
+""",
     )
 
-    image_column_name: str = "webp"
+    input_column_name: str = "webp"
     label_column_name: str = "cls"
 
     def get_candidate_labels(self) -> list[str]:

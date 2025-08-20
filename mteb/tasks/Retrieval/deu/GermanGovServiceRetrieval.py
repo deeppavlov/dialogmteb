@@ -4,7 +4,7 @@ import hashlib
 
 import datasets
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
@@ -32,18 +32,20 @@ class GermanGovServiceRetrieval(AbsTaskRetrieval):
         license="mit",
         annotations_creators="derived",
         dialect=[],
-        bibtex_citation="""@software{lhm-dienstleistungen-qa,
-  author       = {Schröder, Leon Marius and
-                  Gutknecht, Clemens and
-                  Alkiddeh, Oubada and
-                  Susanne Weiß,
-                  Lukas, Leon},
-  title        = {LHM-Dienstleistungen-QA - german public domain question-answering dataset},
-  month        = nov,
-  year         = 2022,
-  publisher    = {it@M},
-  url          = {https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA}
-}""",
+        bibtex_citation=r"""
+@software{lhm-dienstleistungen-qa,
+  author = {Schröder, Leon Marius and
+Gutknecht, Clemens and
+Alkiddeh, Oubada and
+Susanne Weiß,
+Lukas, Leon},
+  month = nov,
+  publisher = {it@M},
+  title = {LHM-Dienstleistungen-QA - german public domain question-answering dataset},
+  url = {https://huggingface.co/datasets/it-at-m/LHM-Dienstleistungen-QA},
+  year = {2022},
+}
+""",
         sample_creation="found",
     )
 

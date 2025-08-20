@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import datasets
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
@@ -31,16 +31,18 @@ class CQADupstackWebmastersNLRetrieval(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated and verified",  # manually checked a small subset
-        bibtex_citation="""@misc{banar2024beirnlzeroshotinformationretrieval,
-    title={BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language},
-     author={Nikolay Banar and Ehsan Lotfi and Walter Daelemans},
-     year={2024},
-     eprint={2412.08329},
-     archivePrefix={arXiv},
-     primaryClass={cs.CL},
-     url={https://arxiv.org/abs/2412.08329},
-}""",
-        adapted_from=["CQADupstackWebmasters"],
+        bibtex_citation=r"""
+@misc{banar2024beirnlzeroshotinformationretrieval,
+  archiveprefix = {arXiv},
+  author = {Nikolay Banar and Ehsan Lotfi and Walter Daelemans},
+  eprint = {2412.08329},
+  primaryclass = {cs.CL},
+  title = {BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language},
+  url = {https://arxiv.org/abs/2412.08329},
+  year = {2024},
+}
+""",
+        adapted_from=["CQADupstackWebmastersRetrieval"],
     )
 
     def load_data(self, **kwargs):

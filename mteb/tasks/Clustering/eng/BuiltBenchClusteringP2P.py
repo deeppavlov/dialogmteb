@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from mteb.abstasks.AbsTaskClustering import AbsTaskClustering
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.AbsTaskAnyClustering import AbsTaskAnyClustering
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class BuiltBenchClusteringP2P(AbsTaskClustering):
+class BuiltBenchClusteringP2P(AbsTaskAnyClustering):
     metadata = TaskMetadata(
         name="BuiltBenchClusteringP2P",
         description="Clustering of built asset item descriptions based on categories identified within industry classification systems such as IFC, Uniclass, etc.",
@@ -26,11 +26,13 @@ class BuiltBenchClusteringP2P(AbsTaskClustering):
         annotations_creators="derived",
         dialect=[],
         sample_creation="created",
-        bibtex_citation="""@article{shahinmoghadam2024benchmarking,
-    title={Benchmarking pre-trained text embedding models in aligning built asset information},
-    author={Shahinmoghadam, Mehrzad and Motamedi, Ali},
-    journal={arXiv preprint arXiv:2411.12056},
-    year={2024}
-}""",
+        bibtex_citation=r"""
+@article{shahinmoghadam2024benchmarking,
+  author = {Shahinmoghadam, Mehrzad and Motamedi, Ali},
+  journal = {arXiv preprint arXiv:2411.12056},
+  title = {Benchmarking pre-trained text embedding models in aligning built asset information},
+  year = {2024},
+}
+""",
         prompt="Identify the category of the built asset entities based on the entity description",
     )

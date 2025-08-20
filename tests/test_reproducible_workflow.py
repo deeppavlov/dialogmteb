@@ -8,8 +8,8 @@ import pytest
 import mteb
 from mteb import MTEB
 from mteb.abstasks import AbsTask
-from mteb.encoder_interface import Encoder
-from mteb.model_meta import ModelMeta
+from mteb.models.model_meta import ModelMeta
+from mteb.models.models_protocols import Encoder
 from tests.test_benchmark.mock_models import AbsMockEncoder
 from tests.test_benchmark.task_grid import TASK_TEST_GRID
 
@@ -51,7 +51,6 @@ def test_reproducibility_workflow(
         "Summarization",
         "InstructionRetrieval",
         "InstructionReranking",
-        "Speed",
     ),
 )
 def test_validate_task_to_prompt_name(task_name: str | AbsTask):

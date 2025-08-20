@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from mteb.abstasks.AbsTaskClustering import AbsTaskClustering
+from mteb.abstasks.AbsTaskAnyClustering import AbsTaskAnyClustering
 from mteb.abstasks.AbsTaskClusteringFast import AbsTaskClusteringFast, convert_to_fast
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class TenKGnadClusteringS2S(AbsTaskClustering):
+class TenKGnadClusteringS2S(AbsTaskAnyClustering):
     superseded_by = "TenKGnadClusteringS2S.v2"
 
     metadata = TaskMetadata(
@@ -23,8 +23,8 @@ class TenKGnadClusteringS2S(AbsTaskClustering):
         eval_langs=["deu-Latn"],
         main_score="v_measure",
         date=None,
-        domains=None,
-        task_subtypes=None,
+        domains=["News", "Non-fiction", "Written"],
+        task_subtypes=["Topic classification"],
         license=None,
         annotations_creators=None,
         dialect=None,
@@ -56,7 +56,7 @@ class TenKGnadClusteringS2SFast(AbsTaskClusteringFast):
             "2020-12-31",
         ),  # since it is news it is guessed that it is from 2000 to 2020
         domains=["News", "Non-fiction", "Written"],
-        task_subtypes=None,
+        task_subtypes=["Topic classification"],
         license="cc-by-sa-4.0",
         annotations_creators="derived",
         dialect=[],

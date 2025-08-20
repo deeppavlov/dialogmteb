@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
@@ -83,7 +83,7 @@ class CQADupstackAndroidRetrievalFa(AbsTaskRetrieval):
         dialect=[],
         sample_creation="found",
         bibtex_citation=""" """,
-        adapted_from=["CQADupstackAndroid"],
+        adapted_from=["CQADupstackAndroidRetrieval"],
     )
 
 
@@ -110,7 +110,7 @@ class CQADupstackEnglishRetrievalFa(AbsTaskRetrieval):
         dialect=[],
         sample_creation="found",
         bibtex_citation=""" """,
-        adapted_from=["CQADupstackEnglish"],
+        adapted_from=["CQADupstackEnglishRetrieval"],
     )
 
 
@@ -353,7 +353,7 @@ class CQADupstackWebmastersRetrievalFa(AbsTaskRetrieval):
         dialect=[],
         sample_creation="found",
         bibtex_citation=""" """,
-        adapted_from=["CQADupstackWebmasters"],
+        adapted_from=["CQADupstackWebmastersRetrieval"],
     )
 
 

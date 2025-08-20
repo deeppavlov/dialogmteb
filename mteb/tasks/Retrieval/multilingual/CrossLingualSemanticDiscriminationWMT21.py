@@ -3,7 +3,7 @@ from __future__ import annotations
 import datasets
 
 from mteb.abstasks.AbsTaskRetrieval import AbsTaskRetrieval
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _LANGUAGES = {
     "wmt21.de.fr": ["deu-Latn", "fra-Latn"],
@@ -51,7 +51,7 @@ class CrossLingualSemanticDiscriminationWMT21(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="LM-generated and verified",
-        bibtex_citation="preprint_coming",
+        bibtex_citation="",  # preprint_coming
     )
 
     num_of_distractors = 4

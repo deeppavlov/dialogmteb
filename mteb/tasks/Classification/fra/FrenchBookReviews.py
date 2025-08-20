@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from mteb.abstasks.AbsTaskClassification import AbsTaskClassification
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.AbsTaskAnyClassification import AbsTaskAnyClassification
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class FrenchBookReviews(AbsTaskClassification):
+class FrenchBookReviews(AbsTaskAnyClassification):
     metadata = TaskMetadata(
         name="FrenchBookReviews",
         dataset={

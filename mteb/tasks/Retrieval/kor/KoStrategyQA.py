@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
@@ -27,10 +27,12 @@ class KoStrategyQA(AbsTaskRetrieval):
         annotations_creators=None,
         dialect=None,
         sample_creation=None,
-        bibtex_citation="""@article{geva2021strategyqa,
-  title = {{Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies}},
+        bibtex_citation=r"""
+@article{geva2021strategyqa,
   author = {Geva, Mor and Khashabi, Daniel and Segal, Elad and Khot, Tushar and Roth, Dan and Berant, Jonathan},
   journal = {Transactions of the Association for Computational Linguistics (TACL)},
+  title = {{Did Aristotle Use a Laptop? A Question Answering Benchmark with Implicit Reasoning Strategies}},
   year = {2021},
-}""",
+}
+""",
     )

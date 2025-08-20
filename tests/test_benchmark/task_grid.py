@@ -12,7 +12,6 @@ from .mock_tasks import (
     MockClassificationTask,
     MockClusteringFastTask,
     MockClusteringTask,
-    MockImageClassificationKNNTask,
     MockImageClassificationTask,
     MockImageClusteringTask,
     MockImageMultilabelClassificationTask,
@@ -40,9 +39,11 @@ from .mock_tasks import (
     MockMultilingualSummarizationTask,
     MockPairClassificationTask,
     MockRerankingTask,
+    MockRetrievalDialogTask,
     MockRetrievalTask,
     MockSTSTask,
     MockSummarizationTask,
+    MockTextZeroShotClassificationTask,
     MockVisualSTSTask,
     MockZeroShotClassificationTask,
 )
@@ -100,6 +101,8 @@ MOCK_TASK_TEST_GRID = [
     MockMultilingualInstructionRetrieval(),
     MockMultilingualInstructionReranking(),
     MockInstructionReranking(),
+    MockRetrievalDialogTask(),
+    MockTextZeroShotClassificationTask(),
 ]
 
 MOCK_TASK_TEST_GRID_AS_STRING = [
@@ -113,7 +116,6 @@ MOCK_MIEB_TASK_GRID = [
     MockAny2AnyRetrievalT2ITask(),
     MockMultiChoiceTask(),
     MockImageClassificationTask(),
-    MockImageClassificationKNNTask(),
     MockImageClusteringTask(),
     MockImageTextPairClassificationTask(),
     MockVisualSTSTask(),
@@ -132,3 +134,11 @@ MOCK_MIEB_TASK_GRID_AS_STRING = [
 MOCK_MIEB_TASK_REGISTRY = {
     task.metadata.name: type(task) for task in MOCK_MIEB_TASK_GRID
 }
+
+ALL_TASK_TEST_GRID = MOCK_TASK_TEST_GRID + MOCK_MIEB_TASK_GRID
+
+ALL_TASK_TEST_GRID_AS_STRING = [
+    t.metadata.name if isinstance(t, AbsTask) else t for t in ALL_TASK_TEST_GRID
+]
+
+ALL_MOCK_TASK_REGISTRY = {task.metadata.name: type(task) for task in ALL_TASK_TEST_GRID}

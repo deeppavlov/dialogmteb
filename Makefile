@@ -6,7 +6,7 @@ install:
 install-for-tests:
 	@echo "--- 🚀 Installing project dependencies for test ---"
 	@echo "This ensures that the project is not installed in editable mode"
-	pip install ".[dev,bm25s,pylate,image]"
+	pip install ".[dev,bm25s,pylate,image,codecarbon]"
 
 lint:
 	@echo "--- 🧹 Running linters ---"
@@ -21,7 +21,7 @@ lint-check:
 
 test:
 	@echo "--- 🧪 Running tests ---"
-	pytest -n auto -m "not test_datasets"
+	pytest -n auto -m "not (test_datasets or leaderboard_stability)"
 
 
 test-with-coverage:
@@ -38,6 +38,7 @@ build-docs:
 	@echo "--- 📚 Building documentation ---"
 	# since we do not have a documentation site, this just build tables for the .md files
 	python docs/create_tasks_table.py
+	python docs/create_benchmarks_table.py
 
 serve-docs:
 	@echo "--- 📚 Serving documentation ---"
@@ -55,10 +56,18 @@ dataset-load-test:
 	@echo "--- 🚀 Running dataset load test ---"
 	pytest -n auto -m test_datasets
 
+leaderboard-build-test:
+	@echo "--- 🚀 Running leaderboard build test ---"
+	pytest -n auto -m leaderboard_stability
 
 run-leaderboard:
 	@echo "--- 🚀 Running leaderboard locally ---"
 	python -m mteb.leaderboard.app
+
+format-citations:
+	@echo "--- 🧹 Formatting citations ---"
+	python scripts/format_citations.py benchmarks
+	python scripts/format_citations.py tasks
 
 
 .PHONY: check

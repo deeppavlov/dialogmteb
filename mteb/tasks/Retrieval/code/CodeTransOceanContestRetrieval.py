@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mteb.abstasks.AbsTaskRetrieval import AbsTaskRetrieval
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _EVAL_SPLIT = "test"
 
@@ -28,13 +28,15 @@ class CodeTransOceanContestRetrieval(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@misc{yan2023codetransoceancomprehensivemultilingualbenchmark,
-              title={CodeTransOcean: A Comprehensive Multilingual Benchmark for Code Translation},
-              author={Weixiang Yan and Yuchen Tian and Yunzhe Li and Qian Chen and Wen Wang},
-              year={2023},
-              eprint={2310.04951},
-              archivePrefix={arXiv},
-              primaryClass={cs.AI},
-              url={https://arxiv.org/abs/2310.04951},
-        }""",
+        bibtex_citation=r"""
+@misc{yan2023codetransoceancomprehensivemultilingualbenchmark,
+  archiveprefix = {arXiv},
+  author = {Weixiang Yan and Yuchen Tian and Yunzhe Li and Qian Chen and Wen Wang},
+  eprint = {2310.04951},
+  primaryclass = {cs.AI},
+  title = {CodeTransOcean: A Comprehensive Multilingual Benchmark for Code Translation},
+  url = {https://arxiv.org/abs/2310.04951},
+  year = {2023},
+}
+""",
     )

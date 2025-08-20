@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from mteb.abstasks.Image.AbsTaskZeroShotClassification import (
-    AbsTaskZeroShotClassification,
+from mteb.abstasks.AbsTaskAnyZeroShotClassification import (
+    AbsTaskAnyZeroShotClassification,
 )
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class DTDZeroShotClassification(AbsTaskZeroShotClassification):
+class DTDZeroShotClassification(AbsTaskAnyZeroShotClassification):
     metadata = TaskMetadata(
         name="DTDZeroShot",
         description="Describable Textures Dataset in 47 categories.",
@@ -31,12 +31,14 @@ class DTDZeroShotClassification(AbsTaskZeroShotClassification):
         dialect=[],
         modalities=["image", "text"],
         sample_creation="created",
-        bibtex_citation="""@InProceedings{cimpoi14describing,
-            Author    = {M. Cimpoi and S. Maji and I. Kokkinos and S. Mohamed and and A. Vedaldi},
-            Title     = {Describing Textures in the Wild},
-            Booktitle = {Proceedings of the {IEEE} Conf. on Computer Vision and Pattern Recognition ({CVPR})},
-            Year      = {2014}}
-        """,
+        bibtex_citation=r"""
+@inproceedings{cimpoi14describing,
+  author = {M. Cimpoi and S. Maji and I. Kokkinos and S. Mohamed and and A. Vedaldi},
+  booktitle = {Proceedings of the {IEEE} Conf. on Computer Vision and Pattern Recognition ({CVPR})},
+  title = {Describing Textures in the Wild},
+  year = {2014},
+}
+""",
     )
 
     def get_candidate_labels(self) -> list[str]:

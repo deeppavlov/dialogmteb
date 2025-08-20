@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mteb.abstasks.AbsTaskRetrieval import AbsTaskRetrieval
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _EVAL_SPLIT = "test"
 
@@ -28,10 +28,12 @@ class AppsRetrieval(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@article{hendrycksapps2021,
-          title={Measuring Coding Challenge Competence With APPS},
-          author={Dan Hendrycks and Steven Basart and Saurav Kadavath and Mantas Mazeika and Akul Arora and Ethan Guo and Collin Burns and Samir Puranik and Horace He and Dawn Song and Jacob Steinhardt},
-          journal={NeurIPS},
-          year={2021}
-        }""",
+        bibtex_citation=r"""
+@article{hendrycksapps2021,
+  author = {Dan Hendrycks and Steven Basart and Saurav Kadavath and Mantas Mazeika and Akul Arora and Ethan Guo and Collin Burns and Samir Puranik and Horace He and Dawn Song and Jacob Steinhardt},
+  journal = {NeurIPS},
+  title = {Measuring Coding Challenge Competence With APPS},
+  year = {2021},
+}
+""",
     )

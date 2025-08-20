@@ -5,7 +5,7 @@ from collections import defaultdict
 import datasets
 
 from mteb.abstasks.AbsTaskRetrieval import AbsTaskRetrieval
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 DOMAINS_LONG = [
     "biology",
@@ -36,9 +36,9 @@ def load_bright_data(
     cache_dir: str | None = None,
     revision: str | None = None,
 ):
-    corpus = {domain: dict.fromkeys(eval_splits) for domain in DOMAINS}
-    queries = {domain: dict.fromkeys(eval_splits) for domain in DOMAINS}
-    relevant_docs = {domain: dict.fromkeys(eval_splits) for domain in DOMAINS}
+    corpus = {domain: dict.fromkeys(eval_splits) for domain in domains}
+    queries = {domain: dict.fromkeys(eval_splits) for domain in domains}
+    relevant_docs = {domain: dict.fromkeys(eval_splits) for domain in domains}
 
     for domain in domains:
         domain_corpus = datasets.load_dataset(
@@ -47,7 +47,8 @@ def load_bright_data(
         examples = datasets.load_dataset(
             path, "examples", split=domain, cache_dir=cache_dir, revision=revision
         )
-        if domain in DOMAINS_LONG:
+        queries[domain]["standard"] = {e["id"]: e["query"] for e in examples}
+        if domain in DOMAINS_LONG and self.is_long:
             domain_corpus_long = datasets.load_dataset(
                 path,
                 "long_documents",
@@ -55,29 +56,29 @@ def load_bright_data(
                 cache_dir=cache_dir,
                 revision=revision,
             )
-        corpus[domain]["standard"] = {
-            e["id"]: {"text": e["content"]} for e in domain_corpus
-        }
-        if domain in DOMAINS_LONG:
             corpus[domain]["long"] = {
                 e["id"]: {"text": e["content"]} for e in domain_corpus_long
             }
-        queries[domain]["standard"] = queries[domain]["long"] = {
-            e["id"]: e["query"] for e in examples
+            queries[domain]["long"] = queries[domain]["standard"]
+            relevant_docs[domain]["long"] = {}
+
+        corpus[domain]["standard"] = {
+            e["id"]: {"text": e["content"]} for e in domain_corpus
         }
+
         relevant_docs[domain]["standard"] = {}
-        relevant_docs[domain]["long"] = {}
 
         for e in examples:
             qid = e["id"]
             gold_ids = e["gold_ids"]
-            gold_ids_long = e["gold_ids_long"]
             relevant_docs[domain]["standard"][qid] = defaultdict(dict)
-            relevant_docs[domain]["long"][qid] = defaultdict(dict)
             for gid in gold_ids:
                 relevant_docs[domain]["standard"][qid].update({gid: 1})
-            for gid in gold_ids_long:
-                relevant_docs[domain]["long"][qid].update({gid: 1})
+            if domain in DOMAINS_LONG and self.is_long:
+                relevant_docs[domain]["long"][qid] = defaultdict(dict)
+                gold_ids_long = e["gold_ids_long"]
+                for gid in gold_ids_long:
+                    relevant_docs[domain]["long"][qid].update({gid: 1})
 
     corpus = datasets.DatasetDict(corpus)
     queries = datasets.DatasetDict(queries)
@@ -91,7 +92,7 @@ def load_data(self, **kwargs):
 
     self.corpus, self.queries, self.relevant_docs = self.load_bright_data(
         path=self.metadata.dataset["path"],
-        domains=DOMAINS,
+        domains=list(self.metadata.eval_langs.keys()),
         eval_splits=self.metadata.eval_splits,
         cache_dir=kwargs.get("cache_dir", None),
         revision=self.metadata.dataset["revision"],
@@ -100,11 +101,12 @@ def load_data(self, **kwargs):
 
 
 class BrightRetrieval(AbsTaskRetrieval):
+    is_long = False
     metadata = TaskMetadata(
         name="BrightRetrieval",
         dataset={
             "path": "xlangai/BRIGHT",
-            "revision": "a75a0eb",
+            "revision": "a75a0eb483f6a5233a6efc2d63d71540a4443dfb",
         },
         reference="https://huggingface.co/datasets/xlangai/BRIGHT",
         description="Bright retrieval dataset.",
@@ -121,17 +123,17 @@ class BrightRetrieval(AbsTaskRetrieval):
         dialect=[],
         sample_creation="found",
         modalities=["text"],
-        bibtex_citation="""
+        bibtex_citation=r"""
 @misc{su2024brightrealisticchallengingbenchmark,
-    title={BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval},
-    author={Hongjin Su and Howard Yen and Mengzhou Xia and Weijia Shi and Niklas Muennighoff and Han-yu Wang and Haisu Liu and Quan Shi and Zachary S. Siegel and Michael Tang and Ruoxi Sun and Jinsung Yoon and Sercan O. Arik and Danqi Chen and Tao Yu},
-    year={2024},
-    eprint={2407.12883},
-    archivePrefix={arXiv},
-    primaryClass={cs.CL},
-    url={https://arxiv.org/abs/2407.12883},
+  archiveprefix = {arXiv},
+  author = {Hongjin Su and Howard Yen and Mengzhou Xia and Weijia Shi and Niklas Muennighoff and Han-yu Wang and Haisu Liu and Quan Shi and Zachary S. Siegel and Michael Tang and Ruoxi Sun and Jinsung Yoon and Sercan O. Arik and Danqi Chen and Tao Yu},
+  eprint = {2407.12883},
+  primaryclass = {cs.CL},
+  title = {BRIGHT: A Realistic and Challenging Benchmark for Reasoning-Intensive Retrieval},
+  url = {https://arxiv.org/abs/2407.12883},
+  year = {2024},
 }
-        """,
+""",
     )
     load_bright_data = load_bright_data
     load_data = load_data
@@ -147,6 +149,7 @@ long_metadata.eval_langs = dom_langs_long
 
 
 class BrightLongRetrieval(AbsTaskRetrieval):
+    is_long = True
     metadata = long_metadata
 
     load_bright_data = load_bright_data

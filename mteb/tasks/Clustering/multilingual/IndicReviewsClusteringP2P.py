@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from mteb.abstasks.AbsTaskClustering import AbsTaskClustering
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.AbsTaskAnyClustering import AbsTaskAnyClustering
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _LANGUAGES = {
     "as": ["asm-Beng"],
@@ -20,7 +20,7 @@ _LANGUAGES = {
 }
 
 
-class IndicReviewsClusteringP2P(AbsTaskClustering):
+class IndicReviewsClusteringP2P(AbsTaskAnyClustering):
     metadata = TaskMetadata(
         name="IndicReviewsClusteringP2P",
         dataset={
@@ -42,11 +42,13 @@ class IndicReviewsClusteringP2P(AbsTaskClustering):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="machine-translated and verified",
-        bibtex_citation="""@article{doddapaneni2022towards,
-  title     = {Towards Leaving No Indic Language Behind: Building Monolingual Corpora, Benchmark and Models for Indic Languages},
-  author    = {Sumanth Doddapaneni and Rahul Aralikatte and Gowtham Ramesh and Shreyansh Goyal and Mitesh M. Khapra and Anoop Kunchukuttan and Pratyush Kumar},
-  journal   = {Annual Meeting of the Association for Computational Linguistics},
-  year      = {2022},
-  doi       = {10.18653/v1/2023.acl-long.693}
-}""",
+        bibtex_citation=r"""
+@article{doddapaneni2022towards,
+  author = {Sumanth Doddapaneni and Rahul Aralikatte and Gowtham Ramesh and Shreyansh Goyal and Mitesh M. Khapra and Anoop Kunchukuttan and Pratyush Kumar},
+  doi = {10.18653/v1/2023.acl-long.693},
+  journal = {Annual Meeting of the Association for Computational Linguistics},
+  title = {Towards Leaving No Indic Language Behind: Building Monolingual Corpora, Benchmark and Models for Indic Languages},
+  year = {2022},
+}
+""",
     )

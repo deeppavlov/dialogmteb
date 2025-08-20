@@ -3,7 +3,7 @@ from __future__ import annotations
 from datasets import Dataset, DatasetDict, load_dataset
 
 from mteb.abstasks.Image.AbsTaskAny2AnyRetrieval import AbsTaskAny2AnyRetrieval
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _LANGUAGES = {
     "ar": ["ara-Arab"],
@@ -113,14 +113,16 @@ class WITT2IRetrieval(AbsTaskAny2AnyRetrieval):
         dialect=[],
         modalities=["text", "image"],
         sample_creation="found",
-        bibtex_citation="""@inproceedings{bugliarello2022iglue,
-  title={IGLUE: A benchmark for transfer learning across modalities, tasks, and languages},
-  author={Bugliarello, Emanuele and Liu, Fangyu and Pfeiffer, Jonas and Reddy, Siva and Elliott, Desmond and Ponti, Edoardo Maria and Vuli{\'c}, Ivan},
-  booktitle={International Conference on Machine Learning},
-  pages={2370--2392},
-  year={2022},
-  organization={PMLR}
-}""",
+        bibtex_citation=r"""
+@inproceedings{bugliarello2022iglue,
+  author = {Bugliarello, Emanuele and Liu, Fangyu and Pfeiffer, Jonas and Reddy, Siva and Elliott, Desmond and Ponti, Edoardo Maria and Vuli{\'c}, Ivan},
+  booktitle = {International Conference on Machine Learning},
+  organization = {PMLR},
+  pages = {2370--2392},
+  title = {IGLUE: A benchmark for transfer learning across modalities, tasks, and languages},
+  year = {2022},
+}
+""",
     )
 
     def load_data(self, **kwargs):

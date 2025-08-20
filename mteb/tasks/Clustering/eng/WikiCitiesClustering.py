@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
-from ....abstasks.AbsTaskClustering import AbsTaskClustering
+from ....abstasks.AbsTaskAnyClustering import AbsTaskAnyClustering
 
 
-class WikiCitiesClustering(AbsTaskClustering):
+class WikiCitiesClustering(AbsTaskAnyClustering):
     metadata = TaskMetadata(
         name="WikiCitiesClustering",
         description="Clustering of Wikipedia articles of cities by country from https://huggingface.co/datasets/wikipedia. Test set includes 126 countries, and a total of 3531 cities.",
@@ -27,9 +27,11 @@ class WikiCitiesClustering(AbsTaskClustering):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@ONLINE{wikidump,
-    author = "Wikimedia Foundation",
-    title  = "Wikimedia Downloads",
-    url    = "https://dumps.wikimedia.org"
-}""",
+        bibtex_citation=r"""
+@online{wikidump,
+  author = {Wikimedia Foundation},
+  title = {Wikimedia Downloads},
+  url = {https://dumps.wikimedia.org},
+}
+""",
     )

@@ -24,6 +24,7 @@ from .NusaParagraphEmotionClassification import NusaParagraphEmotionClassificati
 from .NusaParagraphTopicClassification import NusaParagraphTopicClassification
 from .NusaXSenti import NusaXSentiClassification
 from .ScalaClassification import ScalaClassification
+from .ScandiSentClassification import ScandiSentClassification
 from .SIB200Classification import SIB200Classification
 from .SouthAfricanLangClassification import SouthAfricanLangClassification
 from .SwissJudgementClassification import SwissJudgementClassification
@@ -31,33 +32,34 @@ from .TurkicClassification import TurkicClassification
 from .TweetSentimentClassification import TweetSentimentClassification
 
 __all__ = [
-    "IndicLangClassification",
-    "SouthAfricanLangClassification",
-    "SwissJudgementClassification",
-    "AmazonReviewsClassification",
-    "NaijaSenti",
-    "TurkicClassification",
-    "ScalaClassification",
-    "MultilingualSentimentClassification",
-    "SIB200Classification",
-    "NordicLangClassification",
-    "NusaParagraphTopicClassification",
-    "CyrillicTurkicLangClassification",
-    "IndicNLPNewsClassification",
-    "MassiveScenarioClassification",
-    "MTOPIntentClassification",
-    "NusaParagraphEmotionClassification",
-    "MultiHateClassification",
     "AfriSentiClassification",
+    "AfriSentiLangClassification",
+    "AmazonCounterfactualClassification",
+    "AmazonReviewsClassification",
+    "CataloniaTweetClassification",
+    "CyrillicTurkicLangClassification",
+    "HinDialectClassification",
+    "IndicLangClassification",
+    "IndicNLPNewsClassification",
     "IndicSentimentClassification",
     "LanguageClassification",
-    "AfriSentiLangClassification",
-    "NusaXSentiClassification",
     "MTOPDomainClassification",
-    "HinDialectClassification",
-    "CataloniaTweetClassification",
-    "TweetSentimentClassification",
-    "MassiveIntentClassification",
-    "AmazonCounterfactualClassification",
+    "MTOPIntentClassification",
     "MasakhaNEWSClassification",
+    "MassiveIntentClassification",
+    "MassiveScenarioClassification",
+    "MultiHateClassification",
+    "MultilingualSentimentClassification",
+    "NaijaSenti",
+    "NordicLangClassification",
+    "NusaParagraphEmotionClassification",
+    "NusaParagraphTopicClassification",
+    "NusaXSentiClassification",
+    "SIB200Classification",
+    "ScalaClassification",
+    "SouthAfricanLangClassification",
+    "SwissJudgementClassification",
+    "ScandiSentClassification",
+    "TurkicClassification",
+    "TweetSentimentClassification",
 ]

@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import logging
 from abc import ABC, abstractmethod
-from typing import Any, Callable, get_args
+from typing import Any, Callable, cast, get_args
 
 from torch.utils.data import DataLoader
 
 import mteb
-from mteb.abstasks.TaskMetadata import TASK_TYPE, TaskMetadata
-from mteb.model_meta import ModelMeta, ScoringFunction
+from mteb.abstasks.task_metadata import TaskMetadata, TaskType
+from mteb.models.model_meta import ModelMeta, ScoringFunction
 from mteb.similarity_functions import (
     cos_sim,
     dot_score,
@@ -17,7 +17,11 @@ from mteb.similarity_functions import (
     pairwise_dot_score,
     pairwise_max_sim,
 )
-from mteb.types import Array, BatchedInput, PromptType
+from mteb.types import (
+    Array,
+    BatchedInput,
+    PromptType,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -30,130 +34,8 @@ class AbsEncoder(ABC):
     model: Any
     mteb_model_meta: ModelMeta | None = None
     model_prompts: dict[str, str] | None = None
-    instruction_template: str | Callable[[str, str], str] | None = None
-
-    def similarity(self, embeddings1: Array, embeddings2: Array) -> Array:
-        if self.mteb_model_meta is None or (
-            self.mteb_model_meta is not None
-            and self.mteb_model_meta.similarity_fn_name is None
-        ):
-            if (
-                hasattr(self, "model")
-                and hasattr(self.model, "similarity")
-                and callable(self.model.similarity)
-            ):
-                return self.model.similarity(embeddings1, embeddings2)
-            return cos_sim(embeddings1, embeddings2)
-        if self.mteb_model_meta.similarity_fn_name is ScoringFunction.COSINE:
-            return cos_sim(embeddings1, embeddings2)
-        elif self.mteb_model_meta.similarity_fn_name is ScoringFunction.DOT_PRODUCT:
-            return dot_score(embeddings1, embeddings2)
-        elif self.mteb_model_meta.similarity_fn_name is ScoringFunction.MAX_SIM:
-            return max_sim(embeddings1, embeddings2)
-        raise ValueError("Similarity function not specified.")
-
-    def similarity_pairwise(
-        self,
-        embeddings1: Array,
-        embeddings2: Array,
-    ) -> Array:
-        if self.mteb_model_meta is None or (
-            self.mteb_model_meta is not None
-            and self.mteb_model_meta.similarity_fn_name is None
-        ):
-            if (
-                hasattr(self, "model")
-                and hasattr(self.model, "similarity_pairwise")
-                and callable(self.model.similarity_pairwise)
-            ):
-                return self.model.similarity_pairwise(embeddings1, embeddings2)
-            return pairwise_cos_sim(embeddings1, embeddings2)
-        if self.mteb_model_meta.similarity_fn_name is ScoringFunction.COSINE:
-            return pairwise_cos_sim(embeddings1, embeddings2)
-        elif self.mteb_model_meta.similarity_fn_name is ScoringFunction.DOT_PRODUCT:
-            return pairwise_dot_score(embeddings1, embeddings2)
-        elif self.mteb_model_meta.similarity_fn_name is ScoringFunction.MAX_SIM:
-            return pairwise_max_sim(embeddings1, embeddings2)
-        raise ValueError("Similarity function not specified.")
-
-    @abstractmethod
-    def encode(
-        self,
-        inputs: DataLoader[BatchedInput],
-        *,
-        task_metadata: TaskMetadata,
-        hf_split: str,
-        hf_subset: str,
-        prompt_type: PromptType | None = None,
-        **kwargs: Any,
-    ) -> Array:
-        """Encodes the given sentences using the encoder.
-
-        Args:
-            inputs: Batch of inputs to encode.
-            task_metadata: The metadata of the task. Sentence-transformers uses this to
-                determine which prompt to use from a specified dictionary.
-                The order of priorities for prompt selection are:
-                    1. Composed prompt of task name + prompt type (query or passage)
-                    2. Specific task prompt
-                    3. Composed prompt of task type + prompt type (query or passage)
-                    4. Specific task type prompt
-                    5. Specific prompt type (query or passage)
-            hf_split: Split of current task
-            hf_subset: Subset of current task
-            prompt_type: The name type of prompt. (query or passage)
-            **kwargs: Additional arguments to pass to the encoder.
-
-        Returns:
-            The encoded input in a numpy array or torch tensor of the shape (Number of sentences) x (Embedding dimension).
-        """
-        raise NotImplementedError(
-            "The encode method must be implemented in the subclass."
-        )
-
-    def predict(
-        self,
-        inputs1: DataLoader[BatchedInput],
-        inputs2: DataLoader[BatchedInput],
-        *,
-        task_metadata: TaskMetadata,
-        hf_split: str,
-        hf_subset: str,
-        prompt_type: PromptType | None = None,
-        **kwargs: Any,
-    ) -> Array:
-        """Predicts relevance scores for pairs of inputs.
-
-        Args:
-            inputs1: First Dataloader of inputs to encode.
-            inputs2: Second Dataloader of inputs to encode.
-            task_metadata: Metadata of the current task.
-            hf_split: Split of current task, allows to know some additional information about current split.
-                E.g. Current language
-            hf_subset: Subset of current task. Similar to `hf_split` to get more information
-            prompt_type: The name type of prompt. (query or passage)
-            **kwargs: Additional arguments to pass to the cross-encoder.
-
-        Returns:
-            The predicted relevance scores for each inputs pair.
-        """
-        embeddings1 = self.encode(
-            inputs1,
-            task_metadata=task_metadata,
-            hf_split=hf_split,
-            hf_subset=hf_subset,
-            prompt_type=PromptType.query,
-            **kwargs,
-        )
-        embeddings2 = self.encode(
-            inputs2,
-            task_metadata=task_metadata,
-            hf_split=hf_split,
-            hf_subset=hf_subset,
-            prompt_type=PromptType.passage,
-            **kwargs,
-        )
-        return self.similarity_pairwise(embeddings1, embeddings2)
+    instruction_template: str | Callable[[str, PromptType], str] | None = None
+    prompts_dict: dict[str, str] | None = None
 
     def get_prompt_name(
         self,
@@ -210,7 +92,7 @@ class AbsEncoder(ABC):
         if not self.model_prompts:
             return None
         prompt_name = self.get_prompt_name(task_metadata, prompt_type)
-        return self.model_prompts.get(prompt_name, None)
+        return self.model_prompts.get(prompt_name)  # type: ignore
 
     def validate_task_to_prompt_name(self) -> None:
         """Validate the task name and prompt type against the model prompts.
@@ -219,11 +101,13 @@ class AbsEncoder(ABC):
         """
         if self.model_prompts is None:
             return
-        task_types = get_args(TASK_TYPE)
+        task_types = get_args(TaskType)
         prompt_types = [e.value for e in PromptType]
         for task_name in self.model_prompts:
-            if "-" in task_name:
-                task_name, prompt_type = task_name.split("-")
+            if "-" in task_name and task_name.endswith(
+                (f"-{PromptType.query.value}", f"-{PromptType.passage.value}")
+            ):
+                task_name, prompt_type = task_name.rsplit("-", 1)
                 if prompt_type not in prompt_types:
                     msg = f"Prompt type {prompt_type} is not valid. Valid prompt types are {prompt_types}"
                     logger.warning(msg)
@@ -236,24 +120,36 @@ class AbsEncoder(ABC):
                     raise KeyError(msg)
 
     def get_instruction(
-        self, task_metadata: TaskMetadata, prompt_type: PromptType | None
+        self,
+        task_metadata: TaskMetadata,
+        prompt_type: PromptType | None,
     ) -> str:
         """Get the instruction/prompt to be used for encoding sentences."""
-        if isinstance(task_metadata.prompt, dict) and prompt_type:
-            if task_metadata.prompt.get(prompt_type.value):
-                return task_metadata.prompt[prompt_type.value]
+        prompt = task_metadata.prompt
+        if self.prompts_dict and task_metadata.name in self.prompts_dict:
+            prompt = self.prompts_dict[task_metadata.name]
+
+        if isinstance(prompt, dict) and prompt_type:
+            if prompt.get(prompt_type.value):
+                return prompt[prompt_type.value]
             logger.warning(
                 f"Prompt type '{prompt_type}' not found in task metadata for task '{task_metadata.name}'."
             )
             return ""
-        if task_metadata.prompt:
-            return task_metadata.prompt
+
+        if prompt:
+            return prompt
+
         abstask = mteb.get_task(task_name=task_metadata.name)
         return abstask.abstask_prompt
 
     def format_instruction(
         self, instruction: str, prompt_type: PromptType | None = None
     ) -> str:
+        if self.instruction_template is None:
+            raise ValueError(
+                "Attempting to format an instruction without an instruction template."
+            )
         if isinstance(self.instruction_template, str):
             if "{instruction}" not in self.instruction_template:
                 raise ValueError(
@@ -263,25 +159,96 @@ class AbsEncoder(ABC):
         return self.instruction_template(instruction, prompt_type)
 
     def get_task_instruction(
-        self, task_metadata: TaskMetadata, prompt_type: PromptType | None
+        self,
+        task_metadata: TaskMetadata,
+        prompt_type: PromptType | None,
     ) -> str:
         instruction = self.get_instruction(task_metadata, prompt_type)
-        if self.instruction_template:
+        if self.instruction_template and len(instruction) > 0:
             return self.format_instruction(instruction)
         return instruction
 
-    def combine_query_and_instruction(
+    def similarity(self, embeddings1: Array, embeddings2: Array) -> Array:
+        if self.mteb_model_meta is None or (
+            self.mteb_model_meta is not None
+            and self.mteb_model_meta.similarity_fn_name is None
+        ):
+            if (
+                hasattr(self, "model")
+                and hasattr(self.model, "similarity")
+                and callable(self.model.similarity)
+            ):
+                arr = self.model.similarity(embeddings1, embeddings2)
+                # We assume that the model returns an Array-like object:
+                arr = cast(Array, arr)
+                return arr
+            return cos_sim(embeddings1, embeddings2)
+        if self.mteb_model_meta.similarity_fn_name is ScoringFunction.COSINE:
+            return cos_sim(embeddings1, embeddings2)
+        elif self.mteb_model_meta.similarity_fn_name is ScoringFunction.DOT_PRODUCT:
+            return dot_score(embeddings1, embeddings2)
+        elif self.mteb_model_meta.similarity_fn_name is ScoringFunction.MAX_SIM:
+            return max_sim(embeddings1, embeddings2)
+        raise ValueError("Similarity function not specified.")
+
+    def similarity_pairwise(
         self,
-        query: str,
-        instruction: str,
-    ) -> str:
-        """Combines a query with an instruction.
+        embeddings1: Array,
+        embeddings2: Array,
+    ) -> Array:
+        if self.mteb_model_meta is None or (
+            self.mteb_model_meta is not None
+            and self.mteb_model_meta.similarity_fn_name is None
+        ):
+            if (
+                hasattr(self, "model")
+                and hasattr(self.model, "similarity_pairwise")
+                and callable(self.model.similarity_pairwise)
+            ):
+                arr = self.model.similarity_pairwise(embeddings1, embeddings2)
+                # We assume that the model returns an Array-like object:
+                arr = cast(Array, arr)
+                return arr
+            return pairwise_cos_sim(embeddings1, embeddings2)
+        if self.mteb_model_meta.similarity_fn_name is ScoringFunction.COSINE:
+            return pairwise_cos_sim(embeddings1, embeddings2)
+        elif self.mteb_model_meta.similarity_fn_name is ScoringFunction.DOT_PRODUCT:
+            return pairwise_dot_score(embeddings1, embeddings2)
+        elif self.mteb_model_meta.similarity_fn_name is ScoringFunction.MAX_SIM:
+            return pairwise_max_sim(embeddings1, embeddings2)
+        raise ValueError("Similarity function not specified.")
+
+    @abstractmethod
+    def encode(
+        self,
+        inputs: DataLoader[BatchedInput],
+        *,
+        task_metadata: TaskMetadata,
+        hf_split: str,
+        hf_subset: str,
+        prompt_type: PromptType | None = None,
+        **kwargs: Any,
+    ) -> Array:
+        """Encodes the given sentences using the encoder.
 
         Args:
-            query: The query text to combine.
-            instruction: The instruction text to combine with the query.
+            inputs: Batch of inputs to encode.
+            task_metadata: The metadata of the task. Sentence-transformers uses this to
+                determine which prompt to use from a specified dictionary.
+                The order of priorities for prompt selection are:
+                    1. Composed prompt of task name + prompt type (query or passage)
+                    2. Specific task prompt
+                    3. Composed prompt of task type + prompt type (query or passage)
+                    4. Specific task type prompt
+                    5. Specific prompt type (query or passage)
+            hf_split: Split of current task
+            hf_subset: Subset of current task
+            prompt_type: The name type of prompt. (query or passage)
+            **kwargs: Additional arguments to pass to the encoder.
 
         Returns:
-            The combined query and instruction text.
+            The encoded input in a numpy array or torch tensor of the shape (Number of sentences) x (Embedding dimension).
         """
-        return f"{query} {instruction}"
+        raise NotImplementedError(
+            "The encode method must be implemented in the subclass."
+        )

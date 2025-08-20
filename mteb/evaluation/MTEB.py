@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import sys
 import traceback
 from collections.abc import Iterable
 from copy import deepcopy
@@ -12,26 +13,32 @@ from pathlib import Path
 from time import time
 from typing import TYPE_CHECKING, Any
 
+from mteb.models.get_model_meta import (
+    _model_meta_from_cross_encoder,
+    _model_meta_from_sentence_transformers,
+)
+
+if sys.version_info >= (3, 13):
+    from warnings import deprecated
+else:
+    from typing_extensions import deprecated
+
 import datasets
-from codecarbon import EmissionsTracker
 from sentence_transformers import CrossEncoder, SentenceTransformer
 
 import mteb
-from mteb.abstasks.AbsTask import ScoresDict
-from mteb.abstasks.aggregated_task import AbsTaskAggregate
-from mteb.encoder_interface import Encoder
-from mteb.model_meta import ModelMeta
-from mteb.models import (
-    model_meta_from_cross_encoder,
-    model_meta_from_sentence_transformers,
+from mteb.abstasks.AbsTask import AbsTask
+from mteb.load_results.task_results import TaskResult
+from mteb.models.model_meta import ModelMeta
+from mteb.models.models_protocols import Encoder, MTEBModels
+from mteb.models.sentence_transformer_wrapper import (
+    CrossEncoderWrapper,
+    SentenceTransformerEncoderWrapper,
 )
-
-from ..abstasks.AbsTask import AbsTask
-from ..load_results.task_results import TaskResult
-from ..models.sentence_transformer_wrapper import SentenceTransformerWrapper
 
 if TYPE_CHECKING:
     from mteb.benchmarks import Benchmark
+    from mteb.types import ScoresDict
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +47,10 @@ class MTEB:
     _tasks: Iterable[str | AbsTask] | None
     tasks: list[AbsTask]
 
+    @deprecated(
+        "MTEB is deprecated and will be removed in future versions. "
+        "Please use the `mteb.evaluate` function instead."
+    )
     def __init__(
         self,
         tasks: Iterable[AbsTask | Benchmark],
@@ -158,7 +169,7 @@ class MTEB:
     @staticmethod
     def _run_eval(
         task: AbsTask,
-        model: Encoder,
+        model: MTEBModels,
         split: str,
         subsets_to_run: list[str] | None = None,
         *,
@@ -242,7 +253,7 @@ class MTEB:
 
     def run(
         self,
-        model: SentenceTransformer | Encoder,
+        model: MTEBModels | CrossEncoder | SentenceTransformer,
         verbosity: int = 1,
         output_folder: str | None = "results",
         eval_splits: list[str] | None = None,
@@ -295,8 +306,10 @@ class MTEB:
 
         meta = self.create_model_meta(model)
         output_path = self.create_output_folder(meta, output_folder)
-        if isinstance(model, (SentenceTransformer, CrossEncoder)):
-            model = SentenceTransformerWrapper(model)
+        if isinstance(model, SentenceTransformer):
+            model = SentenceTransformerEncoderWrapper(model)
+        elif isinstance(model, CrossEncoder):
+            model = CrossEncoderWrapper(model)
 
         ## Disable co2_tracker for API models
         if "API" in meta.framework:
@@ -325,7 +338,7 @@ class MTEB:
                 f"\n\n********************** Evaluating {task.metadata.name} **********************"
             )
 
-            if isinstance(task, AbsTaskAggregate):
+            if task.is_aggregate:
                 self_ = MTEB(tasks=task.metadata.tasks)
                 task_results = self_.run(
                     model,
@@ -346,13 +359,6 @@ class MTEB:
                     save_path = output_path / f"{task.metadata.name}.json"
                     new_results.to_disk(save_path)
                 del self.tasks[0]
-                continue
-
-            if "bm25s" in meta.name and task.metadata.type != "Retrieval":
-                logger.warning(
-                    f"bm25s only supports Retrieval tasks, but the task type is {task.metadata.type}. Skipping task."
-                )
-                del self.tasks[0]  # empty memory
                 continue
 
             # NOTE: skip evaluation if the model does not support all of the task's modalities.
@@ -455,8 +461,14 @@ class MTEB:
                         subsets_to_run = ["default"]
 
                     if co2_tracker:
+                        try:
+                            from codecarbon import EmissionsTracker
+                        except ImportError:
+                            raise ImportError(
+                                "codecarbon is not installed. Please install it using `pip install 'mteb[codecarbon]'` to track CO₂ emissions."
+                            )
                         logger.warning(
-                            "Evaluating multiple MTEB runs simultaniously will produce incorrect CO₂ results"
+                            "Evaluating multiple MTEB runs simultaneously will produce incorrect CO₂ results"
                         )
                         with EmissionsTracker(
                             save_to_file=False,
@@ -537,7 +549,7 @@ class MTEB:
         return evaluation_results
 
     @staticmethod
-    def create_model_meta(model: Encoder) -> ModelMeta:
+    def create_model_meta(model: MTEBModels) -> ModelMeta:
         if hasattr(model, "mteb_model_meta") and model.mteb_model_meta is not None:
             meta = model.mteb_model_meta  # type: ignore
         else:
@@ -569,7 +581,7 @@ class MTEB:
         save_path = output_folder / "model_meta.json"
 
         with save_path.open("w") as f:
-            json.dump(model_meta.to_dict(), f)
+            json.dump(model_meta.to_dict(), f, default=str)
 
     def get_last_evaluated_splits(self):
         """Returns a dictionary of tasks and their evaluated splits from the most recent run.
@@ -635,9 +647,9 @@ class MTEB:
     @staticmethod
     def _get_model_meta(model: Encoder) -> ModelMeta:
         if isinstance(model, CrossEncoder):
-            meta = model_meta_from_cross_encoder(model)
+            meta = _model_meta_from_cross_encoder(model)
         elif isinstance(model, SentenceTransformer):
-            meta = model_meta_from_sentence_transformers(model)
+            meta = _model_meta_from_sentence_transformers(model)
         else:
             meta = ModelMeta(
                 loader=None,

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
@@ -32,13 +32,15 @@ class QuoraRetrieval(AbsTaskRetrieval):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@misc{quora-question-pairs,
-    author = {DataCanary, hilfialkaff, Lili Jiang, Meg Risdal, Nikhil Dandekar, tomtung},
-    title = {Quora Question Pairs},
-    publisher = {Kaggle},
-    year = {2017},
-    url = {https://kaggle.com/competitions/quora-question-pairs}
-}""",
+        bibtex_citation=r"""
+@misc{quora-question-pairs,
+  author = {DataCanary, hilfialkaff, Lili Jiang, Meg Risdal, Nikhil Dandekar, tomtung},
+  publisher = {Kaggle},
+  title = {Quora Question Pairs},
+  url = {https://kaggle.com/competitions/quora-question-pairs},
+  year = {2017},
+}
+""",
         prompt={
             "query": "Given a question, retrieve questions that are semantically equivalent to the given question"
         },
@@ -72,12 +74,14 @@ class QuoraRetrievalHardNegatives(AbsTaskRetrieval):
         annotations_creators=None,
         dialect=None,
         sample_creation=None,
-        bibtex_citation="""@misc{quora-question-pairs,
-    author = {DataCanary, hilfialkaff, Lili Jiang, Meg Risdal, Nikhil Dandekar, tomtung},
-    title = {Quora Question Pairs},
-    publisher = {Kaggle},
-    year = {2017},
-    url = {https://kaggle.com/competitions/quora-question-pairs}
-}""",
+        bibtex_citation=r"""
+@misc{quora-question-pairs,
+  author = {DataCanary, hilfialkaff, Lili Jiang, Meg Risdal, Nikhil Dandekar, tomtung},
+  publisher = {Kaggle},
+  title = {Quora Question Pairs},
+  url = {https://kaggle.com/competitions/quora-question-pairs},
+  year = {2017},
+}
+""",
         adapted_from=["QuoraRetrieval"],
     )

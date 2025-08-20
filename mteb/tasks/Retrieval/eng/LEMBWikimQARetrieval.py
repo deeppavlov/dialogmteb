@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import datasets
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
@@ -32,15 +32,15 @@ class LEMBWikimQARetrieval(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""
-            @inproceedings{ho2020constructing,
-                title={Constructing A Multi-hop QA Dataset for Comprehensive Evaluation of Reasoning Steps},
-                author={Ho, Xanh and Nguyen, Anh-Khoa Duong and Sugawara, Saku and Aizawa, Akiko},
-                booktitle={Proceedings of the 28th International Conference on Computational Linguistics},
-                pages={6609--6625},
-                year={2020}
-            }
-        """,
+        bibtex_citation=r"""
+@inproceedings{ho2020constructing,
+  author = {Ho, Xanh and Nguyen, Anh-Khoa Duong and Sugawara, Saku and Aizawa, Akiko},
+  booktitle = {Proceedings of the 28th International Conference on Computational Linguistics},
+  pages = {6609--6625},
+  title = {Constructing A Multi-hop QA Dataset for Comprehensive Evaluation of Reasoning Steps},
+  year = {2020},
+}
+""",
     )
 
     def load_data(self, **kwargs):

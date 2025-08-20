@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import os
 
-from mteb.abstasks.Image.AbsTaskZeroShotClassification import (
-    AbsTaskZeroShotClassification,
+from mteb.abstasks.AbsTaskAnyZeroShotClassification import (
+    AbsTaskAnyZeroShotClassification,
 )
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class GTSRBZeroShotClassification(AbsTaskZeroShotClassification):
+class GTSRBZeroShotClassification(AbsTaskAnyZeroShotClassification):
     metadata = TaskMetadata(
         name="GTSRBZeroShot",
         description="""The German Traffic Sign Recognition Benchmark (GTSRB) is a multi-class classification dataset for traffic signs. It consists of dataset of more than 50,000 traffic sign images. The dataset comprises 43 classes with unbalanced class frequencies.""",
@@ -33,20 +33,22 @@ class GTSRBZeroShotClassification(AbsTaskZeroShotClassification):
         dialect=[],
         modalities=["image"],
         sample_creation="created",
-        bibtex_citation="""@INPROCEEDINGS{6033395,
-    author={Stallkamp, Johannes and Schlipsing, Marc and Salmen, Jan and Igel, Christian},
-    booktitle={The 2011 International Joint Conference on Neural Networks},
-    title={The German Traffic Sign Recognition Benchmark: A multi-class classification competition},
-    year={2011},
-    volume={},
-    number={},
-    pages={1453-1460},
-    keywords={Humans;Training;Image color analysis;Benchmark testing;Lead;Histograms;Image resolution},
-    doi={10.1109/IJCNN.2011.6033395}}
-    """,
+        bibtex_citation=r"""
+@inproceedings{6033395,
+  author = {Stallkamp, Johannes and Schlipsing, Marc and Salmen, Jan and Igel, Christian},
+  booktitle = {The 2011 International Joint Conference on Neural Networks},
+  doi = {10.1109/IJCNN.2011.6033395},
+  keywords = {Humans;Training;Image color analysis;Benchmark testing;Lead;Histograms;Image resolution},
+  number = {},
+  pages = {1453-1460},
+  title = {The German Traffic Sign Recognition Benchmark: A multi-class classification competition},
+  volume = {},
+  year = {2011},
+}
+""",
     )
 
-    image_column_name: str = "webp"
+    input_column_name: str = "webp"
     label_column_name: str = "cls"
 
     def get_candidate_labels(self) -> list[str]:

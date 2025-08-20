@@ -4,12 +4,12 @@ import itertools
 
 from datasets import Dataset, DatasetDict
 
-from mteb.abstasks.AbsTaskClustering import AbsTaskClustering
+from mteb.abstasks.AbsTaskAnyClustering import AbsTaskAnyClustering
 from mteb.abstasks.AbsTaskClusteringFast import (
     AbsTaskClusteringFast,
     check_label_distribution,
 )
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 class RedditFastClusteringS2S(AbsTaskClusteringFast):
@@ -34,19 +34,21 @@ class RedditFastClusteringS2S(AbsTaskClusteringFast):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@article{geigle:2021:arxiv,
-        author    = {Gregor Geigle and
-                        Nils Reimers and
-                        Andreas R{\"u}ckl{\'e} and
-                        Iryna Gurevych},
-        title     = {TWEAC: Transformer with Extendable QA Agent Classifiers},
-        journal   = {arXiv preprint},
-        volume    = {abs/2104.07081},
-        year      = {2021},
-        url       = {http://arxiv.org/abs/2104.07081},
-        archivePrefix = {arXiv},
-        eprint    = {2104.07081}
-        }""",
+        bibtex_citation=r"""
+@article{geigle:2021:arxiv,
+  archiveprefix = {arXiv},
+  author = {Gregor Geigle and
+Nils Reimers and
+Andreas R{\"u}ckl{\'e} and
+Iryna Gurevych},
+  eprint = {2104.07081},
+  journal = {arXiv preprint},
+  title = {TWEAC: Transformer with Extendable QA Agent Classifiers},
+  url = {http://arxiv.org/abs/2104.07081},
+  volume = {abs/2104.07081},
+  year = {2021},
+}
+""",
         prompt="Identify the topic or theme of Reddit posts based on the titles",
         adapted_from=["RedditClustering"],
     )
@@ -70,7 +72,7 @@ class RedditFastClusteringS2S(AbsTaskClusteringFast):
         self.max_fraction_of_documents_to_embed = None
 
 
-class RedditClustering(AbsTaskClustering):
+class RedditClustering(AbsTaskAnyClustering):
     superseded_by = "RedditClustering.v2"
     metadata = TaskMetadata(
         name="RedditClustering",
@@ -93,18 +95,20 @@ class RedditClustering(AbsTaskClustering):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@article{geigle:2021:arxiv,
-        author    = {Gregor Geigle and
-                        Nils Reimers and
-                        Andreas R{\"u}ckl{\'e} and
-                        Iryna Gurevych},
-        title     = {TWEAC: Transformer with Extendable QA Agent Classifiers},
-        journal   = {arXiv preprint},
-        volume    = {abs/2104.07081},
-        year      = {2021},
-        url       = {http://arxiv.org/abs/2104.07081},
-        archivePrefix = {arXiv},
-        eprint    = {2104.07081}
-        }""",
+        bibtex_citation=r"""
+@article{geigle:2021:arxiv,
+  archiveprefix = {arXiv},
+  author = {Gregor Geigle and
+Nils Reimers and
+Andreas R{\"u}ckl{\'e} and
+Iryna Gurevych},
+  eprint = {2104.07081},
+  journal = {arXiv preprint},
+  title = {TWEAC: Transformer with Extendable QA Agent Classifiers},
+  url = {http://arxiv.org/abs/2104.07081},
+  volume = {abs/2104.07081},
+  year = {2021},
+}
+""",
         prompt="Identify the topic or theme of Reddit posts based on the titles",
     )

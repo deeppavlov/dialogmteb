@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from mteb.abstasks.Image.AbsTaskZeroShotClassification import (
-    AbsTaskZeroShotClassification,
+from mteb.abstasks.AbsTaskAnyZeroShotClassification import (
+    AbsTaskAnyZeroShotClassification,
 )
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class FER2013ZeroShotClassification(AbsTaskZeroShotClassification):
+class FER2013ZeroShotClassification(AbsTaskAnyZeroShotClassification):
     metadata = TaskMetadata(
         name="FER2013ZeroShot",
         description="Classifying facial emotions.",
@@ -31,18 +31,19 @@ class FER2013ZeroShotClassification(AbsTaskZeroShotClassification):
         dialect=[],
         modalities=["image", "text"],
         sample_creation="created",
-        bibtex_citation="""@misc{goodfellow2015explainingharnessingadversarialexamples,
-        title={Explaining and Harnessing Adversarial Examples},
-        author={Ian J. Goodfellow and Jonathon Shlens and Christian Szegedy},
-        year={2015},
-        eprint={1412.6572},
-        archivePrefix={arXiv},
-        primaryClass={stat.ML},
-        url={https://arxiv.org/abs/1412.6572},
-        }
-        """,
+        bibtex_citation=r"""
+@misc{goodfellow2015explainingharnessingadversarialexamples,
+  archiveprefix = {arXiv},
+  author = {Ian J. Goodfellow and Jonathon Shlens and Christian Szegedy},
+  eprint = {1412.6572},
+  primaryclass = {stat.ML},
+  title = {Explaining and Harnessing Adversarial Examples},
+  url = {https://arxiv.org/abs/1412.6572},
+  year = {2015},
+}
+""",
     )
-    image_column_name: str = "jpg"
+    input_column_name: str = "jpg"
     label_column_name: str = "cls"
 
     def get_candidate_labels(self) -> list[str]:

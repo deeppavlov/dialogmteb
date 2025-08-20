@@ -3,7 +3,7 @@ from __future__ import annotations
 from datasets import load_dataset
 
 from mteb.abstasks.AbsTaskRetrieval import AbsTaskRetrieval
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _EVAL_SPLIT = "test"
 
@@ -201,12 +201,14 @@ class BelebeleRetrieval(AbsTaskRetrieval):
         task_subtypes=["Question answering"],
         annotations_creators="expert-annotated",
         dialect=[],
-        bibtex_citation="""@article{bandarkar2023belebele,
-      title={The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants},
-      author={Lucas Bandarkar and Davis Liang and Benjamin Muller and Mikel Artetxe and Satya Narayan Shukla and Donald Husa and Naman Goyal and Abhinandan Krishnan and Luke Zettlemoyer and Madian Khabsa},
-      year={2023},
-      journal={arXiv preprint arXiv:2308.16884}
-}""",
+        bibtex_citation=r"""
+@article{bandarkar2023belebele,
+  author = {Lucas Bandarkar and Davis Liang and Benjamin Muller and Mikel Artetxe and Satya Narayan Shukla and Donald Husa and Naman Goyal and Abhinandan Krishnan and Luke Zettlemoyer and Madian Khabsa},
+  journal = {arXiv preprint arXiv:2308.16884},
+  title = {The Belebele Benchmark: a Parallel Reading Comprehension Dataset in 122 Language Variants},
+  year = {2023},
+}
+""",
     )
 
     def load_data(self, **kwargs) -> None:

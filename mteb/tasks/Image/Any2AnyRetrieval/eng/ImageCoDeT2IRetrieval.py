@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mteb.abstasks.Image.AbsTaskAny2AnyRetrieval import AbsTaskAny2AnyRetrieval
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 class ImageCoDeT2IRetrieval(AbsTaskAny2AnyRetrieval):
@@ -26,11 +26,12 @@ class ImageCoDeT2IRetrieval(AbsTaskAny2AnyRetrieval):
         dialect=[],
         modalities=["text", "image"],
         sample_creation="found",
-        bibtex_citation="""@article{krojer2022image,
-  title={Image retrieval from contextual descriptions},
-  author={Krojer, Benno and Adlakha, Vaibhav and Vineet, Vibhav and Goyal, Yash and Ponti, Edoardo and Reddy, Siva},
-  journal={arXiv preprint arXiv:2203.15867},
-  year={2022}
+        bibtex_citation=r"""
+@article{krojer2022image,
+  author = {Krojer, Benno and Adlakha, Vaibhav and Vineet, Vibhav and Goyal, Yash and Ponti, Edoardo and Reddy, Siva},
+  journal = {arXiv preprint arXiv:2203.15867},
+  title = {Image retrieval from contextual descriptions},
+  year = {2022},
 }
 """,
     )

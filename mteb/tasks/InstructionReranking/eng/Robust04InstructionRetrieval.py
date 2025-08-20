@@ -1,8 +1,11 @@
 from __future__ import annotations
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from datasets import load_dataset
+
+from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
+from ....evaluation.evaluators.retrieval_metrics import evaluate_p_mrr_change
 
 
 class Robust04InstructionRetrieval(AbsTaskRetrieval):
@@ -27,12 +30,37 @@ class Robust04InstructionRetrieval(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@misc{weller2024followir,
-      title={FollowIR: Evaluating and Teaching Information Retrieval Models to Follow Instructions},
-      author={Orion Weller and Benjamin Chang and Sean MacAvaney and Kyle Lo and Arman Cohan and Benjamin Van Durme and Dawn Lawrie and Luca Soldaini},
-      year={2024},
-      eprint={2403.15246},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR}
-}""",
+        bibtex_citation=r"""
+@misc{weller2024followir,
+  archiveprefix = {arXiv},
+  author = {Orion Weller and Benjamin Chang and Sean MacAvaney and Kyle Lo and Arman Cohan and Benjamin Van Durme and Dawn Lawrie and Luca Soldaini},
+  eprint = {2403.15246},
+  primaryclass = {cs.IR},
+  title = {FollowIR: Evaluating and Teaching Information Retrieval Models to Follow Instructions},
+  year = {2024},
+}
+""",
     )
+
+    def task_specific_scores(
+        self,
+        scores: dict[str, dict[str, float]],
+        qrels: dict[str, dict[str, int]],
+        results: dict[str, dict[str, float]],
+        hf_split: str,
+        hf_subset: str,
+    ) -> dict[str, float]:
+        qrel_diff_ds = load_dataset(
+            self.metadata.dataset["path"],
+            "qrel_diff",
+            split="qrel_diff",
+            revision=self.metadata.dataset["revision"],
+        )
+        changed_qrels = {item["query-id"]: item["corpus-ids"] for item in qrel_diff_ds}
+
+        return evaluate_p_mrr_change(
+            qrels,
+            results,
+            changed_qrels,
+            self.k_values,
+        )

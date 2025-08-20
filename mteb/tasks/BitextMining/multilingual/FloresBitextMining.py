@@ -5,7 +5,7 @@ from typing import Any
 import datasets
 
 from mteb.abstasks.AbsTaskBitextMining import AbsTaskBitextMining
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _LANGUAGES = [
     "ace_Arab",
@@ -258,15 +258,15 @@ class FloresBitextMining(AbsTaskBitextMining):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="created",
-        bibtex_citation="""
-        @inproceedings{goyal2022flores,
-        title={The FLORES-101 Evaluation Benchmark for Low-Resource and Multilingual Machine Translation},
-        author={Goyal, Naman and Gao, Cynthia and Chaudhary, Vishrav and Chen, Peng-Jen and Wenzek, Guillaume and Ju, Da and Krishnan, Sanjana and Ranzato, Marc'Aurelio and Guzm{\'a}n, Francisco},
-        booktitle={Proceedings of the 2022 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies},
-        pages={19--35},
-        year={2022}
-        }
-        """,
+        bibtex_citation=r"""
+@inproceedings{goyal2022flores,
+  author = {Goyal, Naman and Gao, Cynthia and Chaudhary, Vishrav and Chen, Peng-Jen and Wenzek, Guillaume and Ju, Da and Krishnan, Sanjana and Ranzato, Marc'Aurelio and Guzm{\'a}n, Francisco},
+  booktitle = {Proceedings of the 2022 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies},
+  pages = {19--35},
+  title = {The FLORES-101 Evaluation Benchmark for Low-Resource and Multilingual Machine Translation},
+  year = {2022},
+}
+""",
     )
 
     def load_data(self, **kwargs: Any) -> None:

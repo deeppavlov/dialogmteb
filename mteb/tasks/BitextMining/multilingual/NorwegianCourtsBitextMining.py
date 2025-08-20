@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mteb.abstasks.AbsTaskBitextMining import AbsTaskBitextMining
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 class NorwegianCourtsBitextMining(AbsTaskBitextMining):
@@ -26,12 +26,12 @@ class NorwegianCourtsBitextMining(AbsTaskBitextMining):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""
+        bibtex_citation=r"""
 @inproceedings{opus4,
-  title={OPUS-MT — Building open translation services for the World},
-  author={Tiedemann, J{\"o}rg and Thottingal, Santhosh},
-  booktitle={Proceedings of the 22nd Annual Conference of the European Association for Machine Translation (EAMT)},
-  year={2020}
+  author = {Tiedemann, J{\"o}rg and Thottingal, Santhosh},
+  booktitle = {Proceedings of the 22nd Annual Conference of the European Association for Machine Translation (EAMT)},
+  title = {OPUS-MT — Building open translation services for the World},
+  year = {2020},
 }
 """,
         prompt="Retrieve parallel sentences in Norwegian Bokmål and Nynorsk",

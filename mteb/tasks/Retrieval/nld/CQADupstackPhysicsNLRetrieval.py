@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import datasets
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
@@ -31,15 +31,17 @@ class CQADupstackPhysicsNLRetrieval(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated and verified",  # manually checked a small subset
-        bibtex_citation="""@misc{banar2024beirnlzeroshotinformationretrieval,
-    title={BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language},
-     author={Nikolay Banar and Ehsan Lotfi and Walter Daelemans},
-     year={2024},
-     eprint={2412.08329},
-     archivePrefix={arXiv},
-     primaryClass={cs.CL},
-     url={https://arxiv.org/abs/2412.08329},
-}""",
+        bibtex_citation=r"""
+@misc{banar2024beirnlzeroshotinformationretrieval,
+  archiveprefix = {arXiv},
+  author = {Nikolay Banar and Ehsan Lotfi and Walter Daelemans},
+  eprint = {2412.08329},
+  primaryclass = {cs.CL},
+  title = {BEIR-NL: Zero-shot Information Retrieval Benchmark for the Dutch Language},
+  url = {https://arxiv.org/abs/2412.08329},
+  year = {2024},
+}
+""",
         adapted_from=["CQADupstackPhysicsRetrieval"],
     )
 
@@ -66,7 +68,11 @@ class CQADupstackPhysicsNLRetrieval(AbsTaskRetrieval):
         self.queries["test"] = {query["_id"]: query["text"] for query in queries_raw}
 
         self.corpus["test"] = {
-            doc["_id"]: doc.get("title", "") + " " + doc["text"] for doc in corpus_raw
+            doc["_id"]: {
+                "text": doc["text"],
+                "title": doc["title"],
+            }
+            for doc in corpus_raw
         }
         self.relevant_docs["test"] = {
             q["query-id"]: {q["corpus-id"]: int(q["score"])} for q in qrels_raw

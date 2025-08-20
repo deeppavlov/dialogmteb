@@ -4,9 +4,9 @@ import datasets
 import numpy as np
 from datasets import Dataset, DatasetDict
 
-from mteb.abstasks.AbsTaskClustering import AbsTaskClustering
+from mteb.abstasks.AbsTaskAnyClustering import AbsTaskAnyClustering
 from mteb.abstasks.AbsTaskClusteringFast import AbsTaskClusteringFast
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _LANGUAGES = {
     "de": ["deu-Latn"],
@@ -20,7 +20,7 @@ _LANGUAGES = {
 N_SAMPLES = 2048
 
 
-class MLSUMClusteringS2S(AbsTaskClustering):
+class MLSUMClusteringS2S(AbsTaskAnyClustering):
     superseded_by = "MLSUMClusteringS2S.v2"
     metadata = TaskMetadata(
         name="MLSUMClusteringS2S",
@@ -43,12 +43,14 @@ class MLSUMClusteringS2S(AbsTaskClustering):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@article{scialom2020mlsum,
-        title={MLSUM: The Multilingual Summarization Corpus},
-        author={Scialom, Thomas and Dray, Paul-Alexis and Lamprier, Sylvain and Piwowarski, Benjamin and Staiano, Jacopo},
-        journal={arXiv preprint arXiv:2004.14900},
-        year={2020}
-        }""",
+        bibtex_citation=r"""
+@article{scialom2020mlsum,
+  author = {Scialom, Thomas and Dray, Paul-Alexis and Lamprier, Sylvain and Piwowarski, Benjamin and Staiano, Jacopo},
+  journal = {arXiv preprint arXiv:2004.14900},
+  title = {MLSUM: The Multilingual Summarization Corpus},
+  year = {2020},
+}
+""",
     )
 
     def load_data(self, **kwargs):
@@ -108,12 +110,14 @@ class MLSUMClusteringS2SFast(AbsTaskClusteringFast):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@article{scialom2020mlsum,
-        title={MLSUM: The Multilingual Summarization Corpus},
-        author={Scialom, Thomas and Dray, Paul-Alexis and Lamprier, Sylvain and Piwowarski, Benjamin and Staiano, Jacopo},
-        journal={arXiv preprint arXiv:2004.14900},
-        year={2020}
-        }""",
+        bibtex_citation=r"""
+@article{scialom2020mlsum,
+  author = {Scialom, Thomas and Dray, Paul-Alexis and Lamprier, Sylvain and Piwowarski, Benjamin and Staiano, Jacopo},
+  journal = {arXiv preprint arXiv:2004.14900},
+  title = {MLSUM: The Multilingual Summarization Corpus},
+  year = {2020},
+}
+""",
         adapted_from=["MLSUMClusteringS2S"],
     )
 

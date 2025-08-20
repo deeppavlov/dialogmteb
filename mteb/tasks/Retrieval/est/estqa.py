@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
@@ -32,12 +32,12 @@ class EstQA(AbsTaskRetrieval):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""
+        bibtex_citation=r"""
 @mastersthesis{mastersthesis,
-  author       = {Anu Käver},
-  title        = {Extractive Question Answering for Estonian Language},
-  school       = {Tallinn University of Technology (TalTech)},
-  year         = 2021
+  author = {Anu Käver},
+  school = {Tallinn University of Technology (TalTech)},
+  title = {Extractive Question Answering for Estonian Language},
+  year = {2021},
 }
 """,
     )

@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from mteb.abstasks.Image.AbsTaskZeroShotClassification import (
-    AbsTaskZeroShotClassification,
+from mteb.abstasks.AbsTaskAnyZeroShotClassification import (
+    AbsTaskAnyZeroShotClassification,
 )
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class Food101ZeroShotClassification(AbsTaskZeroShotClassification):
+class Food101ZeroShotClassification(AbsTaskAnyZeroShotClassification):
     metadata = TaskMetadata(
         name="Food101ZeroShot",
         description="Classifying food.",
@@ -31,13 +31,14 @@ class Food101ZeroShotClassification(AbsTaskZeroShotClassification):
         dialect=[],
         modalities=["text", "image"],
         sample_creation="created",
-        bibtex_citation=""" @inproceedings{bossard14,
-        title = {Food-101 -- Mining Discriminative Components with Random Forests},
-        author = {Bossard, Lukas and Guillaumin, Matthieu and Van Gool, Luc},
-        booktitle = {European Conference on Computer Vision},
-        year = {2014}
-        }
-        """,
+        bibtex_citation=r"""
+@inproceedings{bossard14,
+  author = {Bossard, Lukas and Guillaumin, Matthieu and Van Gool, Luc},
+  booktitle = {European Conference on Computer Vision},
+  title = {Food-101 -- Mining Discriminative Components with Random Forests},
+  year = {2014},
+}
+""",
     )
 
     def get_candidate_labels(self) -> list[str]:

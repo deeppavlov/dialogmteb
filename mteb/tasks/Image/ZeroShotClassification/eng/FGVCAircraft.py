@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from mteb.abstasks.Image.AbsTaskZeroShotClassification import (
-    AbsTaskZeroShotClassification,
+from mteb.abstasks.AbsTaskAnyZeroShotClassification import (
+    AbsTaskAnyZeroShotClassification,
 )
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class FGVCAircraftZeroShotClassification(AbsTaskZeroShotClassification):
+class FGVCAircraftZeroShotClassification(AbsTaskAnyZeroShotClassification):
     metadata = TaskMetadata(
         name="FGVCAircraftZeroShot",
         description="Classifying aircraft images from 41 manufacturers and 102 variants.",
@@ -32,16 +32,17 @@ class FGVCAircraftZeroShotClassification(AbsTaskZeroShotClassification):
         dialect=[],
         modalities=["text", "image"],
         sample_creation="created",
-        bibtex_citation="""@misc{maji2013finegrainedvisualclassificationaircraft,
-            title={Fine-Grained Visual Classification of Aircraft},
-            author={Subhransu Maji and Esa Rahtu and Juho Kannala and Matthew Blaschko and Andrea Vedaldi},
-            year={2013},
-            eprint={1306.5151},
-            archivePrefix={arXiv},
-            primaryClass={cs.CV},
-            url={https://arxiv.org/abs/1306.5151},
-        }
-        """,
+        bibtex_citation=r"""
+@misc{maji2013finegrainedvisualclassificationaircraft,
+  archiveprefix = {arXiv},
+  author = {Subhransu Maji and Esa Rahtu and Juho Kannala and Matthew Blaschko and Andrea Vedaldi},
+  eprint = {1306.5151},
+  primaryclass = {cs.CV},
+  title = {Fine-Grained Visual Classification of Aircraft},
+  url = {https://arxiv.org/abs/1306.5151},
+  year = {2013},
+}
+""",
     )
     label_column_name: str = "variant"  ## could be family, manufacturer, or variant. Variant has the higher number of classes.
 

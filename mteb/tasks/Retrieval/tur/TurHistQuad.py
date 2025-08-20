@@ -3,7 +3,7 @@ from __future__ import annotations
 import datasets
 
 from mteb.abstasks.AbsTaskRetrieval import AbsTaskRetrieval
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 class TurHistQuadRetrieval(AbsTaskRetrieval):
@@ -28,19 +28,19 @@ class TurHistQuadRetrieval(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""
-            @INPROCEEDINGS{9559013,
-                author={Soygazi, Fatih and Çiftçi, Okan and Kök, Uğurcan and Cengiz, Soner},
-                booktitle={2021 6th International Conference on Computer Science and Engineering (UBMK)},
-                title={THQuAD: Turkish Historic Question Answering Dataset for Reading Comprehension},
-                year={2021},
-                volume={},
-                number={},
-                pages={215-220},
-                keywords={Computer science;Computational modeling;Neural networks;Knowledge discovery;Information retrieval;Natural language processing;History;question answering;information retrieval;natural language understanding;deep learning;contextualized word embeddings},
-                doi={10.1109/UBMK52708.2021.9559013}}
-
-        """,
+        bibtex_citation=r"""
+@inproceedings{9559013,
+  author = {Soygazi, Fatih and Çiftçi, Okan and Kök, Uğurcan and Cengiz, Soner},
+  booktitle = {2021 6th International Conference on Computer Science and Engineering (UBMK)},
+  doi = {10.1109/UBMK52708.2021.9559013},
+  keywords = {Computer science;Computational modeling;Neural networks;Knowledge discovery;Information retrieval;Natural language processing;History;question answering;information retrieval;natural language understanding;deep learning;contextualized word embeddings},
+  number = {},
+  pages = {215-220},
+  title = {THQuAD: Turkish Historic Question Answering Dataset for Reading Comprehension},
+  volume = {},
+  year = {2021},
+}
+""",
     )
 
     def load_data(self, **kwargs) -> None:

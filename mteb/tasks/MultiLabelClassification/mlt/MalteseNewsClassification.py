@@ -3,7 +3,7 @@ from __future__ import annotations
 from mteb.abstasks.AbsTaskMultilabelClassification import (
     AbsTaskMultilabelClassification,
 )
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 class MalteseNewsClassification(AbsTaskMultilabelClassification):
@@ -33,16 +33,18 @@ class MalteseNewsClassification(AbsTaskMultilabelClassification):
         annotations_creators="expert-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@inproceedings{maltese-news-datasets,
-            title = "Topic Classification and Headline Generation for {M}altese using a Public News Corpus",
-            author = "Chaudhary, Amit Kumar  and
-                    Micallef, Kurt  and
-                    Borg, Claudia",
-            booktitle = "Proceedings of the 2024 Joint International Conference on Computational Linguistics, Language Resources and Evaluation",
-            month = may,
-            year = "2024",
-            publisher = "Association for Computational Linguistics",
-        }""",
+        bibtex_citation=r"""
+@inproceedings{maltese-news-datasets,
+  author = {Chaudhary, Amit Kumar  and
+Micallef, Kurt  and
+Borg, Claudia},
+  booktitle = {Proceedings of the 2024 Joint International Conference on Computational Linguistics, Language Resources and Evaluation},
+  month = may,
+  publisher = {Association for Computational Linguistics},
+  title = {Topic Classification and Headline Generation for {M}altese using a Public News Corpus},
+  year = {2024},
+}
+""",
     )
 
     def dataset_transform(self):

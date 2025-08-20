@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
@@ -28,21 +28,23 @@ class WinoGrande(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@article{xiao2024rar,
-  title={RAR-b: Reasoning as Retrieval Benchmark},
-  author={Xiao, Chenghao and Hudson, G Thomas and Moubayed, Noura Al},
-  journal={arXiv preprint arXiv:2404.06347},
-  year={2024}
-}
+        bibtex_citation=r"""
 @article{sakaguchi2021winogrande,
-  title={Winogrande: An adversarial winograd schema challenge at scale},
-  author={Sakaguchi, Keisuke and Bras, Ronan Le and Bhagavatula, Chandra and Choi, Yejin},
-  journal={Communications of the ACM},
-  volume={64},
-  number={9},
-  pages={99--106},
-  year={2021},
-  publisher={ACM New York, NY, USA}
+  author = {Sakaguchi, Keisuke and Bras, Ronan Le and Bhagavatula, Chandra and Choi, Yejin},
+  journal = {Communications of the ACM},
+  number = {9},
+  pages = {99--106},
+  publisher = {ACM New York, NY, USA},
+  title = {Winogrande: An adversarial winograd schema challenge at scale},
+  volume = {64},
+  year = {2021},
+}
+
+@article{xiao2024rar,
+  author = {Xiao, Chenghao and Hudson, G Thomas and Moubayed, Noura Al},
+  journal = {arXiv preprint arXiv:2404.06347},
+  title = {RAR-b: Reasoning as Retrieval Benchmark},
+  year = {2024},
 }
 """,
         prompt={

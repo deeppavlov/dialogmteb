@@ -11,10 +11,11 @@ from sentence_transformers import CrossEncoder, SentenceTransformer
 from torch import Tensor
 from torch.utils.data import DataLoader
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 from mteb.load_results.task_results import Namespace
-from mteb.model_meta import ModelMeta
-from mteb.models import AbsEncoder, SentenceTransformerWrapper
+from mteb.models.abs_encoder import AbsEncoder
+from mteb.models.model_meta import ModelMeta
+from mteb.models.sentence_transformer_wrapper import SentenceTransformerEncoderWrapper
 from mteb.types import Array, BatchedInput, PromptType
 
 
@@ -81,7 +82,7 @@ class MockCLIPEncoder(AbsMockEncoder):
     mteb_model_meta = ModelMeta(
         loader=None,
         name="mock/MockCLIPModel",
-        languages=["eng_Latn"],
+        languages=["eng-Latn"],
         revision="3d74acf9a28c67741b2f4f2ea7635f0aaf6f0268",
         release_date="2021-02-06",
         modalities=["image", "text"],
@@ -118,7 +119,7 @@ class MockMocoEncoder(AbsMockEncoder):
     mteb_model_meta = ModelMeta(
         loader=None,
         name="mock/MockMocoModel",
-        languages=["eng_Latn"],
+        languages=["eng-Latn"],
         revision="7d091cd70772c5c0ecf7f00b5f12ca609a99d69d",
         release_date="2024-01-01",
         modalities=["image"],
@@ -147,6 +148,7 @@ class MockSentenceTransformer(SentenceTransformer):
     )
 
     def __init__(self):
+        self._modules = {}
         pass
 
     def encode(
@@ -164,8 +166,9 @@ class MockSentenceTransformer(SentenceTransformer):
         device: str | None = None,
         normalize_embeddings: bool = False,
         **kwargs: Any,
-    ) -> list[Tensor] | ndarray | Tensor:
-        return torch.randn(len(sentences), 10).numpy()
+    ) -> ndarray:
+        rng_state = np.random.RandomState(42)
+        return rng_state.randn(len(sentences), 10)
 
     @staticmethod
     def get_sentence_embedding_dimension() -> int:
@@ -192,7 +195,7 @@ class MockSentenceTransformersbf16Encoder(MockSentenceTransformer):
         return torch.randn(len(sentences), 10, dtype=torch.bfloat16)  # type: ignore
 
 
-class MockSentenceTransformerWrapper(SentenceTransformerWrapper):
+class MockSentenceTransformerWrapper(SentenceTransformerEncoderWrapper):
     def __init__(
         self,
         model: str | SentenceTransformer | CrossEncoder,

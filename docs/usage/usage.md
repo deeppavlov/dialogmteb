@@ -1,7 +1,7 @@
 # Usage
 
 This usage documentation follows a structure similar first it introduces a simple example of how to evaluate a model in MTEB.
-Then introduces model detailed section of defining model, selecting tasks and running the evaluation. Each section contain subsection pertaining to
+Then introduces model detailed section of defining model, selecting tasks and running the evaluation. Each section contains subsections pertaining to
 these.
 
 
@@ -19,8 +19,7 @@ model = ...
 tasks = mteb.get_tasks(tasks=["{task1}", "{task1}"])
 
 # run the evaluation
-evaluation = mteb.MTEB(tasks=tasks)
-results = evaluation.run(model)
+results = mteb.evaluate(model, tasks=tasks)
 ```
 
 For instance if we want to run [`"sentence-transformers/all-MiniLM-L6-v2"`](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2) on
@@ -29,17 +28,30 @@ For instance if we want to run [`"sentence-transformers/all-MiniLM-L6-v2"`](http
 ```python
 model_name = "sentence-transformers/all-MiniLM-L6-v2"
 
-# or using SentenceTransformers
-model = SentenceTransformers(model_name)
 # load the model using MTEB
 model = mteb.get_model(model_name) # will default to SentenceTransformers(model_name) if not implemented in MTEB
+# or using SentenceTransformers
+model = SentenceTransformers(model_name)
 
 # select the desired tasks and evaluate
 tasks = mteb.get_tasks(tasks=["Banking77Classification"])
-evaluation = mteb.MTEB(tasks=tasks)
-results = evaluation.run(model)
+results = mteb.evaluate(model, tasks=tasks)
 ```
 
+
+## Speeding up evaluations
+
+Evaluation in MTEB consists of three main components. The download of the dataset, the encoding of the samples, and the evaluation. Typically, the most notable bottleneck are either in the encoding step or on the download step. We discuss how to speed these up in the following sections.
+
+### Speeding up download
+
+The fastest way to speed up downloads is by using Huggingface's [`xet`](https://huggingface.co/blog/xet-on-the-hub). You can use this simply using:
+
+```bash
+pip install mteb[xet]
+```
+
+For one of the larger datasets, `MrTidyRetrieval` (~15 GB), we have seen speed-ups from ~40 minutes to ~30 minutes while using `xet`.
 
 ### Evaluating on Different Modalities
 MTEB is not only text evaluating, but also allow you to evaluate image and image-text embeddings.
@@ -47,7 +59,7 @@ MTEB is not only text evaluating, but also allow you to evaluate image and image
 > [!NOTE]
 > Running MTEB on images requires you to install the optional dependencies using `pip install mteb[image]`
 
-To evaluate image embeddings you can follows the same approach for any other task in `mteb`. Simply ensuring that the task contains the modality "image":
+To evaluate image embeddings you can follow the same approach for any other task in `mteb`. Simply ensuring that the task contains the modality "image":
 
 ```python
 tasks = mteb.get_tasks(modalities=["image"]) # Only select tasks with image modalities
@@ -62,10 +74,9 @@ However, we recommend starting with one of the predefined benchmarks:
 ```python
 import mteb
 benchmark = mteb.get_benchmark("MIEB(eng)")
-evaluation = mteb.MTEB(tasks=benchmark)
-
 model = mteb.get_model("{model-of-choice}")
-evaluation.run(model)
+
+results = mteb.evaluate(model, tasks=benchmark)
 ```
 
 You can also specify exclusive modality filtering to only get tasks with exactly the requested modalities (default behavior with `exclusive_modality_filter=False`):
@@ -96,7 +107,7 @@ model = meta.load_model()
 model = mteb.get_model(model_name)
 ```
 
-You can get an overview of on the models available in `mteb` as follows:
+You can get an overview of the models available in `mteb` as follows:
 
 ```py
 model_metas = mteb.get_model_metas()
@@ -118,11 +129,10 @@ model = SentenceTransformers("sentence-transformers/LaBSE")
 
 # select the desired tasks and evaluate
 tasks = mteb.get_tasks(tasks=["Banking77Classification"])
-evaluation = mteb.MTEB(tasks=tasks)
-results = evaluation.run(model)
+results = mteb.evaluate(model, tasks=tasks)
 ```
 
-However, we do recommend check in mteb include an implementation of the model before using sentence transformers since some models (e.g. the [multilingual e5 models](https://huggingface.co/collections/intfloat/multilingual-e5-text-embeddings-67b2b8bb9bff40dec9fb3534)) require a prompt and not specifying it may reduce performance.
+However, we do recommend checking if mteb includes an implementation of the model before using sentence transformers since some models (e.g. the [multilingual e5 models](https://huggingface.co/collections/intfloat/multilingual-e5-text-embeddings-67b2b8bb9bff40dec9fb3534)) require a prompt and not specifying it may reduce performance.
 
 > [!NOTE]
 > If you want to evaluate a cross encoder on a reranking task, see section on [running cross encoders for reranking](#running-cross-encoders-on-reranking)
@@ -131,7 +141,7 @@ However, we do recommend check in mteb include an implementation of the model be
 
 It is also possible to implement your own custom model in MTEB as long as it adheres to the [encoder interface](https://github.com/embeddings-benchmark/mteb/blob/main/mteb/encoder_interface.py#L21).
 
-This entails implementing an `encode` function taking as inputs a list of sentences, and returning a list of embeddings (embeddings can be `np.array`, `torch.tensor`, etc.).
+This entails implementing an `encode` function taking as input a list of sentences, and returning a list of embeddings (embeddings can be `np.array`, `torch.tensor`, etc.).
 
 ```python
 import mteb
@@ -164,30 +174,30 @@ class CustomModel:
 # evaluating the model:
 model = CustomModel()
 tasks = mteb.get_tasks(tasks=["Banking77Classification"])
-evaluation = mteb.MTEB(tasks=tasks)
-evaluation.run(model)
+model = mteb.evaluate(model, tasks=tasks)
 ```
 
 If you want to submit your implementation to be included in the leaderboard see the section on [submitting a model](https://github.com/embeddings-benchmark/mteb/blob/main/docs/adding_a_model.md).
 
 ## Selecting Tasks
 
-This section describes how to select benchmarks and task to evaluate, including selecting specific subsets or splits to run.
+This section describes how to select benchmarks and tasks to evaluate, including selecting specific subsets or splits to run.
 
 ### Selecting a Benchmark
 
 `mteb` comes with a set of predefined benchmarks. These can be fetched using `mteb.get_benchmark` and run in a similar fashion to other sets of tasks.
-For instance to select the 56 English datasets that form the English leaderboard:
+For instance to select the English datasets that form the English leaderboard:
 
 ```python
 import mteb
 benchmark = mteb.get_benchmark("MTEB(eng, v2)")
-evaluation = mteb.MTEB(tasks=benchmark)
+model = ...
+results = mteb.evaluate(model, tasks=benchmark)
 ```
 
 The benchmark specified not only a list of tasks, but also what splits and language to run on.
 
-To get an overview of all available benchmarks simply run:
+To get an overview of all available benchmarks, simply run:
 
 ```python
 import mteb
@@ -208,7 +218,7 @@ benchmark.citation
 
 ### Task selection
 
-`mteb` comes the utility function `mteb.get_task` and `mteb_get_tasks` for fetching and analysing the tasks of interest.
+`mteb` comes with the utility function `mteb.get_task` and `mteb_get_tasks` for fetching and analysing the tasks of interest.
 
 This can be done in multiple ways, e.g.:
 
@@ -280,24 +290,31 @@ class MyCustomTask(AbsTaskReranking):
     ...
 
 model = mteb.get_model(...)
-evaluation = mteb.MTEB(tasks=[MyCustomTask()])
-evaluation.run(model)
+results = mteb.evaluate(model, tasks=[MyCustomTask()])
 ```
 
 
 ## Running the Evaluation
 
-This section contain documentation related to the runtime of the evalution. How to pass arguments to the encoder, saving outputs and similar.
+This section contains documentation related to the runtime of the evaluation. How to pass arguments to the encoder, saving outputs and similar.
 
 
-### Introduction to the runner
+### Introduction to `mteb.evaluate()`
 
-By default `mteb` with save the results in the `results/{model_name}` folder, however if you want to saving the results in a specific folder you
+Evalauting models in `mteb` typically takes the simple form:
+
+```python
+results = mteb.evaluate(model, tasks=tasks)
+```
+
+### Specifying the cache
+
+By default `mteb` with save the results in cache folder located at `~/.cache/mteb`, however if you want to saving the results in a specific folder you
 can specify it as follows:
 
 ```python
-evaluation = mteb.MTEB(tasks=tasks)
-results = evaluation.run(model, output_folder="my_results_folder")
+cache = mteb.ResultCache(cache_path="~/.cache/mteb")
+results = mteb.evaluate(model, tasks=tasks, cache=cache)
 ```
 
 ### Tracking Carbon Emissions
@@ -305,8 +322,7 @@ results = evaluation.run(model, output_folder="my_results_folder")
 `mteb` allows for easy tracking of carbon emission eq. using `codecarbon`. You simply need to install `mteb[codecarbon]` and enable co2 tracking:
 
 ```python
-evaluation = mteb.MTEB(tasks=tasks)
-results = evaluation.run(model, co2_tracker=True)
+results = mteb.evaluate(tasks=tasks, co2_tracker=True)
 ```
 
 
@@ -315,7 +331,7 @@ results = evaluation.run(model, co2_tracker=True)
 To pass in arguments to the model's `encode` function, you can use the encode keyword arguments (`encode_kwargs`):
 
 ```python
-evaluation.run(model, encode_kwargs={"batch_size": 32})
+mteb.evaluate(model, tasks, encode_kwargs={"batch_size": 32})
 ```
 
 ### Running SentenceTransformer model with prompts
@@ -327,7 +343,7 @@ from sentence_transformers import SentenceTransformer
 
 
 model = SentenceTransformer("average_word_embeddings_komninos", prompts={"query": "Query:", "passage": "Passage:"})
-evaluation = mteb.MTEB(tasks=tasks)
+results = mteb.evaluate(model, tasks=tasks)
 ```
 
 In prompts the key can be:
@@ -343,7 +359,7 @@ In prompts the key can be:
    8. `STS`
    9. `Summarization`
    10. `InstructionRetrieval`
-3. Pair of task type and prompt type like `Retrival-query` - these prompts will be used in all classification tasks
+3. Pair of task type and prompt type like `Retrieval-query` - these prompts will be used in all Retrieval tasks
 4. Task name - these prompts will be used in the specific task
 5. Pair of task name and prompt type like `NFCorpus-query` - these prompts will be used in the specific task
 
@@ -438,48 +454,39 @@ mteb run -t NFCorpus -m all-MiniLM-L6-v2 --output_folder results --save_predicti
 
 ### Caching Embeddings To Re-Use Them
 
-There are times you may want to cache the embeddings so you can re-use them. This may be true if you have multiple query sets for the same corpus (e.g. Wikipedia) or are doing some optimization over the queries (e.g. prompting, other experiments). You can setup a cache by using a simple wrapper, which will save the cache per task in the `cache_embeddings/{task_name}` folder:
+There are times you may want to cache the embeddings so you can re-use them. This may be true if you have multiple query sets for the same corpus (e.g. Wikipedia) or are doing some optimization over the queries (e.g. prompting, other experiments). You can setup a cache by using a simple wrapper, which will save the cache per task in the `<path_to_cache_dir>/<task_name>` folder:
 
 ```python
-# define your task and model above as normal
-...
+# define your task(s) and model above as normal
+task = mteb.get_task("LccSentimentClassification")
+model = mteb.get_model("minishlab/M2V_base_glove_subword")
+
 # wrap the model with the cache wrapper
 from mteb.models.cache_wrapper import CachedEmbeddingWrapper
 model_with_cached_emb = CachedEmbeddingWrapper(model, cache_path='path_to_cache_dir')
 # run as normal
-evaluation.run(model, ...)
+results = mteb.evaluate(model_with_cached_emb, tasks=[task])
+```
+
+If you want to directly access the cached embeddings (e.g. for subsequent analyses) follow this example:
+
+```python
+import numpy as np
+from mteb.models.cache_wrapper import TextVectorMap
+
+# Access the memory-mapped file and convert to array
+vector_map = TextVectorMap("path_to_cache_dir/LccSentimentClassification")
+vector_map.load(name="LccSentimentClassification")
+vectors = np.asarray(vector_map.vectors)
+
+# Remove all "placeholders" in the embedding cache
+zero_mask = (vectors == 0).all(axis=1)
+vectors = vectors[~zero_mask]
 ```
 
 ## Leaderboard
 
 This section contains information on how to interact with the leaderboard including running it locally, analysing the results, annotating contamination and more.
-
-### Fetching results from the Leaderboard
-
-Multiple models have already been run on tasks available within MTEB. These results are available results [repository](https://github.com/embeddings-benchmark/results).
-
-To make the results more easily accessible, we have designed custom functionality for retrieving from the repository. For instance, if you are selecting the best model for your French and English retrieval task on legal documents you could fetch the relevant tasks and create a dataframe of the results using the following code:
-
-```python
-import mteb
-from mteb.task_selection import results_to_dataframe
-
-tasks = mteb.get_tasks(
-    task_types=["Retrieval"], languages=["eng", "fra"], domains=["Legal"]
-)
-
-model_names = [
-    "GritLM/GritLM-7B",
-    "intfloat/multilingual-e5-small",
-    "intfloat/multilingual-e5-base",
-    "intfloat/multilingual-e5-large",
-]
-models = [mteb.get_model_meta(name) for name in model_names]
-
-results = mteb.load_results(models=models, tasks=tasks)
-
-df = results_to_dataframe(results)
-```
 
 ### Annotate Contamination
 
@@ -503,8 +510,8 @@ It is possible to completely deploy the leaderboard locally or self-host it. Thi
 integrate build their own benchmarks or integrate custom tasks into existing benchmarks.
 
 Running the leaderboard is quite easy. Simply run:
-```py
-python -m mteb.leaderboard.app
+```bash
+make run-leaderboard
 ```
 
-The leaderboard requires gradio install, which can be installed using `pip install mteb[gradio]` and requires python >3.10.
+The leaderboard requires gradio install, which can be installed using `pip install mteb[leaderboard]` and requires python >3.10.

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from mteb.abstasks import AbsTaskRetrieval, TaskMetadata
+from mteb.abstasks import AbsTaskRetrieval
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 class CQADupstackWordpressRetrievalPL(AbsTaskRetrieval):
@@ -25,14 +26,16 @@ class CQADupstackWordpressRetrievalPL(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated",
-        bibtex_citation="""@misc{wojtasik2024beirpl,
-      title={BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
-      author={Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
-      year={2024},
-      eprint={2305.19840},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR}
-}""",
+        bibtex_citation=r"""
+@misc{wojtasik2024beirpl,
+  archiveprefix = {arXiv},
+  author = {Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
+  eprint = {2305.19840},
+  primaryclass = {cs.IR},
+  title = {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
+  year = {2024},
+}
+""",
         adapted_from=["CQADupstackWordpressRetrieval"],
     )
 
@@ -59,14 +62,16 @@ class CQADupstackWebmastersRetrievalPL(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated",
-        bibtex_citation="""@misc{wojtasik2024beirpl,
-      title={BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
-      author={Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
-      year={2024},
-      eprint={2305.19840},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR}
-}""",
+        bibtex_citation=r"""
+@misc{wojtasik2024beirpl,
+  archiveprefix = {arXiv},
+  author = {Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
+  eprint = {2305.19840},
+  primaryclass = {cs.IR},
+  title = {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
+  year = {2024},
+}
+""",
         adapted_from=["CQADupstackWebmastersRetrieval"],
     )
 
@@ -93,14 +98,16 @@ class CQADupstackUnixRetrievalPL(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated",
-        bibtex_citation="""@misc{wojtasik2024beirpl,
-      title={BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
-      author={Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
-      year={2024},
-      eprint={2305.19840},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR}
-}""",
+        bibtex_citation=r"""
+@misc{wojtasik2024beirpl,
+  archiveprefix = {arXiv},
+  author = {Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
+  eprint = {2305.19840},
+  primaryclass = {cs.IR},
+  title = {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
+  year = {2024},
+}
+""",
         adapted_from=["CQADupstackUnixRetrieval"],
     )
 
@@ -127,14 +134,16 @@ class CQADupstackTexRetrievalPL(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated",
-        bibtex_citation="""@misc{wojtasik2024beirpl,
-      title={BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
-      author={Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
-      year={2024},
-      eprint={2305.19840},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR}
-}""",
+        bibtex_citation=r"""
+@misc{wojtasik2024beirpl,
+  archiveprefix = {arXiv},
+  author = {Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
+  eprint = {2305.19840},
+  primaryclass = {cs.IR},
+  title = {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
+  year = {2024},
+}
+""",
         adapted_from=["CQADupstackTexRetrieval"],
     )
 
@@ -161,14 +170,16 @@ class CQADupstackStatsRetrievalPL(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated",
-        bibtex_citation="""@misc{wojtasik2024beirpl,
-      title={BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
-      author={Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
-      year={2024},
-      eprint={2305.19840},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR}
-}""",
+        bibtex_citation=r"""
+@misc{wojtasik2024beirpl,
+  archiveprefix = {arXiv},
+  author = {Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
+  eprint = {2305.19840},
+  primaryclass = {cs.IR},
+  title = {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
+  year = {2024},
+}
+""",
         adapted_from=["CQADupstackStatsRetrieval"],
     )
 
@@ -195,14 +206,16 @@ class CQADupstackProgrammersRetrievalPL(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated",
-        bibtex_citation="""@misc{wojtasik2024beirpl,
-      title={BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
-      author={Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
-      year={2024},
-      eprint={2305.19840},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR}
-}""",
+        bibtex_citation=r"""
+@misc{wojtasik2024beirpl,
+  archiveprefix = {arXiv},
+  author = {Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
+  eprint = {2305.19840},
+  primaryclass = {cs.IR},
+  title = {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
+  year = {2024},
+}
+""",
         adapted_from=["CQADupstackProgrammersRetrieval"],
     )
 
@@ -229,14 +242,16 @@ class CQADupstackPhysicsRetrievalPL(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated",
-        bibtex_citation="""@misc{wojtasik2024beirpl,
-      title={BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
-      author={Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
-      year={2024},
-      eprint={2305.19840},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR}
-}""",
+        bibtex_citation=r"""
+@misc{wojtasik2024beirpl,
+  archiveprefix = {arXiv},
+  author = {Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
+  eprint = {2305.19840},
+  primaryclass = {cs.IR},
+  title = {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
+  year = {2024},
+}
+""",
         adapted_from=["CQADupstackPhysicsRetrieval"],
     )
 
@@ -263,14 +278,16 @@ class CQADupstackMathematicaRetrievalPL(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated",
-        bibtex_citation="""@misc{wojtasik2024beirpl,
-      title={BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
-      author={Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
-      year={2024},
-      eprint={2305.19840},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR}
-}""",
+        bibtex_citation=r"""
+@misc{wojtasik2024beirpl,
+  archiveprefix = {arXiv},
+  author = {Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
+  eprint = {2305.19840},
+  primaryclass = {cs.IR},
+  title = {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
+  year = {2024},
+}
+""",
         adapted_from=["CQADupstackMathematicaRetrieval"],
     )
 
@@ -297,14 +314,16 @@ class CQADupstackGisRetrievalPL(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated",
-        bibtex_citation="""@misc{wojtasik2024beirpl,
-      title={BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
-      author={Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
-      year={2024},
-      eprint={2305.19840},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR}
-}""",
+        bibtex_citation=r"""
+@misc{wojtasik2024beirpl,
+  archiveprefix = {arXiv},
+  author = {Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
+  eprint = {2305.19840},
+  primaryclass = {cs.IR},
+  title = {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
+  year = {2024},
+}
+""",
         adapted_from=["CQADupstackGisRetrieval"],
     )
 
@@ -331,14 +350,16 @@ class CQADupstackGamingRetrievalPL(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated",
-        bibtex_citation="""@misc{wojtasik2024beirpl,
-      title={BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
-      author={Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
-      year={2024},
-      eprint={2305.19840},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR}
-}""",
+        bibtex_citation=r"""
+@misc{wojtasik2024beirpl,
+  archiveprefix = {arXiv},
+  author = {Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
+  eprint = {2305.19840},
+  primaryclass = {cs.IR},
+  title = {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
+  year = {2024},
+}
+""",
         adapted_from=["CQADupstackGamingRetrieval"],
     )
 
@@ -365,14 +386,16 @@ class CQADupstackEnglishRetrievalPL(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated",
-        bibtex_citation="""@misc{wojtasik2024beirpl,
-      title={BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
-      author={Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
-      year={2024},
-      eprint={2305.19840},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR}
-}""",
+        bibtex_citation=r"""
+@misc{wojtasik2024beirpl,
+  archiveprefix = {arXiv},
+  author = {Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
+  eprint = {2305.19840},
+  primaryclass = {cs.IR},
+  title = {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
+  year = {2024},
+}
+""",
         adapted_from=["CQADupstackEnglishRetrieval"],
     )
 
@@ -399,13 +422,15 @@ class CQADupstackAndroidRetrievalPL(AbsTaskRetrieval):
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated",
-        bibtex_citation="""@misc{wojtasik2024beirpl,
-      title={BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
-      author={Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
-      year={2024},
-      eprint={2305.19840},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR}
-}""",
+        bibtex_citation=r"""
+@misc{wojtasik2024beirpl,
+  archiveprefix = {arXiv},
+  author = {Konrad Wojtasik and Vadim Shishkin and Kacper Wołowiec and Arkadiusz Janz and Maciej Piasecki},
+  eprint = {2305.19840},
+  primaryclass = {cs.IR},
+  title = {BEIR-PL: Zero Shot Information Retrieval Benchmark for the Polish Language},
+  year = {2024},
+}
+""",
         adapted_from=["CQADupstackAndroidRetrieval"],
     )

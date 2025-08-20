@@ -2,36 +2,32 @@
 
 from __future__ import annotations
 
-import numpy as np
 from datasets import Dataset, DatasetDict
 from PIL import Image
 
+from mteb.abstasks.AbsTaskAnyClassification import AbsTaskAnyClassification
+from mteb.abstasks.AbsTaskAnyClustering import AbsTaskAnyClustering
+from mteb.abstasks.AbsTaskAnySTS import AbsTaskAnySTS
+from mteb.abstasks.AbsTaskAnyZeroShotClassification import (
+    AbsTaskAnyZeroShotClassification,
+)
 from mteb.abstasks.AbsTaskBitextMining import AbsTaskBitextMining
-from mteb.abstasks.AbsTaskClassification import AbsTaskClassification
-from mteb.abstasks.AbsTaskClustering import AbsTaskClustering
 from mteb.abstasks.AbsTaskClusteringFast import AbsTaskClusteringFast
 from mteb.abstasks.AbsTaskMultilabelClassification import (
     AbsTaskMultilabelClassification,
 )
 from mteb.abstasks.AbsTaskPairClassification import AbsTaskPairClassification
-from mteb.abstasks.AbsTaskRetrieval import AbsTaskRetrieval
-from mteb.abstasks.AbsTaskSTS import AbsTaskSTS
+from mteb.abstasks.AbsTaskRetrieval import AbsTaskRetrieval, RetrievalSplitData
 from mteb.abstasks.AbsTaskSummarization import AbsTaskSummarization
 from mteb.abstasks.Image.AbsTaskAny2AnyMultiChoice import AbsTaskAny2AnyMultiChoice
 from mteb.abstasks.Image.AbsTaskAny2AnyRetrieval import AbsTaskAny2AnyRetrieval
-from mteb.abstasks.Image.AbsTaskImageClassification import AbsTaskImageClassification
-from mteb.abstasks.Image.AbsTaskImageClustering import AbsTaskImageClustering
 from mteb.abstasks.Image.AbsTaskImageMultilabelClassification import (  # noqa
     AbsTaskImageMultilabelClassification,
 )
 from mteb.abstasks.Image.AbsTaskImageTextPairClassification import (
     AbsTaskImageTextPairClassification,
 )
-from mteb.abstasks.Image.AbsTaskVisualSTS import AbsTaskVisualSTS
-from mteb.abstasks.Image.AbsTaskZeroShotClassification import (
-    AbsTaskZeroShotClassification,
-)
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 general_args = {
     "description": "a mock task for testing",
@@ -60,35 +56,103 @@ multilingual_eval_langs = {
 }
 
 
-class MockClassificationTask(AbsTaskClassification):
+def base_retrieval_datasplit() -> RetrievalSplitData:
+    return RetrievalSplitData(
+        queries=Dataset.from_list(
+            [
+                {
+                    "id": "q1",
+                    "text": "This is a test sentence",
+                },
+                {
+                    "id": "q2",
+                    "text": "This is another test sentence",
+                },
+            ]
+        ),
+        corpus=Dataset.from_list(
+            [
+                {
+                    "id": "d2",
+                    "text": "This is a positive sentence",
+                    "title": "Title of d1",
+                },
+                {
+                    "id": "d1",
+                    "text": "This is another positive sentence",
+                    "title": "Title of d2",
+                },
+            ]
+        ),
+        relevant_docs={
+            "q1": {"d1": 1, "d2": 0},
+            "q2": {"d1": 0, "d2": 1},
+        },
+        top_ranked={
+            "q1": ["d1", "d2"],
+            "q2": ["d2", "d1"],
+        },
+    )
+
+
+def instruction_retrieval_datasplit() -> RetrievalSplitData:
+    base_ds = base_retrieval_datasplit()
+    base_ds["queries"] = Dataset.from_list(
+        [
+            {
+                "id": "q1",
+                "text": "This is a test sentence",
+                "instruction": "This is a test instruction",
+            },
+            {
+                "id": "q2",
+                "text": "This is another test sentence",
+                "instruction": "This is another test instruction",
+            },
+        ]
+    )
+    return base_ds
+
+
+class MockClassificationTask(AbsTaskAnyClassification):
     expected_stats = {
         "test": {
             "num_samples": 2,
-            "number_of_characters": 52,
             "number_texts_intersect_with_train": 1,
-            "min_text_length": 23,
-            "average_text_length": 26.0,
-            "max_text_length": 29,
-            "unique_texts": 2,
-            "min_labels_per_text": 1,
-            "average_label_per_text": 1.0,
-            "max_labels_per_text": 1,
-            "unique_labels": 2,
-            "labels": {"0": {"count": 1}, "1": {"count": 1}},
+            "text_statistics": {
+                "total_text_length": 52,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "image_statistics": None,
+            "label_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 2,
+                "labels": {"0": {"count": 1}, "1": {"count": 1}},
+            },
         },
         "train": {
             "num_samples": 2,
-            "number_of_characters": 53,
             "number_texts_intersect_with_train": None,
-            "min_text_length": 23,
-            "average_text_length": 26.5,
-            "max_text_length": 30,
-            "unique_texts": 2,
-            "min_labels_per_text": 1,
-            "average_label_per_text": 1.0,
-            "max_labels_per_text": 1,
-            "unique_labels": 2,
-            "labels": {"0": {"count": 1}, "1": {"count": 1}},
+            "text_statistics": {
+                "total_text_length": 53,
+                "min_text_length": 23,
+                "average_text_length": 26.5,
+                "max_text_length": 30,
+                "unique_texts": 2,
+            },
+            "image_statistics": None,
+            "label_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 2,
+                "labels": {"0": {"count": 1}, "1": {"count": 1}},
+            },
         },
     }
 
@@ -124,93 +188,123 @@ class MockClassificationTask(AbsTaskClassification):
         self.data_loaded = True
 
 
-class MockMultilingualClassificationTask(AbsTaskClassification):
+class MockMultilingualClassificationTask(AbsTaskAnyClassification):
     expected_stats = {
         "test": {
             "num_samples": 4,
-            "number_of_characters": 104,
             "number_texts_intersect_with_train": 1,
-            "min_text_length": 23,
-            "average_text_length": 26.0,
-            "max_text_length": 29,
-            "unique_texts": 2,
-            "min_labels_per_text": 1,
-            "average_label_per_text": 1.0,
-            "max_labels_per_text": 1,
-            "unique_labels": 2,
-            "labels": {"0": {"count": 2}, "1": {"count": 2}},
+            "text_statistics": {
+                "total_text_length": 104,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "image_statistics": None,
+            "label_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 2,
+                "labels": {"0": {"count": 2}, "1": {"count": 2}},
+            },
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 2,
-                    "number_of_characters": 52,
                     "number_texts_intersect_with_train": 1,
-                    "min_text_length": 23,
-                    "average_text_length": 26.0,
-                    "max_text_length": 29,
-                    "unique_texts": 2,
-                    "min_labels_per_text": 1,
-                    "average_label_per_text": 1.0,
-                    "max_labels_per_text": 1,
-                    "unique_labels": 2,
-                    "labels": {"0": {"count": 1}, "1": {"count": 1}},
+                    "text_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "image_statistics": None,
+                    "label_statistics": {
+                        "min_labels_per_text": 1,
+                        "average_label_per_text": 1.0,
+                        "max_labels_per_text": 1,
+                        "unique_labels": 2,
+                        "labels": {"0": {"count": 1}, "1": {"count": 1}},
+                    },
                 },
                 "fra": {
                     "num_samples": 2,
-                    "number_of_characters": 52,
                     "number_texts_intersect_with_train": 1,
-                    "min_text_length": 23,
-                    "average_text_length": 26.0,
-                    "max_text_length": 29,
-                    "unique_texts": 2,
-                    "min_labels_per_text": 1,
-                    "average_label_per_text": 1.0,
-                    "max_labels_per_text": 1,
-                    "unique_labels": 2,
-                    "labels": {"0": {"count": 1}, "1": {"count": 1}},
+                    "text_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "image_statistics": None,
+                    "label_statistics": {
+                        "min_labels_per_text": 1,
+                        "average_label_per_text": 1.0,
+                        "max_labels_per_text": 1,
+                        "unique_labels": 2,
+                        "labels": {"0": {"count": 1}, "1": {"count": 1}},
+                    },
                 },
             },
         },
         "train": {
             "num_samples": 4,
-            "number_of_characters": 106,
             "number_texts_intersect_with_train": None,
-            "min_text_length": 23,
-            "average_text_length": 26.5,
-            "max_text_length": 30,
-            "unique_texts": 2,
-            "min_labels_per_text": 1,
-            "average_label_per_text": 1.0,
-            "max_labels_per_text": 1,
-            "unique_labels": 2,
-            "labels": {"0": {"count": 2}, "1": {"count": 2}},
+            "text_statistics": {
+                "total_text_length": 106,
+                "min_text_length": 23,
+                "average_text_length": 26.5,
+                "max_text_length": 30,
+                "unique_texts": 2,
+            },
+            "image_statistics": None,
+            "label_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 2,
+                "labels": {"0": {"count": 2}, "1": {"count": 2}},
+            },
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 2,
-                    "number_of_characters": 53,
                     "number_texts_intersect_with_train": None,
-                    "min_text_length": 23,
-                    "average_text_length": 26.5,
-                    "max_text_length": 30,
-                    "unique_texts": 2,
-                    "min_labels_per_text": 1,
-                    "average_label_per_text": 1.0,
-                    "max_labels_per_text": 1,
-                    "unique_labels": 2,
-                    "labels": {"0": {"count": 1}, "1": {"count": 1}},
+                    "text_statistics": {
+                        "total_text_length": 53,
+                        "min_text_length": 23,
+                        "average_text_length": 26.5,
+                        "max_text_length": 30,
+                        "unique_texts": 2,
+                    },
+                    "image_statistics": None,
+                    "label_statistics": {
+                        "min_labels_per_text": 1,
+                        "average_label_per_text": 1.0,
+                        "max_labels_per_text": 1,
+                        "unique_labels": 2,
+                        "labels": {"0": {"count": 1}, "1": {"count": 1}},
+                    },
                 },
                 "fra": {
                     "num_samples": 2,
-                    "number_of_characters": 53,
                     "number_texts_intersect_with_train": None,
-                    "min_text_length": 23,
-                    "average_text_length": 26.5,
-                    "max_text_length": 30,
-                    "unique_texts": 2,
-                    "min_labels_per_text": 1,
-                    "average_label_per_text": 1.0,
-                    "max_labels_per_text": 1,
-                    "unique_labels": 2,
-                    "labels": {"0": {"count": 1}, "1": {"count": 1}},
+                    "text_statistics": {
+                        "total_text_length": 53,
+                        "min_text_length": 23,
+                        "average_text_length": 26.5,
+                        "max_text_length": 30,
+                        "unique_texts": 2,
+                    },
+                    "image_statistics": None,
+                    "label_statistics": {
+                        "min_labels_per_text": 1,
+                        "average_label_per_text": 1.0,
+                        "max_labels_per_text": 1,
+                        "unique_labels": 2,
+                        "labels": {"0": {"count": 1}, "1": {"count": 1}},
+                    },
                 },
             },
         },
@@ -258,14 +352,20 @@ class MockBitextMiningTask(AbsTaskBitextMining):
             "num_samples": 2,
             "number_of_characters": 113,
             "unique_pairs": 2,
-            "min_sentence1_length": 23,
-            "average_sentence1_length": 26.0,
-            "max_sentence1_length": 29,
-            "unique_sentence1": 2,
-            "min_sentence2_length": 24,
-            "average_sentence2_length": 30.5,
-            "max_sentence2_length": 37,
-            "unique_sentence2": 2,
+            "sentence1_statistics": {
+                "total_text_length": 52,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "sentence2_statistics": {
+                "total_text_length": 61,
+                "min_text_length": 24,
+                "average_text_length": 30.5,
+                "max_text_length": 37,
+                "unique_texts": 2,
+            },
         }
     }
 
@@ -302,40 +402,58 @@ class MockMultilingualBitextMiningTask(AbsTaskBitextMining):
             "num_samples": 4,
             "number_of_characters": 226,
             "unique_pairs": 2,
-            "min_sentence1_length": 23,
-            "average_sentence1_length": 26.0,
-            "max_sentence1_length": 29,
-            "unique_sentence1": 2,
-            "min_sentence2_length": 24,
-            "average_sentence2_length": 30.5,
-            "max_sentence2_length": 37,
-            "unique_sentence2": 2,
+            "sentence1_statistics": {
+                "total_text_length": 104,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "sentence2_statistics": {
+                "total_text_length": 122,
+                "min_text_length": 24,
+                "average_text_length": 30.5,
+                "max_text_length": 37,
+                "unique_texts": 2,
+            },
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 2,
                     "number_of_characters": 113,
                     "unique_pairs": 2,
-                    "min_sentence1_length": 23,
-                    "average_sentence1_length": 26.0,
-                    "max_sentence1_length": 29,
-                    "unique_sentence1": 2,
-                    "min_sentence2_length": 24,
-                    "average_sentence2_length": 30.5,
-                    "max_sentence2_length": 37,
-                    "unique_sentence2": 2,
+                    "sentence1_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "sentence2_statistics": {
+                        "total_text_length": 61,
+                        "min_text_length": 24,
+                        "average_text_length": 30.5,
+                        "max_text_length": 37,
+                        "unique_texts": 2,
+                    },
                 },
                 "fra": {
                     "num_samples": 2,
                     "number_of_characters": 113,
                     "unique_pairs": 2,
-                    "min_sentence1_length": 23,
-                    "average_sentence1_length": 26.0,
-                    "max_sentence1_length": 29,
-                    "unique_sentence1": 2,
-                    "min_sentence2_length": 24,
-                    "average_sentence2_length": 30.5,
-                    "max_sentence2_length": 37,
-                    "unique_sentence2": 2,
+                    "sentence1_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "sentence2_statistics": {
+                        "total_text_length": 61,
+                        "min_text_length": 24,
+                        "average_text_length": 30.5,
+                        "max_text_length": 37,
+                        "unique_texts": 2,
+                    },
                 },
             },
         }
@@ -379,40 +497,58 @@ class MockMultilingualParallelBitextMiningTask(AbsTaskBitextMining):
             "num_samples": 4,
             "number_of_characters": 226,
             "unique_pairs": 4,
-            "min_sentence1_length": 23,
-            "average_sentence1_length": 28.25,
-            "max_sentence1_length": 37,
-            "unique_sentence1": 4,
-            "min_sentence2_length": 23,
-            "average_sentence2_length": 28.25,
-            "max_sentence2_length": 37,
-            "unique_sentence2": 4,
+            "sentence1_statistics": {
+                "total_text_length": 113,
+                "min_text_length": 23,
+                "average_text_length": 28.25,
+                "max_text_length": 37,
+                "unique_texts": 4,
+            },
+            "sentence2_statistics": {
+                "total_text_length": 113,
+                "min_text_length": 23,
+                "average_text_length": 28.25,
+                "max_text_length": 37,
+                "unique_texts": 4,
+            },
             "hf_subset_descriptive_stats": {
                 "eng_Latn-fra_Latn": {
                     "num_samples": 2,
                     "number_of_characters": 113,
                     "unique_pairs": 2,
-                    "min_sentence1_length": 23,
-                    "average_sentence1_length": 26.0,
-                    "max_sentence1_length": 29,
-                    "unique_sentence1": 2,
-                    "min_sentence2_length": 24,
-                    "average_sentence2_length": 30.5,
-                    "max_sentence2_length": 37,
-                    "unique_sentence2": 2,
+                    "sentence1_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "sentence2_statistics": {
+                        "total_text_length": 61,
+                        "min_text_length": 24,
+                        "average_text_length": 30.5,
+                        "max_text_length": 37,
+                        "unique_texts": 2,
+                    },
                 },
                 "fra_Latn-eng_Latn": {
                     "num_samples": 2,
                     "number_of_characters": 113,
                     "unique_pairs": 2,
-                    "min_sentence1_length": 24,
-                    "average_sentence1_length": 30.5,
-                    "max_sentence1_length": 37,
-                    "unique_sentence1": 2,
-                    "min_sentence2_length": 23,
-                    "average_sentence2_length": 26.0,
-                    "max_sentence2_length": 29,
-                    "unique_sentence2": 2,
+                    "sentence1_statistics": {
+                        "total_text_length": 61,
+                        "min_text_length": 24,
+                        "average_text_length": 30.5,
+                        "max_text_length": 37,
+                        "unique_texts": 2,
+                    },
+                    "sentence2_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
                 },
             },
         }
@@ -449,20 +585,26 @@ class MockMultilingualParallelBitextMiningTask(AbsTaskBitextMining):
         self.data_loaded = True
 
 
-class MockClusteringTask(AbsTaskClustering):
+class MockClusteringTask(AbsTaskAnyClustering):
     expected_stats = {
         "test": {
-            "num_samples": 1,
-            "number_of_characters": 3,
-            "min_text_length": 3,
-            "average_text_length": 3.0,
-            "max_text_length": 3,
-            "unique_texts": 3,
-            "min_labels_per_text": 1,
-            "average_labels_per_text": 3.0,
-            "max_labels_per_text": 1,
-            "unique_labels": 3,
-            "labels": {"0": {"count": 1}, "1": {"count": 1}, "2": {"count": 1}},
+            "num_samples": 3,
+            "number_of_characters": 0,
+            "text_statistics": {
+                "total_text_length": 81,
+                "min_text_length": 23,
+                "average_text_length": 27.0,
+                "max_text_length": 29,
+                "unique_texts": 3,
+            },
+            "image_statistics": None,
+            "label_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 3,
+                "labels": {"0": {"count": 1}, "1": {"count": 1}, "2": {"count": 1}},
+            },
         }
     }
 
@@ -496,46 +638,72 @@ class MockClusteringTask(AbsTaskClustering):
         self.data_loaded = True
 
 
-class MockMultilingualClusteringTask(AbsTaskClustering):
+class MockMultilingualClusteringTask(AbsTaskAnyClustering):
     expected_stats = {
         "test": {
-            "num_samples": 2,
-            "number_of_characters": 6,
-            "min_text_length": 3,
-            "average_text_length": 3.0,
-            "max_text_length": 3,
-            "unique_texts": 3,
-            "min_labels_per_text": 2,
-            "average_labels_per_text": 3.0,
-            "max_labels_per_text": 2,
-            "unique_labels": 3,
-            "labels": {"0": {"count": 2}, "1": {"count": 2}, "2": {"count": 2}},
+            "num_samples": 6,
+            "number_of_characters": 0,
+            "text_statistics": {
+                "total_text_length": 162,
+                "min_text_length": 23,
+                "average_text_length": 27.0,
+                "max_text_length": 29,
+                "unique_texts": 3,
+            },
+            "image_statistics": None,
+            "label_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 3,
+                "labels": {"0": {"count": 2}, "1": {"count": 2}, "2": {"count": 2}},
+            },
             "hf_subset_descriptive_stats": {
                 "eng": {
-                    "num_samples": 1,
-                    "number_of_characters": 3,
-                    "min_text_length": 3,
-                    "average_text_length": 3.0,
-                    "max_text_length": 3,
-                    "unique_texts": 3,
-                    "min_labels_per_text": 1,
-                    "average_labels_per_text": 3.0,
-                    "max_labels_per_text": 1,
-                    "unique_labels": 3,
-                    "labels": {"0": {"count": 1}, "1": {"count": 1}, "2": {"count": 1}},
+                    "num_samples": 3,
+                    "number_of_characters": 0,
+                    "text_statistics": {
+                        "total_text_length": 81,
+                        "min_text_length": 23,
+                        "average_text_length": 27.0,
+                        "max_text_length": 29,
+                        "unique_texts": 3,
+                    },
+                    "image_statistics": None,
+                    "label_statistics": {
+                        "min_labels_per_text": 1,
+                        "average_label_per_text": 1.0,
+                        "max_labels_per_text": 1,
+                        "unique_labels": 3,
+                        "labels": {
+                            "0": {"count": 1},
+                            "1": {"count": 1},
+                            "2": {"count": 1},
+                        },
+                    },
                 },
                 "fra": {
-                    "num_samples": 1,
-                    "number_of_characters": 3,
-                    "min_text_length": 3,
-                    "average_text_length": 3.0,
-                    "max_text_length": 3,
-                    "unique_texts": 3,
-                    "min_labels_per_text": 1,
-                    "average_labels_per_text": 3.0,
-                    "max_labels_per_text": 1,
-                    "unique_labels": 3,
-                    "labels": {"0": {"count": 1}, "1": {"count": 1}, "2": {"count": 1}},
+                    "num_samples": 3,
+                    "number_of_characters": 0,
+                    "text_statistics": {
+                        "total_text_length": 81,
+                        "min_text_length": 23,
+                        "average_text_length": 27.0,
+                        "max_text_length": 29,
+                        "unique_texts": 3,
+                    },
+                    "image_statistics": None,
+                    "label_statistics": {
+                        "min_labels_per_text": 1,
+                        "average_label_per_text": 1.0,
+                        "max_labels_per_text": 1,
+                        "unique_labels": 3,
+                        "labels": {
+                            "0": {"count": 1},
+                            "1": {"count": 1},
+                            "2": {"count": 1},
+                        },
+                    },
                 },
             },
         }
@@ -582,16 +750,20 @@ class MockClusteringFastTask(AbsTaskClusteringFast):
     expected_stats = {
         "test": {
             "num_samples": 3,
-            "number_of_characters": 81,
-            "min_text_length": 23,
-            "average_text_length": 27.0,
-            "max_text_length": 29,
-            "unique_texts": 2,
-            "min_labels_per_text": 1,
-            "average_labels_per_text": 1.0,
-            "max_labels_per_text": 1,
-            "unique_labels": 3,
-            "labels": {"0": {"count": 1}, "1": {"count": 1}, "2": {"count": 1}},
+            "text_statistics": {
+                "total_text_length": 81,
+                "min_text_length": 23,
+                "average_text_length": 27.0,
+                "max_text_length": 29,
+                "unique_texts": 3,
+            },
+            "labels_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 3,
+                "labels": {"0": {"count": 1}, "1": {"count": 1}, "2": {"count": 1}},
+            },
         }
     }
 
@@ -629,42 +801,62 @@ class MockMultilingualClusteringFastTask(AbsTaskClusteringFast):
     expected_stats = {
         "test": {
             "num_samples": 6,
-            "number_of_characters": 162,
-            "min_text_length": 23,
-            "average_text_length": 27.0,
-            "max_text_length": 29,
-            "unique_texts": 2,
-            "min_labels_per_text": 2,
-            "average_labels_per_text": 1.0,
-            "max_labels_per_text": 2,
-            "unique_labels": 3,
-            "labels": {"0": {"count": 2}, "1": {"count": 2}, "2": {"count": 2}},
+            "text_statistics": {
+                "total_text_length": 162,
+                "min_text_length": 23,
+                "average_text_length": 27.0,
+                "max_text_length": 29,
+                "unique_texts": 3,
+            },
+            "labels_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 3,
+                "labels": {"0": {"count": 2}, "1": {"count": 2}, "2": {"count": 2}},
+            },
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 3,
-                    "number_of_characters": 81,
-                    "min_text_length": 23,
-                    "average_text_length": 27.0,
-                    "max_text_length": 29,
-                    "unique_texts": 2,
-                    "min_labels_per_text": 1,
-                    "average_labels_per_text": 1.0,
-                    "max_labels_per_text": 1,
-                    "unique_labels": 3,
-                    "labels": {"0": {"count": 1}, "1": {"count": 1}, "2": {"count": 1}},
+                    "text_statistics": {
+                        "total_text_length": 81,
+                        "min_text_length": 23,
+                        "average_text_length": 27.0,
+                        "max_text_length": 29,
+                        "unique_texts": 3,
+                    },
+                    "labels_statistics": {
+                        "min_labels_per_text": 1,
+                        "average_label_per_text": 1.0,
+                        "max_labels_per_text": 1,
+                        "unique_labels": 3,
+                        "labels": {
+                            "0": {"count": 1},
+                            "1": {"count": 1},
+                            "2": {"count": 1},
+                        },
+                    },
                 },
                 "fra": {
                     "num_samples": 3,
-                    "number_of_characters": 81,
-                    "min_text_length": 23,
-                    "average_text_length": 27.0,
-                    "max_text_length": 29,
-                    "unique_texts": 2,
-                    "min_labels_per_text": 1,
-                    "average_labels_per_text": 1.0,
-                    "max_labels_per_text": 1,
-                    "unique_labels": 3,
-                    "labels": {"0": {"count": 1}, "1": {"count": 1}, "2": {"count": 1}},
+                    "text_statistics": {
+                        "total_text_length": 81,
+                        "min_text_length": 23,
+                        "average_text_length": 27.0,
+                        "max_text_length": 29,
+                        "unique_texts": 3,
+                    },
+                    "labels_statistics": {
+                        "min_labels_per_text": 1,
+                        "average_label_per_text": 1.0,
+                        "max_labels_per_text": 1,
+                        "unique_labels": 3,
+                        "labels": {
+                            "0": {"count": 1},
+                            "1": {"count": 1},
+                            "2": {"count": 1},
+                        },
+                    },
                 },
             },
         }
@@ -709,16 +901,27 @@ class MockPairClassificationTask(AbsTaskPairClassification):
             "num_samples": 2,
             "number_of_characters": 113,
             "unique_pairs": 2,
-            "min_sentence1_length": 23,
-            "avg_sentence1_length": 26.0,
-            "max_sentence1_length": 29,
-            "unique_sentence1": 2,
-            "min_sentence2_length": 24,
-            "avg_sentence2_length": 30.5,
-            "max_sentence2_length": 37,
-            "unique_sentence2": 2,
-            "unique_labels": 2,
-            "labels": {"1": {"count": 1}, "0": {"count": 1}},
+            "text1_statistics": {
+                "total_text_length": 52,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "text2_statistics": {
+                "total_text_length": 61,
+                "min_text_length": 24,
+                "average_text_length": 30.5,
+                "max_text_length": 37,
+                "unique_texts": 2,
+            },
+            "labels_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 2,
+                "labels": {"1": {"count": 1}, "0": {"count": 1}},
+            },
         }
     }
 
@@ -759,46 +962,79 @@ class MockMultilingualPairClassificationTask(AbsTaskPairClassification):
             "num_samples": 4,
             "number_of_characters": 226,
             "unique_pairs": 2,
-            "min_sentence1_length": 23,
-            "avg_sentence1_length": 26.0,
-            "max_sentence1_length": 29,
-            "unique_sentence1": 2,
-            "min_sentence2_length": 24,
-            "avg_sentence2_length": 30.5,
-            "max_sentence2_length": 37,
-            "unique_sentence2": 2,
-            "unique_labels": 2,
-            "labels": {"1": {"count": 2}, "0": {"count": 2}},
+            "text1_statistics": {
+                "total_text_length": 104,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "text2_statistics": {
+                "total_text_length": 122,
+                "min_text_length": 24,
+                "average_text_length": 30.5,
+                "max_text_length": 37,
+                "unique_texts": 2,
+            },
+            "labels_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 2,
+                "labels": {"1": {"count": 2}, "0": {"count": 2}},
+            },
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 2,
                     "number_of_characters": 113,
                     "unique_pairs": 2,
-                    "min_sentence1_length": 23,
-                    "avg_sentence1_length": 26.0,
-                    "max_sentence1_length": 29,
-                    "unique_sentence1": 2,
-                    "min_sentence2_length": 24,
-                    "avg_sentence2_length": 30.5,
-                    "max_sentence2_length": 37,
-                    "unique_sentence2": 2,
-                    "unique_labels": 2,
-                    "labels": {"1": {"count": 1}, "0": {"count": 1}},
+                    "text1_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "text2_statistics": {
+                        "total_text_length": 61,
+                        "min_text_length": 24,
+                        "average_text_length": 30.5,
+                        "max_text_length": 37,
+                        "unique_texts": 2,
+                    },
+                    "labels_statistics": {
+                        "min_labels_per_text": 1,
+                        "average_label_per_text": 1.0,
+                        "max_labels_per_text": 1,
+                        "unique_labels": 2,
+                        "labels": {"1": {"count": 1}, "0": {"count": 1}},
+                    },
                 },
                 "fra": {
                     "num_samples": 2,
                     "number_of_characters": 113,
                     "unique_pairs": 2,
-                    "min_sentence1_length": 23,
-                    "avg_sentence1_length": 26.0,
-                    "max_sentence1_length": 29,
-                    "unique_sentence1": 2,
-                    "min_sentence2_length": 24,
-                    "avg_sentence2_length": 30.5,
-                    "max_sentence2_length": 37,
-                    "unique_sentence2": 2,
-                    "unique_labels": 2,
-                    "labels": {"1": {"count": 1}, "0": {"count": 1}},
+                    "text1_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "text2_statistics": {
+                        "total_text_length": 61,
+                        "min_text_length": 24,
+                        "average_text_length": 30.5,
+                        "max_text_length": 37,
+                        "unique_texts": 2,
+                    },
+                    "labels_statistics": {
+                        "min_labels_per_text": 1,
+                        "average_label_per_text": 1.0,
+                        "max_labels_per_text": 1,
+                        "unique_labels": 2,
+                        "labels": {"1": {"count": 1}, "0": {"count": 1}},
+                    },
                 },
             },
         }
@@ -839,23 +1075,29 @@ class MockMultilingualPairClassificationTask(AbsTaskPairClassification):
         self.data_loaded = True
 
 
-class MockSTSTask(AbsTaskSTS):
+class MockSTSTask(AbsTaskAnySTS):
     expected_stats = {
         "test": {
             "num_samples": 2,
             "number_of_characters": 113,
             "unique_pairs": 2,
-            "min_sentence1_length": 23,
-            "average_sentence1_len": 26.0,
-            "max_sentence1_length": 29,
-            "unique_sentence1": 2,
-            "min_sentence2_length": 24,
-            "average_sentence2_len": 30.5,
-            "max_sentence2_length": 37,
-            "unique_sentence2": 2,
-            "min_score": 0,
-            "avg_score": 0.5,
-            "max_score": 1,
+            "text1_statistics": {
+                "total_text_length": 52,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "text2_statistics": {
+                "total_text_length": 61,
+                "min_text_length": 24,
+                "average_text_length": 30.5,
+                "max_text_length": 37,
+                "unique_texts": 2,
+            },
+            "image1_statistics": None,
+            "image2_statistics": None,
+            "label_statistics": {"min_score": 0, "avg_score": 0.5, "max_score": 1},
         }
     }
 
@@ -891,55 +1133,81 @@ class MockSTSTask(AbsTaskSTS):
     max_score = 1
 
 
-class MockMultilingualSTSTask(AbsTaskSTS):
+class MockMultilingualSTSTask(AbsTaskAnySTS):
     expected_stats = {
         "test": {
             "num_samples": 4,
             "number_of_characters": 226,
             "unique_pairs": 2,
-            "min_sentence1_length": 23,
-            "average_sentence1_len": 26.0,
-            "max_sentence1_length": 29,
-            "unique_sentence1": 2,
-            "min_sentence2_length": 24,
-            "average_sentence2_len": 30.5,
-            "max_sentence2_length": 37,
-            "unique_sentence2": 2,
-            "min_score": 0,
-            "avg_score": 0.5,
-            "max_score": 1,
+            "text1_statistics": {
+                "total_text_length": 104,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "text2_statistics": {
+                "total_text_length": 122,
+                "min_text_length": 24,
+                "average_text_length": 30.5,
+                "max_text_length": 37,
+                "unique_texts": 2,
+            },
+            "image1_statistics": None,
+            "image2_statistics": None,
+            "label_statistics": {"min_score": 0, "avg_score": 0.5, "max_score": 1},
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 2,
                     "number_of_characters": 113,
                     "unique_pairs": 2,
-                    "min_sentence1_length": 23,
-                    "average_sentence1_len": 26.0,
-                    "max_sentence1_length": 29,
-                    "unique_sentence1": 2,
-                    "min_sentence2_length": 24,
-                    "average_sentence2_len": 30.5,
-                    "max_sentence2_length": 37,
-                    "unique_sentence2": 2,
-                    "min_score": 0,
-                    "avg_score": 0.5,
-                    "max_score": 1,
+                    "text1_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "text2_statistics": {
+                        "total_text_length": 61,
+                        "min_text_length": 24,
+                        "average_text_length": 30.5,
+                        "max_text_length": 37,
+                        "unique_texts": 2,
+                    },
+                    "image1_statistics": None,
+                    "image2_statistics": None,
+                    "label_statistics": {
+                        "min_score": 0,
+                        "avg_score": 0.5,
+                        "max_score": 1,
+                    },
                 },
                 "fra": {
                     "num_samples": 2,
                     "number_of_characters": 113,
                     "unique_pairs": 2,
-                    "min_sentence1_length": 23,
-                    "average_sentence1_len": 26.0,
-                    "max_sentence1_length": 29,
-                    "unique_sentence1": 2,
-                    "min_sentence2_length": 24,
-                    "average_sentence2_len": 30.5,
-                    "max_sentence2_length": 37,
-                    "unique_sentence2": 2,
-                    "min_score": 0,
-                    "avg_score": 0.5,
-                    "max_score": 1,
+                    "text1_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "text2_statistics": {
+                        "total_text_length": 61,
+                        "min_text_length": 24,
+                        "average_text_length": 30.5,
+                        "max_text_length": 37,
+                        "unique_texts": 2,
+                    },
+                    "image1_statistics": None,
+                    "image2_statistics": None,
+                    "label_statistics": {
+                        "min_score": 0,
+                        "avg_score": 0.5,
+                        "max_score": 1,
+                    },
                 },
             },
         }
@@ -984,22 +1252,29 @@ class MockSummarizationTask(AbsTaskSummarization):
     expected_stats = {
         "test": {
             "num_samples": 2,
-            "number_of_characters": 60,
-            "min_text_length": 23,
-            "avg_text_length": 26.0,
-            "max_text_length": 29,
-            "unique_texts": 2,
-            "min_human_summaries_length": 2,
-            "avg_human_summaries_length": 2.0,
-            "max_human_summaries_length": 2,
-            "unique_human_summaries": 2,
-            "min_machine_summaries_length": 2,
-            "avg_machine_summaries_length": 2.0,
-            "max_machine_summaries_length": 2,
-            "unique_machine_summaries": 2,
-            "min_relevance": [0, 1],
-            "avg_relevance": 0.5,
-            "max_relevance": [1, 0],
+            "number_of_characters": 244,
+            "text_statistics": {
+                "total_text_length": 52,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "human_summaries_statistics": {
+                "total_text_length": 80,
+                "min_text_length": 17,
+                "average_text_length": 20.0,
+                "max_text_length": 23,
+                "unique_texts": 2,
+            },
+            "machine_summaries_statistics": {
+                "total_text_length": 112,
+                "min_text_length": 25,
+                "average_text_length": 28.0,
+                "max_text_length": 31,
+                "unique_texts": 2,
+            },
+            "score_statistics": {"min_score": 0, "avg_score": 0.5, "max_score": 1},
         }
     }
 
@@ -1044,60 +1319,89 @@ class MockMultilingualSummarizationTask(AbsTaskSummarization):
     expected_stats = {
         "test": {
             "num_samples": 4,
-            "number_of_characters": 120,
-            "min_text_length": 23,
-            "avg_text_length": 26.0,
-            "max_text_length": 29,
-            "unique_texts": 2,
-            "min_human_summaries_length": 2,
-            "avg_human_summaries_length": 2.0,
-            "max_human_summaries_length": 2,
-            "unique_human_summaries": 2,
-            "min_machine_summaries_length": 2,
-            "avg_machine_summaries_length": 2.0,
-            "max_machine_summaries_length": 2,
-            "unique_machine_summaries": 2,
-            "min_relevance": [0, 1],
-            "avg_relevance": 0.5,
-            "max_relevance": [1, 0],
+            "number_of_characters": 488,
+            "text_statistics": {
+                "total_text_length": 104,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "human_summaries_statistics": {
+                "total_text_length": 160,
+                "min_text_length": 17,
+                "average_text_length": 20.0,
+                "max_text_length": 23,
+                "unique_texts": 2,
+            },
+            "machine_summaries_statistics": {
+                "total_text_length": 224,
+                "min_text_length": 25,
+                "average_text_length": 28.0,
+                "max_text_length": 31,
+                "unique_texts": 2,
+            },
+            "score_statistics": {"min_score": 0, "avg_score": 0.5, "max_score": 1},
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 2,
-                    "number_of_characters": 60,
-                    "min_text_length": 23,
-                    "avg_text_length": 26.0,
-                    "max_text_length": 29,
-                    "unique_texts": 2,
-                    "min_human_summaries_length": 2,
-                    "avg_human_summaries_length": 2.0,
-                    "max_human_summaries_length": 2,
-                    "unique_human_summaries": 2,
-                    "min_machine_summaries_length": 2,
-                    "avg_machine_summaries_length": 2.0,
-                    "max_machine_summaries_length": 2,
-                    "unique_machine_summaries": 2,
-                    "min_relevance": [0, 1],
-                    "avg_relevance": 0.5,
-                    "max_relevance": [1, 0],
+                    "number_of_characters": 244,
+                    "text_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "human_summaries_statistics": {
+                        "total_text_length": 80,
+                        "min_text_length": 17,
+                        "average_text_length": 20.0,
+                        "max_text_length": 23,
+                        "unique_texts": 2,
+                    },
+                    "machine_summaries_statistics": {
+                        "total_text_length": 112,
+                        "min_text_length": 25,
+                        "average_text_length": 28.0,
+                        "max_text_length": 31,
+                        "unique_texts": 2,
+                    },
+                    "score_statistics": {
+                        "min_score": 0,
+                        "avg_score": 0.5,
+                        "max_score": 1,
+                    },
                 },
                 "fra": {
                     "num_samples": 2,
-                    "number_of_characters": 60,
-                    "min_text_length": 23,
-                    "avg_text_length": 26.0,
-                    "max_text_length": 29,
-                    "unique_texts": 2,
-                    "min_human_summaries_length": 2,
-                    "avg_human_summaries_length": 2.0,
-                    "max_human_summaries_length": 2,
-                    "unique_human_summaries": 2,
-                    "min_machine_summaries_length": 2,
-                    "avg_machine_summaries_length": 2.0,
-                    "max_machine_summaries_length": 2,
-                    "unique_machine_summaries": 2,
-                    "min_relevance": [0, 1],
-                    "avg_relevance": 0.5,
-                    "max_relevance": [1, 0],
+                    "number_of_characters": 244,
+                    "text_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "human_summaries_statistics": {
+                        "total_text_length": 80,
+                        "min_text_length": 17,
+                        "average_text_length": 20.0,
+                        "max_text_length": 23,
+                        "unique_texts": 2,
+                    },
+                    "machine_summaries_statistics": {
+                        "total_text_length": 112,
+                        "min_text_length": 25,
+                        "average_text_length": 28.0,
+                        "max_text_length": 31,
+                        "unique_texts": 2,
+                    },
+                    "score_statistics": {
+                        "min_score": 0,
+                        "avg_score": 0.5,
+                        "max_score": 1,
+                    },
                 },
             },
         }
@@ -1148,32 +1452,34 @@ class MockRerankingTask(AbsTaskRetrieval):
     expected_stats = {
         "test": {
             "num_samples": 4,
-            "number_of_characters": 106,
-            "num_documents": 2,
-            "min_document_length": 27,
-            "average_document_length": 27.0,
-            "max_document_length": 27,
-            "unique_documents": 2,
-            "num_queries": 2,
-            "min_query_length": 23,
-            "average_query_length": 26.0,
-            "max_query_length": 29,
-            "unique_queries": 2,
-            "none_queries": 0,
-            "num_relevant_docs": 4,
-            "min_relevant_docs_per_query": 2,
-            "average_relevant_docs_per_query": 1.0,
-            "max_relevant_docs_per_query": 2,
-            "unique_relevant_docs": 2,
-            "num_instructions": None,
-            "min_instruction_length": None,
-            "average_instruction_length": None,
-            "max_instruction_length": None,
-            "unique_instructions": None,
-            "num_top_ranked": 2,
-            "min_top_ranked_per_query": 2,
-            "average_top_ranked_per_query": 2.0,
-            "max_top_ranked_per_query": 2,
+            "number_of_characters": 136,
+            "documents_statistics": {
+                "total_text_length": 84,
+                "min_text_length": 39,
+                "average_text_length": 42.0,
+                "max_text_length": 45,
+                "unique_texts": 2,
+            },
+            "queries_statistics": {
+                "total_text_length": 52,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "relevant_docs_statistics": {
+                "num_relevant_docs": 2,
+                "min_relevant_docs_per_query": 2,
+                "average_relevant_docs_per_query": 1.0,
+                "max_relevant_docs_per_query": 2,
+                "unique_relevant_docs": 2,
+            },
+            "top_ranked_statistics": {
+                "num_top_ranked": 4,
+                "min_top_ranked_per_query": 2,
+                "average_top_ranked_per_query": 2.0,
+                "max_top_ranked_per_query": 2,
+            },
         }
     }
 
@@ -1185,33 +1491,9 @@ class MockRerankingTask(AbsTaskRetrieval):
     )
 
     def load_data(self, **kwargs):
-        self.queries = {
-            "test": {
-                "q1": "This is a test sentence",
-                "q2": "This is another test sentence",
-            }
-        }
-        self.corpus = {
-            "test": {
-                "d1": "This is a positive sentence",
-                "d2": "This is a negative sentence",
-            }
-        }
+        base_datasplit = base_retrieval_datasplit()
 
-        self.relevant_docs = {
-            "test": {
-                "q1": {"d1": 1, "d2": 0},
-                "q2": {"d1": 0, "d2": 1},
-            },
-        }
-
-        self.top_ranked = {
-            "test": {
-                "q1": ["d1", "d2"],
-                "q2": ["d2", "d1"],
-            },
-        }
-        self.instructions = None
+        self.dataset["default"]["test"] = base_datasplit
         self.data_loaded = True
 
 
@@ -1219,90 +1501,96 @@ class MockMultilingualRerankingTask(AbsTaskRetrieval):
     expected_stats = {
         "test": {
             "num_samples": 8,
-            "number_of_characters": 224,
-            "num_documents": 4,
-            "min_document_length": 27,
-            "average_document_length": 30.0,
-            "max_document_length": 33,
-            "unique_documents": 4,
-            "num_queries": 4,
-            "min_query_length": 23,
-            "average_query_length": 26.0,
-            "max_query_length": 29,
-            "unique_queries": 4,
-            "none_queries": 0,
-            "num_relevant_docs": 8,
-            "min_relevant_docs_per_query": 2,
-            "average_relevant_docs_per_query": 1.0,
-            "max_relevant_docs_per_query": 2,
-            "unique_relevant_docs": 4,
-            "num_instructions": None,
-            "min_instruction_length": None,
-            "average_instruction_length": None,
-            "max_instruction_length": None,
-            "unique_instructions": None,
-            "num_top_ranked": 4,
-            "min_top_ranked_per_query": 2,
-            "average_top_ranked_per_query": 2.0,
-            "max_top_ranked_per_query": 2,
+            "number_of_characters": 272,
+            "documents_statistics": {
+                "total_text_length": 168,
+                "min_text_length": 39,
+                "average_text_length": 42.0,
+                "max_text_length": 45,
+                "unique_texts": 2,
+            },
+            "queries_statistics": {
+                "total_text_length": 104,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "relevant_docs_statistics": {
+                "num_relevant_docs": 4,
+                "min_relevant_docs_per_query": 2,
+                "average_relevant_docs_per_query": 1.0,
+                "max_relevant_docs_per_query": 2,
+                "unique_relevant_docs": 4,
+            },
+            "top_ranked_statistics": {
+                "num_top_ranked": 8,
+                "min_top_ranked_per_query": 2,
+                "average_top_ranked_per_query": 2.0,
+                "max_top_ranked_per_query": 2,
+            },
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 4,
-                    "number_of_characters": 112,
-                    "num_documents": 2,
-                    "min_document_length": 27,
-                    "average_document_length": 30.0,
-                    "max_document_length": 33,
-                    "unique_documents": 2,
-                    "num_queries": 2,
-                    "min_query_length": 23,
-                    "average_query_length": 26.0,
-                    "max_query_length": 29,
-                    "unique_queries": 2,
-                    "none_queries": 0,
-                    "num_relevant_docs": 4,
-                    "min_relevant_docs_per_query": 2,
-                    "average_relevant_docs_per_query": 1.0,
-                    "max_relevant_docs_per_query": 2,
-                    "unique_relevant_docs": 2,
-                    "num_instructions": None,
-                    "min_instruction_length": None,
-                    "average_instruction_length": None,
-                    "max_instruction_length": None,
-                    "unique_instructions": None,
-                    "num_top_ranked": 2,
-                    "min_top_ranked_per_query": 2,
-                    "average_top_ranked_per_query": 2.0,
-                    "max_top_ranked_per_query": 2,
+                    "number_of_characters": 136,
+                    "documents_statistics": {
+                        "total_text_length": 84,
+                        "min_text_length": 39,
+                        "average_text_length": 42.0,
+                        "max_text_length": 45,
+                        "unique_texts": 2,
+                    },
+                    "queries_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "relevant_docs_statistics": {
+                        "num_relevant_docs": 2,
+                        "min_relevant_docs_per_query": 2,
+                        "average_relevant_docs_per_query": 1.0,
+                        "max_relevant_docs_per_query": 2,
+                        "unique_relevant_docs": 2,
+                    },
+                    "top_ranked_statistics": {
+                        "num_top_ranked": 4,
+                        "min_top_ranked_per_query": 2,
+                        "average_top_ranked_per_query": 2.0,
+                        "max_top_ranked_per_query": 2,
+                    },
                 },
                 "fra": {
                     "num_samples": 4,
-                    "number_of_characters": 112,
-                    "num_documents": 2,
-                    "min_document_length": 27,
-                    "average_document_length": 30.0,
-                    "max_document_length": 33,
-                    "unique_documents": 2,
-                    "num_queries": 2,
-                    "min_query_length": 23,
-                    "average_query_length": 26.0,
-                    "max_query_length": 29,
-                    "unique_queries": 2,
-                    "none_queries": 0,
-                    "num_relevant_docs": 4,
-                    "min_relevant_docs_per_query": 2,
-                    "average_relevant_docs_per_query": 1.0,
-                    "max_relevant_docs_per_query": 2,
-                    "unique_relevant_docs": 2,
-                    "num_instructions": None,
-                    "min_instruction_length": None,
-                    "average_instruction_length": None,
-                    "max_instruction_length": None,
-                    "unique_instructions": None,
-                    "num_top_ranked": 2,
-                    "min_top_ranked_per_query": 2,
-                    "average_top_ranked_per_query": 2.0,
-                    "max_top_ranked_per_query": 2,
+                    "number_of_characters": 136,
+                    "documents_statistics": {
+                        "total_text_length": 84,
+                        "min_text_length": 39,
+                        "average_text_length": 42.0,
+                        "max_text_length": 45,
+                        "unique_texts": 2,
+                    },
+                    "queries_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "relevant_docs_statistics": {
+                        "num_relevant_docs": 2,
+                        "min_relevant_docs_per_query": 2,
+                        "average_relevant_docs_per_query": 1.0,
+                        "max_relevant_docs_per_query": 2,
+                        "unique_relevant_docs": 2,
+                    },
+                    "top_ranked_statistics": {
+                        "num_top_ranked": 4,
+                        "min_top_ranked_per_query": 2,
+                        "average_top_ranked_per_query": 2.0,
+                        "max_top_ranked_per_query": 2,
+                    },
                 },
             },
         }
@@ -1317,104 +1605,68 @@ class MockMultilingualRerankingTask(AbsTaskRetrieval):
     metadata.eval_langs = multilingual_eval_langs
 
     def load_data(self, **kwargs):
-        queries = {
-            "test": {
-                "q1": "This is a test sentence",
-                "q2": "This is another test sentence",
-            }
-        }
-        self.queries = {"eng": queries, "fra": queries}
-        corpus = {
-            "test": {
-                "d1": "This is a positive sentence",
-                "d2": "This is another positive sentence",
-            }
-        }
-        self.corpus = {"eng": corpus, "fra": corpus}
+        base_datasplit = base_retrieval_datasplit()
 
-        relevant_docs = {
-            "test": {
-                "q1": {"d1": 1, "d2": 0},
-                "q2": {"d1": 0, "d2": 1},
-            },
-        }
-        self.relevant_docs = {
-            "eng": relevant_docs,
-            "fra": relevant_docs,
-        }
-        top_ranked = {
-            "test": {
-                "q1": ["d1", "d2"],
-                "q2": ["d2", "d1"],
-            },
-        }
-        self.top_ranked = {
-            "eng": top_ranked,
-            "fra": top_ranked,
-        }
-        self.instructions = None
+        self.dataset["eng"]["test"] = base_datasplit
+        self.dataset["fra"]["test"] = base_datasplit
+
         self.data_loaded = True
 
 
 class MockRetrievalTask(AbsTaskRetrieval):
+    top_k = 1
     expected_stats = {
         "val": {
             "num_samples": 4,
-            "number_of_characters": 112,
-            "num_documents": 2,
-            "min_document_length": 27,
-            "average_document_length": 30.0,
-            "max_document_length": 33,
-            "unique_documents": 2,
-            "num_queries": 2,
-            "min_query_length": 23,
-            "average_query_length": 26.0,
-            "max_query_length": 29,
-            "unique_queries": 2,
-            "none_queries": 0,
-            "num_relevant_docs": 4,
-            "min_relevant_docs_per_query": 2,
-            "average_relevant_docs_per_query": 1.0,
-            "max_relevant_docs_per_query": 2,
-            "unique_relevant_docs": 2,
-            "num_instructions": None,
-            "min_instruction_length": None,
-            "average_instruction_length": None,
-            "max_instruction_length": None,
-            "unique_instructions": None,
-            "num_top_ranked": None,
-            "min_top_ranked_per_query": None,
-            "average_top_ranked_per_query": None,
-            "max_top_ranked_per_query": None,
+            "number_of_characters": 136,
+            "documents_statistics": {
+                "total_text_length": 84,
+                "min_text_length": 39,
+                "average_text_length": 42.0,
+                "max_text_length": 45,
+                "unique_texts": 2,
+            },
+            "queries_statistics": {
+                "total_text_length": 52,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "relevant_docs_statistics": {
+                "num_relevant_docs": 2,
+                "min_relevant_docs_per_query": 2,
+                "average_relevant_docs_per_query": 1.0,
+                "max_relevant_docs_per_query": 2,
+                "unique_relevant_docs": 2,
+            },
+            "top_ranked_statistics": None,
         },
         "test": {
             "num_samples": 4,
-            "number_of_characters": 112,
-            "num_documents": 2,
-            "min_document_length": 27,
-            "average_document_length": 30.0,
-            "max_document_length": 33,
-            "unique_documents": 2,
-            "num_queries": 2,
-            "min_query_length": 23,
-            "average_query_length": 26.0,
-            "max_query_length": 29,
-            "unique_queries": 2,
-            "none_queries": 0,
-            "num_relevant_docs": 4,
-            "min_relevant_docs_per_query": 2,
-            "average_relevant_docs_per_query": 1.0,
-            "max_relevant_docs_per_query": 2,
-            "unique_relevant_docs": 2,
-            "num_instructions": None,
-            "min_instruction_length": None,
-            "average_instruction_length": None,
-            "max_instruction_length": None,
-            "unique_instructions": None,
-            "num_top_ranked": None,
-            "min_top_ranked_per_query": None,
-            "average_top_ranked_per_query": None,
-            "max_top_ranked_per_query": None,
+            "number_of_characters": 136,
+            "documents_statistics": {
+                "total_text_length": 84,
+                "min_text_length": 39,
+                "average_text_length": 42.0,
+                "max_text_length": 45,
+                "unique_texts": 2,
+            },
+            "queries_statistics": {
+                "total_text_length": 52,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "relevant_docs_statistics": {
+                "num_relevant_docs": 2,
+                "min_relevant_docs_per_query": 2,
+                "average_relevant_docs_per_query": 1.0,
+                "max_relevant_docs_per_query": 2,
+                "unique_relevant_docs": 2,
+            },
+            "top_ranked_statistics": None,
         },
     }
 
@@ -1426,40 +1678,107 @@ class MockRetrievalTask(AbsTaskRetrieval):
     )
 
     def load_data(self, **kwargs):
-        self.queries = {
-            "test": {
-                "q1": "This is a test sentence",
-                "q2": "This is another test sentence",
-            },
-            "val": {
-                "q1": "This is a test sentence",
-                "q2": "This is another test sentence",
-            },
-        }
+        base_datasplit = base_retrieval_datasplit()
 
-        self.corpus = {
-            "test": {
-                "d1": "This is a positive sentence",
-                "d2": "This is another positive sentence",
-            },
-            "val": {
-                "d1": "This is a positive sentence",
-                "d2": "This is another positive sentence",
-            },
-        }
+        base_datasplit["top_ranked"] = None
 
-        self.relevant_docs = {
-            "test": {
-                "q1": {"d1": 1, "d2": 0},
-                "q2": {"d1": 0, "d2": 1},
+        self.dataset["default"]["test"] = base_datasplit
+        self.dataset["default"]["val"] = base_datasplit
+        self.data_loaded = True
+
+
+class MockRetrievalDialogTask(AbsTaskRetrieval):
+    top_k = 1
+    expected_stats = {
+        "val": {
+            "num_samples": 2,
+            "number_of_characters": 257,
+            "documents_statistics": {
+                "total_text_length": 84,
+                "min_text_length": 39,
+                "average_text_length": 42.0,
+                "max_text_length": 45,
+                "unique_texts": 2,
             },
-            "val": {
-                "q1": {"d1": 1, "d2": 0},
-                "q2": {"d1": 0, "d2": 1},
+            "queries_statistics": {
+                "total_text_length": 173,
+                "min_text_length": 80,
+                "average_text_length": 86.5,
+                "max_text_length": 93,
+                "unique_texts": 2,
             },
-        }
-        self.top_ranked = None
-        self.instructions = None
+            "relevant_docs_statistics": {
+                "num_relevant_docs": 2,
+                "min_relevant_docs_per_query": 2,
+                "average_relevant_docs_per_query": 1.0,
+                "max_relevant_docs_per_query": 2,
+                "unique_relevant_docs": 2,
+            },
+            "top_ranked_statistics": None,
+        },
+        "test": {
+            "num_samples": 2,
+            "number_of_characters": 257,
+            "documents_statistics": {
+                "total_text_length": 84,
+                "min_text_length": 39,
+                "average_text_length": 42.0,
+                "max_text_length": 45,
+                "unique_texts": 2,
+            },
+            "queries_statistics": {
+                "total_text_length": 173,
+                "min_text_length": 80,
+                "average_text_length": 86.5,
+                "max_text_length": 93,
+                "unique_texts": 2,
+            },
+            "relevant_docs_statistics": {
+                "num_relevant_docs": 2,
+                "min_relevant_docs_per_query": 2,
+                "average_relevant_docs_per_query": 1.0,
+                "max_relevant_docs_per_query": 2,
+                "unique_relevant_docs": 2,
+            },
+            "top_ranked_statistics": None,
+        },
+    }
+
+    metadata = TaskMetadata(
+        type="Retrieval",
+        name="MockRetrievalDialogTask",
+        main_score="ndcg_at_10",
+        **dict(general_args | {"eval_splits": ["val", "test"]}),  # type: ignore
+    )
+
+    def load_data(self, **kwargs):
+        base_datasplit = base_retrieval_datasplit()
+
+        base_datasplit["top_ranked"] = None
+        base_datasplit["queries"] = Dataset.from_dict(
+            {
+                "id": ["q1", "q2"],
+                "text": [
+                    [
+                        {"role": "user", "content": "What is the weather like today?"},
+                        {
+                            "role": "assistant",
+                            "content": "The weather is sunny with a chance of rain.",
+                        },
+                    ],
+                    [
+                        {"role": "user", "content": "What is the capital of France?"},
+                        {
+                            "role": "assistant",
+                            "content": "The capital of France is Paris.",
+                        },
+                    ],
+                ],
+            }
+        )
+
+        self.dataset["default"]["test"] = base_datasplit
+        self.dataset["default"]["val"] = base_datasplit
         self.data_loaded = True
 
 
@@ -1467,179 +1786,161 @@ class MockMultilingualRetrievalTask(AbsTaskRetrieval):
     expected_stats = {
         "val": {
             "num_samples": 8,
-            "number_of_characters": 224,
-            "num_documents": 4,
-            "min_document_length": 27,
-            "average_document_length": 30.0,
-            "max_document_length": 33,
-            "unique_documents": 4,
-            "num_queries": 4,
-            "min_query_length": 23,
-            "average_query_length": 26.0,
-            "max_query_length": 29,
-            "unique_queries": 4,
-            "none_queries": 0,
-            "num_relevant_docs": 8,
-            "min_relevant_docs_per_query": 2,
-            "average_relevant_docs_per_query": 1.0,
-            "max_relevant_docs_per_query": 2,
-            "unique_relevant_docs": 4,
-            "num_instructions": None,
-            "min_instruction_length": None,
-            "average_instruction_length": None,
-            "max_instruction_length": None,
-            "unique_instructions": None,
-            "num_top_ranked": None,
-            "min_top_ranked_per_query": None,
-            "average_top_ranked_per_query": None,
-            "max_top_ranked_per_query": None,
+            "number_of_characters": 272,
+            "documents_statistics": {
+                "total_text_length": 168,
+                "min_text_length": 39,
+                "average_text_length": 42.0,
+                "max_text_length": 45,
+                "unique_texts": 2,
+            },
+            "queries_statistics": {
+                "total_text_length": 104,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "relevant_docs_statistics": {
+                "num_relevant_docs": 4,
+                "min_relevant_docs_per_query": 2,
+                "average_relevant_docs_per_query": 1.0,
+                "max_relevant_docs_per_query": 2,
+                "unique_relevant_docs": 4,
+            },
+            "top_ranked_statistics": None,
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 4,
-                    "number_of_characters": 112,
-                    "num_documents": 2,
-                    "min_document_length": 27,
-                    "average_document_length": 30.0,
-                    "max_document_length": 33,
-                    "unique_documents": 2,
-                    "num_queries": 2,
-                    "min_query_length": 23,
-                    "average_query_length": 26.0,
-                    "max_query_length": 29,
-                    "unique_queries": 2,
-                    "none_queries": 0,
-                    "num_relevant_docs": 4,
-                    "min_relevant_docs_per_query": 2,
-                    "average_relevant_docs_per_query": 1.0,
-                    "max_relevant_docs_per_query": 2,
-                    "unique_relevant_docs": 2,
-                    "num_instructions": None,
-                    "min_instruction_length": None,
-                    "average_instruction_length": None,
-                    "max_instruction_length": None,
-                    "unique_instructions": None,
-                    "num_top_ranked": None,
-                    "min_top_ranked_per_query": None,
-                    "average_top_ranked_per_query": None,
-                    "max_top_ranked_per_query": None,
+                    "number_of_characters": 136,
+                    "documents_statistics": {
+                        "total_text_length": 84,
+                        "min_text_length": 39,
+                        "average_text_length": 42.0,
+                        "max_text_length": 45,
+                        "unique_texts": 2,
+                    },
+                    "queries_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "relevant_docs_statistics": {
+                        "num_relevant_docs": 2,
+                        "min_relevant_docs_per_query": 2,
+                        "average_relevant_docs_per_query": 1.0,
+                        "max_relevant_docs_per_query": 2,
+                        "unique_relevant_docs": 2,
+                    },
+                    "top_ranked_statistics": None,
                 },
                 "fra": {
                     "num_samples": 4,
-                    "number_of_characters": 112,
-                    "num_documents": 2,
-                    "min_document_length": 27,
-                    "average_document_length": 30.0,
-                    "max_document_length": 33,
-                    "unique_documents": 2,
-                    "num_queries": 2,
-                    "min_query_length": 23,
-                    "average_query_length": 26.0,
-                    "max_query_length": 29,
-                    "unique_queries": 2,
-                    "none_queries": 0,
-                    "num_relevant_docs": 4,
-                    "min_relevant_docs_per_query": 2,
-                    "average_relevant_docs_per_query": 1.0,
-                    "max_relevant_docs_per_query": 2,
-                    "unique_relevant_docs": 2,
-                    "num_instructions": None,
-                    "min_instruction_length": None,
-                    "average_instruction_length": None,
-                    "max_instruction_length": None,
-                    "unique_instructions": None,
-                    "num_top_ranked": None,
-                    "min_top_ranked_per_query": None,
-                    "average_top_ranked_per_query": None,
-                    "max_top_ranked_per_query": None,
+                    "number_of_characters": 136,
+                    "documents_statistics": {
+                        "total_text_length": 84,
+                        "min_text_length": 39,
+                        "average_text_length": 42.0,
+                        "max_text_length": 45,
+                        "unique_texts": 2,
+                    },
+                    "queries_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "relevant_docs_statistics": {
+                        "num_relevant_docs": 2,
+                        "min_relevant_docs_per_query": 2,
+                        "average_relevant_docs_per_query": 1.0,
+                        "max_relevant_docs_per_query": 2,
+                        "unique_relevant_docs": 2,
+                    },
+                    "top_ranked_statistics": None,
                 },
             },
         },
         "test": {
             "num_samples": 8,
-            "number_of_characters": 224,
-            "num_documents": 4,
-            "min_document_length": 27,
-            "average_document_length": 30.0,
-            "max_document_length": 33,
-            "unique_documents": 4,
-            "num_queries": 4,
-            "min_query_length": 23,
-            "average_query_length": 26.0,
-            "max_query_length": 29,
-            "unique_queries": 4,
-            "none_queries": 0,
-            "num_relevant_docs": 8,
-            "min_relevant_docs_per_query": 2,
-            "average_relevant_docs_per_query": 1.0,
-            "max_relevant_docs_per_query": 2,
-            "unique_relevant_docs": 4,
-            "num_instructions": None,
-            "min_instruction_length": None,
-            "average_instruction_length": None,
-            "max_instruction_length": None,
-            "unique_instructions": None,
-            "num_top_ranked": None,
-            "min_top_ranked_per_query": None,
-            "average_top_ranked_per_query": None,
-            "max_top_ranked_per_query": None,
+            "number_of_characters": 272,
+            "documents_statistics": {
+                "total_text_length": 168,
+                "min_text_length": 39,
+                "average_text_length": 42.0,
+                "max_text_length": 45,
+                "unique_texts": 2,
+            },
+            "queries_statistics": {
+                "total_text_length": 104,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "relevant_docs_statistics": {
+                "num_relevant_docs": 4,
+                "min_relevant_docs_per_query": 2,
+                "average_relevant_docs_per_query": 1.0,
+                "max_relevant_docs_per_query": 2,
+                "unique_relevant_docs": 4,
+            },
+            "top_ranked_statistics": None,
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 4,
-                    "number_of_characters": 112,
-                    "num_documents": 2,
-                    "min_document_length": 27,
-                    "average_document_length": 30.0,
-                    "max_document_length": 33,
-                    "unique_documents": 2,
-                    "num_queries": 2,
-                    "min_query_length": 23,
-                    "average_query_length": 26.0,
-                    "max_query_length": 29,
-                    "unique_queries": 2,
-                    "none_queries": 0,
-                    "num_relevant_docs": 4,
-                    "min_relevant_docs_per_query": 2,
-                    "average_relevant_docs_per_query": 1.0,
-                    "max_relevant_docs_per_query": 2,
-                    "unique_relevant_docs": 2,
-                    "num_instructions": None,
-                    "min_instruction_length": None,
-                    "average_instruction_length": None,
-                    "max_instruction_length": None,
-                    "unique_instructions": None,
-                    "num_top_ranked": None,
-                    "min_top_ranked_per_query": None,
-                    "average_top_ranked_per_query": None,
-                    "max_top_ranked_per_query": None,
+                    "number_of_characters": 136,
+                    "documents_statistics": {
+                        "total_text_length": 84,
+                        "min_text_length": 39,
+                        "average_text_length": 42.0,
+                        "max_text_length": 45,
+                        "unique_texts": 2,
+                    },
+                    "queries_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "relevant_docs_statistics": {
+                        "num_relevant_docs": 2,
+                        "min_relevant_docs_per_query": 2,
+                        "average_relevant_docs_per_query": 1.0,
+                        "max_relevant_docs_per_query": 2,
+                        "unique_relevant_docs": 2,
+                    },
+                    "top_ranked_statistics": None,
                 },
                 "fra": {
                     "num_samples": 4,
-                    "number_of_characters": 112,
-                    "num_documents": 2,
-                    "min_document_length": 27,
-                    "average_document_length": 30.0,
-                    "max_document_length": 33,
-                    "unique_documents": 2,
-                    "num_queries": 2,
-                    "min_query_length": 23,
-                    "average_query_length": 26.0,
-                    "max_query_length": 29,
-                    "unique_queries": 2,
-                    "none_queries": 0,
-                    "num_relevant_docs": 4,
-                    "min_relevant_docs_per_query": 2,
-                    "average_relevant_docs_per_query": 1.0,
-                    "max_relevant_docs_per_query": 2,
-                    "unique_relevant_docs": 2,
-                    "num_instructions": None,
-                    "min_instruction_length": None,
-                    "average_instruction_length": None,
-                    "max_instruction_length": None,
-                    "unique_instructions": None,
-                    "num_top_ranked": None,
-                    "min_top_ranked_per_query": None,
-                    "average_top_ranked_per_query": None,
-                    "max_top_ranked_per_query": None,
+                    "number_of_characters": 136,
+                    "documents_statistics": {
+                        "total_text_length": 84,
+                        "min_text_length": 39,
+                        "average_text_length": 42.0,
+                        "max_text_length": 45,
+                        "unique_texts": 2,
+                    },
+                    "queries_statistics": {
+                        "total_text_length": 52,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "relevant_docs_statistics": {
+                        "num_relevant_docs": 2,
+                        "min_relevant_docs_per_query": 2,
+                        "average_relevant_docs_per_query": 1.0,
+                        "max_relevant_docs_per_query": 2,
+                        "unique_relevant_docs": 2,
+                    },
+                    "top_ranked_statistics": None,
                 },
             },
         },
@@ -1654,45 +1955,13 @@ class MockMultilingualRetrievalTask(AbsTaskRetrieval):
     metadata.eval_langs = multilingual_eval_langs
 
     def load_data(self, **kwargs):
-        queries = {
-            "test": {
-                "q1": "This is a test sentence",
-                "q2": "This is another test sentence",
-            },
-            "val": {
-                "q1": "This is a test sentence",
-                "q2": "This is another test sentence",
-            },
-        }
-        self.queries = {"eng": queries, "fra": queries}
-        corpus = {
-            "test": {
-                "d1": "This is a positive sentence",
-                "d2": "This is another positive sentence",
-            },
-            "val": {
-                "d1": "This is a positive sentence",
-                "d2": "This is another positive sentence",
-            },
-        }
-        self.corpus = {"eng": corpus, "fra": corpus}
+        base_datasplit = base_retrieval_datasplit()
 
-        relevant_docs = {
-            "test": {
-                "q1": {"d1": 1, "d2": 0},
-                "q2": {"d1": 0, "d2": 1},
-            },
-            "val": {
-                "q1": {"d1": 1, "d2": 0},
-                "q2": {"d1": 0, "d2": 1},
-            },
-        }
-        self.relevant_docs = {
-            "eng": relevant_docs,
-            "fra": relevant_docs,
-        }
-        self.top_ranked = None
-        self.instructions = None
+        base_datasplit["top_ranked"] = None
+
+        for subset in ["eng", "fra"]:
+            for split in ["test", "val"]:
+                self.dataset[subset][split] = base_datasplit
         self.data_loaded = True
 
 
@@ -1700,31 +1969,41 @@ class MockMultilabelClassification(AbsTaskMultilabelClassification):
     expected_stats = {
         "test": {
             "num_samples": 6,
-            "number_of_characters": 156,
             "number_texts_intersect_with_train": 1,
-            "min_text_length": 23,
-            "average_text_length": 26.0,
-            "max_text_length": 29,
-            "unique_texts": 2,
-            "min_labels_per_text": 2,
-            "average_label_per_text": 2.0,
-            "max_labels_per_text": 2,
-            "unique_labels": 2,
-            "labels": {"0": {"count": 6}, "1": {"count": 6}},
+            "text_statistics": {
+                "total_text_length": 156,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "image_statistics": None,
+            "label_statistics": {
+                "min_labels_per_text": 2,
+                "average_label_per_text": 2.0,
+                "max_labels_per_text": 2,
+                "unique_labels": 2,
+                "labels": {"0": {"count": 6}, "1": {"count": 6}},
+            },
         },
         "train": {
             "num_samples": 6,
-            "number_of_characters": 159,
             "number_texts_intersect_with_train": None,
-            "min_text_length": 23,
-            "average_text_length": 26.5,
-            "max_text_length": 30,
-            "unique_texts": 2,
-            "min_labels_per_text": 2,
-            "average_label_per_text": 2.0,
-            "max_labels_per_text": 2,
-            "unique_labels": 2,
-            "labels": {"0": {"count": 6}, "1": {"count": 6}},
+            "text_statistics": {
+                "total_text_length": 159,
+                "min_text_length": 23,
+                "average_text_length": 26.5,
+                "max_text_length": 30,
+                "unique_texts": 2,
+            },
+            "image_statistics": None,
+            "label_statistics": {
+                "min_labels_per_text": 2,
+                "average_label_per_text": 2.0,
+                "max_labels_per_text": 2,
+                "unique_labels": 2,
+                "labels": {"0": {"count": 6}, "1": {"count": 6}},
+            },
         },
     }
 
@@ -1763,89 +2042,119 @@ class MockMultilingualMultilabelClassification(AbsTaskMultilabelClassification):
     expected_stats = {
         "test": {
             "num_samples": 12,
-            "number_of_characters": 312,
             "number_texts_intersect_with_train": 1,
-            "min_text_length": 23,
-            "average_text_length": 26.0,
-            "max_text_length": 29,
-            "unique_texts": 2,
-            "min_labels_per_text": 2,
-            "average_label_per_text": 2.0,
-            "max_labels_per_text": 2,
-            "unique_labels": 2,
-            "labels": {"0": {"count": 12}, "1": {"count": 12}},
+            "text_statistics": {
+                "total_text_length": 312,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "image_statistics": None,
+            "label_statistics": {
+                "min_labels_per_text": 2,
+                "average_label_per_text": 2.0,
+                "max_labels_per_text": 2,
+                "unique_labels": 2,
+                "labels": {"0": {"count": 12}, "1": {"count": 12}},
+            },
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 6,
-                    "number_of_characters": 156,
                     "number_texts_intersect_with_train": 1,
-                    "min_text_length": 23,
-                    "average_text_length": 26.0,
-                    "max_text_length": 29,
-                    "unique_texts": 2,
-                    "min_labels_per_text": 2,
-                    "average_label_per_text": 2.0,
-                    "max_labels_per_text": 2,
-                    "unique_labels": 2,
-                    "labels": {"0": {"count": 6}, "1": {"count": 6}},
+                    "text_statistics": {
+                        "total_text_length": 156,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "image_statistics": None,
+                    "label_statistics": {
+                        "min_labels_per_text": 2,
+                        "average_label_per_text": 2.0,
+                        "max_labels_per_text": 2,
+                        "unique_labels": 2,
+                        "labels": {"0": {"count": 6}, "1": {"count": 6}},
+                    },
                 },
                 "fra": {
                     "num_samples": 6,
-                    "number_of_characters": 156,
                     "number_texts_intersect_with_train": 1,
-                    "min_text_length": 23,
-                    "average_text_length": 26.0,
-                    "max_text_length": 29,
-                    "unique_texts": 2,
-                    "min_labels_per_text": 2,
-                    "average_label_per_text": 2.0,
-                    "max_labels_per_text": 2,
-                    "unique_labels": 2,
-                    "labels": {"0": {"count": 6}, "1": {"count": 6}},
+                    "text_statistics": {
+                        "total_text_length": 156,
+                        "min_text_length": 23,
+                        "average_text_length": 26.0,
+                        "max_text_length": 29,
+                        "unique_texts": 2,
+                    },
+                    "image_statistics": None,
+                    "label_statistics": {
+                        "min_labels_per_text": 2,
+                        "average_label_per_text": 2.0,
+                        "max_labels_per_text": 2,
+                        "unique_labels": 2,
+                        "labels": {"0": {"count": 6}, "1": {"count": 6}},
+                    },
                 },
             },
         },
         "train": {
             "num_samples": 12,
-            "number_of_characters": 318,
             "number_texts_intersect_with_train": None,
-            "min_text_length": 23,
-            "average_text_length": 26.5,
-            "max_text_length": 30,
-            "unique_texts": 2,
-            "min_labels_per_text": 2,
-            "average_label_per_text": 2.0,
-            "max_labels_per_text": 2,
-            "unique_labels": 2,
-            "labels": {"0": {"count": 12}, "1": {"count": 12}},
+            "text_statistics": {
+                "total_text_length": 318,
+                "min_text_length": 23,
+                "average_text_length": 26.5,
+                "max_text_length": 30,
+                "unique_texts": 2,
+            },
+            "image_statistics": None,
+            "label_statistics": {
+                "min_labels_per_text": 2,
+                "average_label_per_text": 2.0,
+                "max_labels_per_text": 2,
+                "unique_labels": 2,
+                "labels": {"0": {"count": 12}, "1": {"count": 12}},
+            },
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 6,
-                    "number_of_characters": 159,
                     "number_texts_intersect_with_train": None,
-                    "min_text_length": 23,
-                    "average_text_length": 26.5,
-                    "max_text_length": 30,
-                    "unique_texts": 2,
-                    "min_labels_per_text": 2,
-                    "average_label_per_text": 2.0,
-                    "max_labels_per_text": 2,
-                    "unique_labels": 2,
-                    "labels": {"0": {"count": 6}, "1": {"count": 6}},
+                    "text_statistics": {
+                        "total_text_length": 159,
+                        "min_text_length": 23,
+                        "average_text_length": 26.5,
+                        "max_text_length": 30,
+                        "unique_texts": 2,
+                    },
+                    "image_statistics": None,
+                    "label_statistics": {
+                        "min_labels_per_text": 2,
+                        "average_label_per_text": 2.0,
+                        "max_labels_per_text": 2,
+                        "unique_labels": 2,
+                        "labels": {"0": {"count": 6}, "1": {"count": 6}},
+                    },
                 },
                 "fra": {
                     "num_samples": 6,
-                    "number_of_characters": 159,
                     "number_texts_intersect_with_train": None,
-                    "min_text_length": 23,
-                    "average_text_length": 26.5,
-                    "max_text_length": 30,
-                    "unique_texts": 2,
-                    "min_labels_per_text": 2,
-                    "average_label_per_text": 2.0,
-                    "max_labels_per_text": 2,
-                    "unique_labels": 2,
-                    "labels": {"0": {"count": 6}, "1": {"count": 6}},
+                    "text_statistics": {
+                        "total_text_length": 159,
+                        "min_text_length": 23,
+                        "average_text_length": 26.5,
+                        "max_text_length": 30,
+                        "unique_texts": 2,
+                    },
+                    "image_statistics": None,
+                    "label_statistics": {
+                        "min_labels_per_text": 2,
+                        "average_label_per_text": 2.0,
+                        "max_labels_per_text": 2,
+                        "unique_labels": 2,
+                        "labels": {"0": {"count": 6}, "1": {"count": 6}},
+                    },
                 },
             },
         },
@@ -1892,32 +2201,29 @@ class MockInstructionRetrieval(AbsTaskRetrieval):
     expected_stats = {
         "test": {
             "num_samples": 4,
-            "number_of_characters": 112,
-            "num_documents": 2,
-            "min_document_length": 27,
-            "average_document_length": 30.0,
-            "max_document_length": 33,
-            "unique_documents": 2,
-            "num_queries": 2,
-            "min_query_length": 23,
-            "average_query_length": 26.0,
-            "max_query_length": 29,
-            "unique_queries": 2,
-            "none_queries": 0,
-            "num_relevant_docs": 4,
-            "min_relevant_docs_per_query": 2,
-            "average_relevant_docs_per_query": 1.0,
-            "max_relevant_docs_per_query": 2,
-            "unique_relevant_docs": 2,
-            "num_instructions": 2,
-            "min_instruction_length": 26,
-            "average_instruction_length": 58,
-            "max_instruction_length": 32,
-            "unique_instructions": 2,
-            "num_top_ranked": None,
-            "min_top_ranked_per_query": None,
-            "average_top_ranked_per_query": None,
-            "max_top_ranked_per_query": None,
+            "number_of_characters": 196,
+            "documents_statistics": {
+                "total_text_length": 84,
+                "min_text_length": 39,
+                "average_text_length": 42.0,
+                "max_text_length": 45,
+                "unique_texts": 2,
+            },
+            "queries_statistics": {
+                "total_text_length": 112,
+                "min_text_length": 50,
+                "average_text_length": 56.0,
+                "max_text_length": 62,
+                "unique_texts": 2,
+            },
+            "relevant_docs_statistics": {
+                "num_relevant_docs": 2,
+                "min_relevant_docs_per_query": 2,
+                "average_relevant_docs_per_query": 1.0,
+                "max_relevant_docs_per_query": 2,
+                "unique_relevant_docs": 2,
+            },
+            "top_ranked_statistics": None,
         }
     }
 
@@ -1929,32 +2235,10 @@ class MockInstructionRetrieval(AbsTaskRetrieval):
     )
 
     def load_data(self, **kwargs):
-        self.queries = {
-            "test": {
-                "q1": "This is a test sentence",
-                "q2": "This is another test sentence",
-            }
-        }
-        self.corpus = {
-            "test": {
-                "d1": "This is a positive sentence",
-                "d2": "This is another positive sentence",
-            }
-        }
+        base_datasplit = instruction_retrieval_datasplit()
+        base_datasplit["top_ranked"] = None
 
-        self.relevant_docs = {
-            "test": {
-                "q1": {"d1": 1, "d2": 0},
-                "q2": {"d1": 0, "d2": 1},
-            },
-        }
-        self.instructions = {
-            "test": {
-                "q1": "This is a test instruction",
-                "q2": "This is another test instruction",
-            }
-        }
-        self.top_ranked = None
+        self.dataset["default"]["test"] = base_datasplit
         self.data_loaded = True
 
 
@@ -1962,32 +2246,34 @@ class MockInstructionReranking(AbsTaskRetrieval):
     expected_stats = {
         "test": {
             "num_samples": 4,
-            "number_of_characters": 112,
-            "num_documents": 2,
-            "min_document_length": 27,
-            "average_document_length": 30.0,
-            "max_document_length": 33,
-            "unique_documents": 2,
-            "num_queries": 2,
-            "min_query_length": 23,
-            "average_query_length": 26.0,
-            "max_query_length": 29,
-            "unique_queries": 2,
-            "none_queries": 0,
-            "num_relevant_docs": 4,
-            "min_relevant_docs_per_query": 2,
-            "average_relevant_docs_per_query": 1.0,
-            "max_relevant_docs_per_query": 2,
-            "unique_relevant_docs": 2,
-            "num_instructions": 2,
-            "min_instruction_length": 26,
-            "average_instruction_length": 58,
-            "max_instruction_length": 32,
-            "unique_instructions": 2,
-            "num_top_ranked": 2,
-            "min_top_ranked_per_query": 2,
-            "average_top_ranked_per_query": 2.0,
-            "max_top_ranked_per_query": 2,
+            "number_of_characters": 196,
+            "documents_statistics": {
+                "total_text_length": 84,
+                "min_text_length": 39,
+                "average_text_length": 42.0,
+                "max_text_length": 45,
+                "unique_texts": 2,
+            },
+            "queries_statistics": {
+                "total_text_length": 112,
+                "min_text_length": 50,
+                "average_text_length": 56.0,
+                "max_text_length": 62,
+                "unique_texts": 2,
+            },
+            "relevant_docs_statistics": {
+                "num_relevant_docs": 2,
+                "min_relevant_docs_per_query": 2,
+                "average_relevant_docs_per_query": 1.0,
+                "max_relevant_docs_per_query": 2,
+                "unique_relevant_docs": 2,
+            },
+            "top_ranked_statistics": {
+                "num_top_ranked": 4,
+                "min_top_ranked_per_query": 2,
+                "average_top_ranked_per_query": 2.0,
+                "max_top_ranked_per_query": 2,
+            },
         }
     }
 
@@ -1999,37 +2285,9 @@ class MockInstructionReranking(AbsTaskRetrieval):
     )
 
     def load_data(self, **kwargs):
-        self.queries = {
-            "test": {
-                "q1": "This is a test sentence",
-                "q2": "This is another test sentence",
-            }
-        }
-        self.corpus = {
-            "test": {
-                "d1": "This is a positive sentence",
-                "d2": "This is another positive sentence",
-            }
-        }
+        base_datasplit = instruction_retrieval_datasplit()
 
-        self.relevant_docs = {
-            "test": {
-                "q1": {"d1": 1, "d2": 0},
-                "q2": {"d1": 0, "d2": 1},
-            },
-        }
-        self.instructions = {
-            "test": {
-                "q1": "This is a test instruction",
-                "q2": "This is another test instruction",
-            }
-        }
-        self.top_ranked = {
-            "test": {
-                "q1": ["d1", "d2"],
-                "q2": ["d2", "d1"],
-            }
-        }
+        self.dataset["default"]["test"] = base_datasplit
         self.data_loaded = True
 
 
@@ -2037,90 +2295,81 @@ class MockMultilingualInstructionRetrieval(AbsTaskRetrieval):
     expected_stats = {
         "test": {
             "num_samples": 8,
-            "number_of_characters": 224,
-            "num_documents": 4,
-            "min_document_length": 27,
-            "average_document_length": 30.0,
-            "max_document_length": 33,
-            "unique_documents": 4,
-            "num_queries": 4,
-            "min_query_length": 23,
-            "average_query_length": 26.0,
-            "max_query_length": 29,
-            "unique_queries": 4,
-            "none_queries": 0,
-            "num_relevant_docs": 8,
-            "min_relevant_docs_per_query": 2,
-            "average_relevant_docs_per_query": 1.0,
-            "max_relevant_docs_per_query": 2,
-            "unique_relevant_docs": 4,
-            "num_instructions": 4,
-            "min_instruction_length": 26,
-            "average_instruction_length": 116,
-            "max_instruction_length": 32,
-            "unique_instructions": 4,
-            "num_top_ranked": None,
-            "min_top_ranked_per_query": None,
-            "average_top_ranked_per_query": None,
-            "max_top_ranked_per_query": None,
+            "number_of_characters": 392,
+            "documents_statistics": {
+                "total_text_length": 168,
+                "min_text_length": 39,
+                "average_text_length": 42.0,
+                "max_text_length": 45,
+                "unique_texts": 2,
+            },
+            "queries_statistics": {
+                "total_text_length": 224,
+                "min_text_length": 50,
+                "average_text_length": 56.0,
+                "max_text_length": 62,
+                "unique_texts": 2,
+            },
+            "relevant_docs_statistics": {
+                "num_relevant_docs": 4,
+                "min_relevant_docs_per_query": 2,
+                "average_relevant_docs_per_query": 1.0,
+                "max_relevant_docs_per_query": 2,
+                "unique_relevant_docs": 4,
+            },
+            "top_ranked_statistics": None,
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 4,
-                    "number_of_characters": 112,
-                    "num_documents": 2,
-                    "min_document_length": 27,
-                    "average_document_length": 30.0,
-                    "max_document_length": 33,
-                    "unique_documents": 2,
-                    "num_queries": 2,
-                    "min_query_length": 23,
-                    "average_query_length": 26.0,
-                    "max_query_length": 29,
-                    "unique_queries": 2,
-                    "none_queries": 0,
-                    "num_relevant_docs": 4,
-                    "min_relevant_docs_per_query": 2,
-                    "average_relevant_docs_per_query": 1.0,
-                    "max_relevant_docs_per_query": 2,
-                    "unique_relevant_docs": 2,
-                    "num_instructions": 2,
-                    "min_instruction_length": 26,
-                    "average_instruction_length": 58,
-                    "max_instruction_length": 32,
-                    "unique_instructions": 2,
-                    "num_top_ranked": None,
-                    "min_top_ranked_per_query": None,
-                    "average_top_ranked_per_query": None,
-                    "max_top_ranked_per_query": None,
+                    "number_of_characters": 196,
+                    "documents_statistics": {
+                        "total_text_length": 84,
+                        "min_text_length": 39,
+                        "average_text_length": 42.0,
+                        "max_text_length": 45,
+                        "unique_texts": 2,
+                    },
+                    "queries_statistics": {
+                        "total_text_length": 112,
+                        "min_text_length": 50,
+                        "average_text_length": 56.0,
+                        "max_text_length": 62,
+                        "unique_texts": 2,
+                    },
+                    "relevant_docs_statistics": {
+                        "num_relevant_docs": 2,
+                        "min_relevant_docs_per_query": 2,
+                        "average_relevant_docs_per_query": 1.0,
+                        "max_relevant_docs_per_query": 2,
+                        "unique_relevant_docs": 2,
+                    },
+                    "top_ranked_statistics": None,
                 },
                 "fra": {
                     "num_samples": 4,
-                    "number_of_characters": 112,
-                    "num_documents": 2,
-                    "min_document_length": 27,
-                    "average_document_length": 30.0,
-                    "max_document_length": 33,
-                    "unique_documents": 2,
-                    "num_queries": 2,
-                    "min_query_length": 23,
-                    "average_query_length": 26.0,
-                    "max_query_length": 29,
-                    "unique_queries": 2,
-                    "none_queries": 0,
-                    "num_relevant_docs": 4,
-                    "min_relevant_docs_per_query": 2,
-                    "average_relevant_docs_per_query": 1.0,
-                    "max_relevant_docs_per_query": 2,
-                    "unique_relevant_docs": 2,
-                    "num_instructions": 2,
-                    "min_instruction_length": 26,
-                    "average_instruction_length": 58,
-                    "max_instruction_length": 32,
-                    "unique_instructions": 2,
-                    "num_top_ranked": None,
-                    "min_top_ranked_per_query": None,
-                    "average_top_ranked_per_query": None,
-                    "max_top_ranked_per_query": None,
+                    "number_of_characters": 196,
+                    "documents_statistics": {
+                        "total_text_length": 84,
+                        "min_text_length": 39,
+                        "average_text_length": 42.0,
+                        "max_text_length": 45,
+                        "unique_texts": 2,
+                    },
+                    "queries_statistics": {
+                        "total_text_length": 112,
+                        "min_text_length": 50,
+                        "average_text_length": 56.0,
+                        "max_text_length": 62,
+                        "unique_texts": 2,
+                    },
+                    "relevant_docs_statistics": {
+                        "num_relevant_docs": 2,
+                        "min_relevant_docs_per_query": 2,
+                        "average_relevant_docs_per_query": 1.0,
+                        "max_relevant_docs_per_query": 2,
+                        "unique_relevant_docs": 2,
+                    },
+                    "top_ranked_statistics": None,
                 },
             },
         }
@@ -2135,139 +2384,108 @@ class MockMultilingualInstructionRetrieval(AbsTaskRetrieval):
     metadata.eval_langs = multilingual_eval_langs
 
     def load_data(self, **kwargs):
-        queries = {
-            "test": {
-                "q1": "This is a test sentence",
-                "q2": "This is another test sentence",
-            }
-        }
-        self.queries = {
-            "eng": queries,
-            "fra": queries,
-        }
-        corpus = {
-            "test": {
-                "d1": "This is a positive sentence",
-                "d2": "This is another positive sentence",
-            }
-        }
-        self.corpus = {
-            "eng": corpus,
-            "fra": corpus,
-        }
+        base_datasplit = instruction_retrieval_datasplit()
+        base_datasplit["top_ranked"] = None
 
-        relevant_docs = {
-            "test": {
-                "q1": {"d1": 1, "d2": 0},
-                "q2": {"d1": 0, "d2": 1},
-            },
-        }
-        self.relevant_docs = {
-            "eng": relevant_docs,
-            "fra": relevant_docs,
-        }
-
-        instructions = {
-            "test": {
-                "q1": "This is a test instruction",
-                "q2": "This is another test instruction",
-            }
-        }
-        self.instructions = {
-            "eng": instructions,
-            "fra": instructions,
-        }
-        self.top_ranked = None
+        for subset in ["eng", "fra"]:
+            self.dataset[subset]["test"] = base_datasplit
+        self.data_loaded = True
 
 
 class MockMultilingualInstructionReranking(AbsTaskRetrieval):
     expected_stats = {
         "test": {
             "num_samples": 8,
-            "number_of_characters": 224,
-            "num_documents": 4,
-            "min_document_length": 27,
-            "average_document_length": 30.0,
-            "max_document_length": 33,
-            "unique_documents": 4,
-            "num_queries": 4,
-            "min_query_length": 23,
-            "average_query_length": 26.0,
-            "max_query_length": 29,
-            "unique_queries": 4,
-            "none_queries": 0,
-            "num_relevant_docs": 8,
-            "min_relevant_docs_per_query": 2,
-            "average_relevant_docs_per_query": 1.0,
-            "max_relevant_docs_per_query": 2,
-            "unique_relevant_docs": 4,
-            "num_instructions": 4,
-            "min_instruction_length": 26,
-            "average_instruction_length": 116,
-            "max_instruction_length": 32,
-            "unique_instructions": 4,
-            "num_top_ranked": 4,
-            "min_top_ranked_per_query": 2,
-            "average_top_ranked_per_query": 2.0,
-            "max_top_ranked_per_query": 2,
+            "number_of_characters": 392,
+            "documents_statistics": {
+                "total_text_length": 168,
+                "min_text_length": 39,
+                "average_text_length": 42.0,
+                "max_text_length": 45,
+                "unique_texts": 2,
+            },
+            "queries_statistics": {
+                "total_text_length": 224,
+                "min_text_length": 50,
+                "average_text_length": 56.0,
+                "max_text_length": 62,
+                "unique_texts": 2,
+            },
+            "relevant_docs_statistics": {
+                "num_relevant_docs": 4,
+                "min_relevant_docs_per_query": 2,
+                "average_relevant_docs_per_query": 1.0,
+                "max_relevant_docs_per_query": 2,
+                "unique_relevant_docs": 4,
+            },
+            "top_ranked_statistics": {
+                "num_top_ranked": 8,
+                "min_top_ranked_per_query": 2,
+                "average_top_ranked_per_query": 2.0,
+                "max_top_ranked_per_query": 2,
+            },
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 4,
-                    "number_of_characters": 112,
-                    "num_documents": 2,
-                    "min_document_length": 27,
-                    "average_document_length": 30.0,
-                    "max_document_length": 33,
-                    "unique_documents": 2,
-                    "num_queries": 2,
-                    "min_query_length": 23,
-                    "average_query_length": 26.0,
-                    "max_query_length": 29,
-                    "unique_queries": 2,
-                    "none_queries": 0,
-                    "num_relevant_docs": 4,
-                    "min_relevant_docs_per_query": 2,
-                    "average_relevant_docs_per_query": 1.0,
-                    "max_relevant_docs_per_query": 2,
-                    "unique_relevant_docs": 2,
-                    "num_instructions": 2,
-                    "min_instruction_length": 26,
-                    "average_instruction_length": 58,
-                    "max_instruction_length": 32,
-                    "unique_instructions": 2,
-                    "num_top_ranked": 2,
-                    "min_top_ranked_per_query": 2,
-                    "average_top_ranked_per_query": 2.0,
-                    "max_top_ranked_per_query": 2,
+                    "number_of_characters": 196,
+                    "documents_statistics": {
+                        "total_text_length": 84,
+                        "min_text_length": 39,
+                        "average_text_length": 42.0,
+                        "max_text_length": 45,
+                        "unique_texts": 2,
+                    },
+                    "queries_statistics": {
+                        "total_text_length": 112,
+                        "min_text_length": 50,
+                        "average_text_length": 56.0,
+                        "max_text_length": 62,
+                        "unique_texts": 2,
+                    },
+                    "relevant_docs_statistics": {
+                        "num_relevant_docs": 2,
+                        "min_relevant_docs_per_query": 2,
+                        "average_relevant_docs_per_query": 1.0,
+                        "max_relevant_docs_per_query": 2,
+                        "unique_relevant_docs": 2,
+                    },
+                    "top_ranked_statistics": {
+                        "num_top_ranked": 4,
+                        "min_top_ranked_per_query": 2,
+                        "average_top_ranked_per_query": 2.0,
+                        "max_top_ranked_per_query": 2,
+                    },
                 },
                 "fra": {
                     "num_samples": 4,
-                    "number_of_characters": 112,
-                    "num_documents": 2,
-                    "min_document_length": 27,
-                    "average_document_length": 30.0,
-                    "max_document_length": 33,
-                    "unique_documents": 2,
-                    "num_queries": 2,
-                    "min_query_length": 23,
-                    "average_query_length": 26.0,
-                    "max_query_length": 29,
-                    "unique_queries": 2,
-                    "none_queries": 0,
-                    "num_relevant_docs": 4,
-                    "min_relevant_docs_per_query": 2,
-                    "average_relevant_docs_per_query": 1.0,
-                    "max_relevant_docs_per_query": 2,
-                    "unique_relevant_docs": 2,
-                    "num_instructions": 2,
-                    "min_instruction_length": 26,
-                    "average_instruction_length": 58,
-                    "max_instruction_length": 32,
-                    "unique_instructions": 2,
-                    "num_top_ranked": 2,
-                    "min_top_ranked_per_query": 2,
-                    "average_top_ranked_per_query": 2.0,
-                    "max_top_ranked_per_query": 2,
+                    "number_of_characters": 196,
+                    "documents_statistics": {
+                        "total_text_length": 84,
+                        "min_text_length": 39,
+                        "average_text_length": 42.0,
+                        "max_text_length": 45,
+                        "unique_texts": 2,
+                    },
+                    "queries_statistics": {
+                        "total_text_length": 112,
+                        "min_text_length": 50,
+                        "average_text_length": 56.0,
+                        "max_text_length": 62,
+                        "unique_texts": 2,
+                    },
+                    "relevant_docs_statistics": {
+                        "num_relevant_docs": 2,
+                        "min_relevant_docs_per_query": 2,
+                        "average_relevant_docs_per_query": 1.0,
+                        "max_relevant_docs_per_query": 2,
+                        "unique_relevant_docs": 2,
+                    },
+                    "top_ranked_statistics": {
+                        "num_top_ranked": 4,
+                        "min_top_ranked_per_query": 2,
+                        "average_top_ranked_per_query": 2.0,
+                        "max_top_ranked_per_query": 2,
+                    },
                 },
             },
         }
@@ -2282,73 +2500,50 @@ class MockMultilingualInstructionReranking(AbsTaskRetrieval):
     metadata.eval_langs = multilingual_eval_langs
 
     def load_data(self, **kwargs):
-        queries = {
-            "test": {
-                "q1": "This is a test sentence",
-                "q2": "This is another test sentence",
-            }
-        }
-        self.queries = {
-            "eng": queries,
-            "fra": queries,
-        }
-        corpus = {
-            "test": {
-                "d1": "This is a positive sentence",
-                "d2": "This is another positive sentence",
-            }
-        }
+        base_datasplit = instruction_retrieval_datasplit()
 
-        self.corpus = {
-            "eng": corpus,
-            "fra": corpus,
-        }
-
-        relevant_docs = {
-            "test": {
-                "q1": {"d1": 1, "d2": 0},
-                "q2": {"d1": 0, "d2": 1},
-            },
-        }
-
-        self.relevant_docs = {
-            "eng": relevant_docs,
-            "fra": relevant_docs,
-        }
-
-        instructions = {
-            "test": {
-                "q1": "This is a test instruction",
-                "q2": "This is another test instruction",
-            }
-        }
-        self.instructions = {
-            "eng": instructions,
-            "fra": instructions,
-        }
-        top_ranked = {
-            "test": {
-                "q1": ["d1", "d2"],
-                "q2": ["d2", "d1"],
-            }
-        }
-        self.top_ranked = {
-            "eng": top_ranked,
-            "fra": top_ranked,
-        }
+        for subset in ["eng", "fra"]:
+            for split in ["test", "val"]:
+                self.dataset[subset][split] = base_datasplit
         self.data_loaded = True
 
 
 class MockMultiChoiceTask(AbsTaskAny2AnyMultiChoice):
     expected_stats = {
         "test": {
-            "num_samples": 2,
-            "average_question_length": 26.0,
-            "average_choice_length": 30.5,
-            "unique_labels": 2,
-            "labels": {"1": {"count": 1}, "0": {"count": 1}},
+            "number_of_characters": 60,
+            "num_samples": 4,
+            "num_queries": 2,
+            "num_documents": 2,
+            "min_document_length": 0,
+            "average_document_length": 0,
+            "max_document_length": 0,
+            "unique_documents": 0,
+            "min_document_image_width": 100,
+            "average_document_image_width": 100.0,
+            "max_document_image_width": 100,
+            "min_document_image_height": 100,
+            "average_document_image_height": 100.0,
+            "max_document_image_height": 100,
+            "num_document_images": 2,
+            "min_query_length": 27,
+            "average_query_length": 30.0,
+            "max_query_length": 33,
+            "unique_queries": 2,
+            "num_query_images": 2,
+            "min_query_image_width": 100,
+            "average_query_image_width": 100.0,
+            "max_query_image_width": 100,
+            "min_query_image_height": 100,
+            "average_query_image_height": 100.0,
+            "max_query_image_height": 100,
+            "min_relevant_docs_per_query": 1,
+            "average_relevant_docs_per_query": 1.0,
+            "max_relevant_docs_per_query": 1,
+            "unique_relevant_docs": 2,
         }
     }
+
     metadata = TaskMetadata(
         type="Any2AnyMultiChoice",
         name="MockMultiChoice",
@@ -2359,7 +2554,7 @@ class MockMultiChoiceTask(AbsTaskAny2AnyMultiChoice):
     metadata.category = "it2i"
 
     def load_data(self, **kwargs):
-        images = [np.random.randint(0, 255, (100, 100, 3)) for _ in range(2)]  # noqa: NPY002
+        images = [self.np_rng.integers(0, 255, (100, 100, 3)) for _ in range(2)]
         images = [
             Image.fromarray(image.astype("uint8")).convert("RGBA") for image in images
         ]
@@ -2434,7 +2629,7 @@ class MockMultilingualMultiChoiceTask(AbsTaskAny2AnyMultiChoice):
     metadata.category = "it2i"
 
     def load_data(self, **kwargs):
-        images = [np.random.randint(0, 255, (100, 100, 3)) for _ in range(2)]  # noqa: NPY002
+        images = [self.np_rng.integers(0, 255, (100, 100, 3)) for _ in range(2)]
         images = [
             Image.fromarray(image.astype("uint8")).convert("RGBA") for image in images
         ]
@@ -2488,11 +2683,24 @@ class MockMultilingualMultiChoiceTask(AbsTaskAny2AnyMultiChoice):
 class MockAny2AnyRetrievalI2TTask(AbsTaskAny2AnyRetrieval):
     expected_stats = {
         "test": {
-            "average_document_length": 30.0,
-            "average_query_length": 26.0,
-            "num_documents": 2,
+            "number_of_characters": 60,
+            "num_samples": 4,
             "num_queries": 2,
-            "average_relevant_docs_per_query": 1.0,
+            "num_documents": 2,
+            "min_document_length": 27,
+            "average_document_length": 30.0,
+            "max_document_length": 33,
+            "unique_documents": 2,
+            "num_document_images": 0,
+            "min_query_length": 0,
+            "average_query_length": 0,
+            "max_query_length": 0,
+            "unique_queries": 0,
+            "num_query_images": 2,
+            "min_relevant_docs_per_query": 2,
+            "average_relevant_docs_per_query": 2.0,
+            "max_relevant_docs_per_query": 2,
+            "unique_relevant_docs": 2,
         }
     }
 
@@ -2506,7 +2714,7 @@ class MockAny2AnyRetrievalI2TTask(AbsTaskAny2AnyRetrieval):
     metadata.category = "i2t"
 
     def load_data(self, **kwargs):
-        images = [np.random.randint(0, 255, (100, 100, 3)) for _ in range(2)]  # noqa: NPY002
+        images = [self.np_rng.integers(0, 255, (100, 100, 3)) for _ in range(2)]
         images = [
             Image.fromarray(image.astype("uint8")).convert("RGBA") for image in images
         ]
@@ -2545,13 +2753,27 @@ class MockAny2AnyRetrievalI2TTask(AbsTaskAny2AnyRetrieval):
 class MockAny2AnyRetrievalT2ITask(AbsTaskAny2AnyRetrieval):
     expected_stats = {
         "test": {
-            "average_document_length": 30.0,
-            "average_query_length": 26.0,
-            "num_documents": 2,
+            "number_of_characters": 60,
+            "num_samples": 4,
             "num_queries": 2,
-            "average_relevant_docs_per_query": 1.0,
+            "num_documents": 2,
+            "min_document_length": 0,
+            "average_document_length": 0,
+            "max_document_length": 0,
+            "unique_documents": 0,
+            "num_document_images": 2,
+            "min_query_length": 27,
+            "average_query_length": 30.0,
+            "max_query_length": 33,
+            "unique_queries": 2,
+            "num_query_images": 0,
+            "min_relevant_docs_per_query": 2,
+            "average_relevant_docs_per_query": 2.0,
+            "max_relevant_docs_per_query": 2,
+            "unique_relevant_docs": 2,
         }
     }
+
     metadata = TaskMetadata(
         type="Any2AnyRetrieval",
         name="MockAny2AnyRetrievalT2I",
@@ -2562,7 +2784,7 @@ class MockAny2AnyRetrievalT2ITask(AbsTaskAny2AnyRetrieval):
     metadata.category = "t2i"
 
     def load_data(self, **kwargs):
-        images = [np.random.randint(0, 255, (100, 100, 3)) for _ in range(2)]  # noqa: NPY002
+        images = [self.np_rng.integers(0, 255, (100, 100, 3)) for _ in range(2)]
         images = [
             Image.fromarray(image.astype("uint8")).convert("RGBA") for image in images
         ]
@@ -2598,19 +2820,49 @@ class MockAny2AnyRetrievalT2ITask(AbsTaskAny2AnyRetrieval):
         self.data_loaded = True
 
 
-class MockImageClassificationTask(AbsTaskImageClassification):
+class MockImageClassificationTask(AbsTaskAnyClassification):
     expected_stats = {
         "test": {
             "num_samples": 2,
-            "average_image_size": 26.0,
-            "unique_labels": 2,
-            "labels": {"1": {"count": 1}, "0": {"count": 1}},
+            "number_texts_intersect_with_train": None,
+            "text_statistics": None,
+            "image_statistics": {
+                "min_image_width": 100,
+                "average_image_width": 100.0,
+                "max_image_width": 100,
+                "min_image_height": 100,
+                "average_image_height": 100.0,
+                "max_image_height": 100,
+                "unique_images": 2,
+            },
+            "label_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 2,
+                "labels": {"1": {"count": 1}, "0": {"count": 1}},
+            },
         },
         "train": {
             "num_samples": 10,
-            "average_image_size": 26.0,
-            "unique_labels": 2,
-            "labels": {"1": {"count": 5}, "0": {"count": 5}},
+            "number_texts_intersect_with_train": None,
+            "text_statistics": None,
+            "image_statistics": {
+                "min_image_width": 100,
+                "average_image_width": 100.0,
+                "max_image_width": 100,
+                "min_image_height": 100,
+                "average_image_height": 100.0,
+                "max_image_height": 100,
+                "unique_images": 10,
+            },
+            "label_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 2,
+                "labels": {"1": {"count": 5}, "0": {"count": 5}},
+            },
         },
     }
 
@@ -2621,13 +2873,13 @@ class MockImageClassificationTask(AbsTaskImageClassification):
         **general_args,  # type: ignore
     )
     metadata.modalities = ["image"]
-    metadata.category = "i2i"
-
-    def __init__(self, **kwargs):
-        super().__init__(n_experiments=1, samples_per_label=5, **kwargs)
+    metadata.category = "i2c"
+    n_experiments = 1
+    samples_per_label = 5
+    input_column_name = "image"
 
     def load_data(self, **kwargs):
-        images = [np.random.randint(0, 255, (100, 100, 3)) for _ in range(2)]  # noqa: NPY002
+        images = [self.np_rng.integers(0, 255, (100, 100, 3)) for _ in range(2)]
         images = [
             Image.fromarray(image.astype("uint8")).convert("RGBA") for image in images
         ]
@@ -2652,107 +2904,142 @@ class MockImageClassificationTask(AbsTaskImageClassification):
         self.data_loaded = True
 
 
-class MockImageClassificationKNNTask(AbsTaskImageClassification):
-    expected_stats = (
-        {
-            "test": {
-                "num_samples": 2,
-                "average_image_size": 26.0,
-                "unique_labels": 2,
-                "labels": {"1": {"count": 1}, "0": {"count": 1}},
-            },
-            "train": {
-                "num_samples": 10,
-                "average_image_size": 26.0,
-                "unique_labels": 2,
-                "labels": {"1": {"count": 5}, "0": {"count": 5}},
-            },
-        },
-    )
-
-    metadata = TaskMetadata(
-        type="ImageClassification",
-        name="MockImageClassificationKNN",
-        main_score="accuracy",
-        **general_args,  # type: ignore
-    )
-    metadata.modalities = ["image"]
-    metadata.category = "i2i"
-
-    def __init__(self, **kwargs):
-        super().__init__(method="kNN", n_experiments=1, samples_per_label=5, **kwargs)
-
-    def load_data(self, **kwargs):
-        images = [np.random.randint(0, 255, (100, 100, 3)) for _ in range(2)]  # noqa: NPY002
-        images = [
-            Image.fromarray(image.astype("uint8")).convert("RGBA") for image in images
-        ]
-        labels = [1, 0]
-
-        self.dataset = DatasetDict(
-            {
-                "test": Dataset.from_dict(
-                    {
-                        "image": images,
-                        "label": labels,
-                    }
-                ),
-                "train": Dataset.from_dict(
-                    {
-                        "image": images * 5,
-                        "label": labels * 5,
-                    }
-                ),
-            }
-        )
-        self.data_loaded = True
-
-
-class MockMultilingualImageClassificationTask(AbsTaskImageClassification):
+class MockMultilingualImageClassificationTask(AbsTaskAnyClassification):
     n_experiments = 1
     samples_per_label = 5
     expected_stats = {
         "test": {
             "num_samples": 4,
-            "average_image_size": 26.0,
-            "unique_labels": 2,
-            "labels": {"1": {"count": 2}, "0": {"count": 2}},
+            "number_texts_intersect_with_train": None,
+            "text_statistics": None,
+            "image_statistics": {
+                "min_image_width": 100,
+                "average_image_width": 100.0,
+                "max_image_width": 100,
+                "min_image_height": 100,
+                "average_image_height": 100.0,
+                "max_image_height": 100,
+                "unique_images": 4,
+            },
+            "label_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 2,
+                "labels": {"1": {"count": 2}, "0": {"count": 2}},
+            },
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 2,
-                    "average_image_size": 26.0,
-                    "unique_labels": 2,
-                    "labels": {"1": {"count": 1}, "0": {"count": 1}},
+                    "number_texts_intersect_with_train": None,
+                    "text_statistics": None,
+                    "image_statistics": {
+                        "min_image_width": 100,
+                        "average_image_width": 100.0,
+                        "max_image_width": 100,
+                        "min_image_height": 100,
+                        "average_image_height": 100.0,
+                        "max_image_height": 100,
+                        "unique_images": 2,
+                    },
+                    "label_statistics": {
+                        "min_labels_per_text": 1,
+                        "average_label_per_text": 1.0,
+                        "max_labels_per_text": 1,
+                        "unique_labels": 2,
+                        "labels": {"1": {"count": 1}, "0": {"count": 1}},
+                    },
                 },
                 "fra": {
                     "num_samples": 2,
-                    "average_image_size": 26.0,
-                    "unique_labels": 2,
-                    "labels": {"1": {"count": 1}, "0": {"count": 1}},
+                    "number_texts_intersect_with_train": None,
+                    "text_statistics": None,
+                    "image_statistics": {
+                        "min_image_width": 100,
+                        "average_image_width": 100.0,
+                        "max_image_width": 100,
+                        "min_image_height": 100,
+                        "average_image_height": 100.0,
+                        "max_image_height": 100,
+                        "unique_images": 2,
+                    },
+                    "label_statistics": {
+                        "min_labels_per_text": 1,
+                        "average_label_per_text": 1.0,
+                        "max_labels_per_text": 1,
+                        "unique_labels": 2,
+                        "labels": {"1": {"count": 1}, "0": {"count": 1}},
+                    },
                 },
             },
         },
         "train": {
             "num_samples": 20,
-            "average_image_size": 26.0,
-            "unique_labels": 2,
-            "labels": {"1": {"count": 10}, "0": {"count": 10}},
+            "number_texts_intersect_with_train": None,
+            "text_statistics": None,
+            "image_statistics": {
+                "min_image_width": 100,
+                "average_image_width": 100.0,
+                "max_image_width": 100,
+                "min_image_height": 100,
+                "average_image_height": 100.0,
+                "max_image_height": 100,
+                "unique_images": 20,
+            },
+            "label_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 2,
+                "labels": {"1": {"count": 10}, "0": {"count": 10}},
+            },
             "hf_subset_descriptive_stats": {
                 "eng": {
                     "num_samples": 10,
-                    "average_image_size": 26.0,
-                    "unique_labels": 2,
-                    "labels": {"1": {"count": 5}, "0": {"count": 5}},
+                    "number_texts_intersect_with_train": None,
+                    "text_statistics": None,
+                    "image_statistics": {
+                        "min_image_width": 100,
+                        "average_image_width": 100.0,
+                        "max_image_width": 100,
+                        "min_image_height": 100,
+                        "average_image_height": 100.0,
+                        "max_image_height": 100,
+                        "unique_images": 10,
+                    },
+                    "label_statistics": {
+                        "min_labels_per_text": 1,
+                        "average_label_per_text": 1.0,
+                        "max_labels_per_text": 1,
+                        "unique_labels": 2,
+                        "labels": {"1": {"count": 5}, "0": {"count": 5}},
+                    },
                 },
                 "fra": {
                     "num_samples": 10,
-                    "average_image_size": 26.0,
-                    "unique_labels": 2,
-                    "labels": {"1": {"count": 5}, "0": {"count": 5}},
+                    "number_texts_intersect_with_train": None,
+                    "text_statistics": None,
+                    "image_statistics": {
+                        "min_image_width": 100,
+                        "average_image_width": 100.0,
+                        "max_image_width": 100,
+                        "min_image_height": 100,
+                        "average_image_height": 100.0,
+                        "max_image_height": 100,
+                        "unique_images": 10,
+                    },
+                    "label_statistics": {
+                        "min_labels_per_text": 1,
+                        "average_label_per_text": 1.0,
+                        "max_labels_per_text": 1,
+                        "unique_labels": 2,
+                        "labels": {"1": {"count": 5}, "0": {"count": 5}},
+                    },
                 },
             },
         },
     }
+
     metadata = TaskMetadata(
         type="ImageClassification",
         name="MockMultilingualImageClassification",
@@ -2760,11 +3047,12 @@ class MockMultilingualImageClassificationTask(AbsTaskImageClassification):
         **general_args,  # type: ignore
     )
     metadata.modalities = ["image"]
-    metadata.category = "i2i"
+    metadata.category = "i2c"
     metadata.eval_langs = multilingual_eval_langs
+    input_column_name = "image"
 
     def load_data(self, **kwargs):
-        images = [np.random.randint(0, 255, (100, 100, 3)) for _ in range(2)]  # noqa: NPY002
+        images = [self.np_rng.integers(0, 255, (100, 100, 3)) for _ in range(2)]
         images = [
             Image.fromarray(image.astype("uint8")).convert("RGBA") for image in images
         ]
@@ -2793,13 +3081,28 @@ class MockMultilingualImageClassificationTask(AbsTaskImageClassification):
         self.data_loaded = True
 
 
-class MockImageClusteringTask(AbsTaskImageClustering):
+class MockImageClusteringTask(AbsTaskAnyClustering):
     expected_stats = {
         "test": {
             "num_samples": 2,
-            "average_image_size": 26.0,
-            "unique_labels": 2,
-            "labels": {"1": {"count": 1}, "0": {"count": 1}},
+            "number_of_characters": 0,
+            "text_statistics": None,
+            "image_statistics": {
+                "min_image_width": 100,
+                "average_image_width": 100.0,
+                "max_image_width": 100,
+                "min_image_height": 100,
+                "average_image_height": 100.0,
+                "max_image_height": 100,
+                "unique_images": 2,
+            },
+            "label_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 2,
+                "labels": {"1": {"count": 1}, "0": {"count": 1}},
+            },
         }
     }
 
@@ -2810,9 +3113,11 @@ class MockImageClusteringTask(AbsTaskImageClustering):
         **general_args,  # type: ignore
     )
     metadata.modalities = ["image"]
+    input_column_name = "image"
+    label_column_name = "label"
 
     def load_data(self, **kwargs):
-        images = [np.random.randint(0, 255, (100, 100, 3)) for _ in range(2)]  # noqa: NPY002
+        images = [self.np_rng.integers(0, 255, (100, 100, 3)) for _ in range(2)]
         images = [
             Image.fromarray(image.astype("uint8")).convert("RGBA") for image in images
         ]
@@ -2834,11 +3139,23 @@ class MockImageClusteringTask(AbsTaskImageClustering):
 class MockImageMultilabelClassificationTask(AbsTaskImageMultilabelClassification):
     expected_stats = {
         "test": {
-            "average_image_size": 26.0,
-            "average_label_per_image": 2.0,
-            "num_samples": 6,
-            "unique_labels": 2,
-            "labels": {"0": {"count": 6}, "1": {"count": 6}},
+            "num_samples": 4,
+            "min_image_width": 100,
+            "average_image_width": 100.0,
+            "max_image_width": 100,
+            "min_image_height": 100,
+            "average_image_height": 100.0,
+            "max_image_height": 100,
+            "min_labels_per_sample": 2,
+            "average_label_per_sample": 2.0,
+            "max_labels_per_sample": 2,
+            "unique_num_labels": 4,
+            "labels": {
+                "0": {"count": 2},
+                "3": {"count": 2},
+                "1": {"count": 2},
+                "2": {"count": 2},
+            },
         }
     }
 
@@ -2854,7 +3171,7 @@ class MockImageMultilabelClassificationTask(AbsTaskImageMultilabelClassification
     samples_per_label = 3
 
     def load_data(self, **kwargs):
-        images = [np.random.randint(0, 255, (100, 100, 3)) for _ in range(2)]  # noqa: NPY002
+        images = [self.np_rng.integers(0, 255, (100, 100, 3)) for _ in range(2)]
         images = [
             Image.fromarray(image.astype("uint8")).convert("RGBA") for image in images
         ]
@@ -2884,29 +3201,66 @@ class MockMultilingualImageMultilabelClassificationTask(
 ):
     expected_stats = {
         "test": {
-            "average_image_size": 26.0,
-            "average_label_per_image": 2.0,
-            "num_samples": 12,
-            "unique_labels": 2,
-            "labels": {"0": {"count": 12}, "1": {"count": 12}},
+            "num_samples": 8,
+            "min_image_width": 100,
+            "average_image_width": 100.0,
+            "max_image_width": 100,
+            "min_image_height": 100,
+            "average_image_height": 100.0,
+            "max_image_height": 100,
+            "min_labels_per_sample": 2,
+            "average_label_per_sample": 2.0,
+            "max_labels_per_sample": 2,
+            "unique_num_labels": 4,
+            "labels": {
+                "0": {"count": 4},
+                "3": {"count": 4},
+                "1": {"count": 4},
+                "2": {"count": 4},
+            },
             "hf_subset_descriptive_stats": {
                 "eng": {
-                    "average_image_size": 26.0,
-                    "average_label_per_image": 2.0,
-                    "num_samples": 6,
-                    "unique_labels": 2,
-                    "labels": {"0": {"count": 6}, "1": {"count": 6}},
+                    "num_samples": 4,
+                    "min_image_width": 100,
+                    "average_image_width": 100.0,
+                    "max_image_width": 100,
+                    "min_image_height": 100,
+                    "average_image_height": 100.0,
+                    "max_image_height": 100,
+                    "min_labels_per_sample": 2,
+                    "average_label_per_sample": 2.0,
+                    "max_labels_per_sample": 2,
+                    "unique_num_labels": 4,
+                    "labels": {
+                        "0": {"count": 2},
+                        "3": {"count": 2},
+                        "1": {"count": 2},
+                        "2": {"count": 2},
+                    },
                 },
                 "fra": {
-                    "average_image_size": 26.0,
-                    "average_label_per_image": 2.0,
-                    "num_samples": 6,
-                    "unique_labels": 2,
-                    "labels": {"0": {"count": 6}, "1": {"count": 6}},
+                    "num_samples": 4,
+                    "min_image_width": 100,
+                    "average_image_width": 100.0,
+                    "max_image_width": 100,
+                    "min_image_height": 100,
+                    "average_image_height": 100.0,
+                    "max_image_height": 100,
+                    "min_labels_per_sample": 2,
+                    "average_label_per_sample": 2.0,
+                    "max_labels_per_sample": 2,
+                    "unique_num_labels": 4,
+                    "labels": {
+                        "0": {"count": 2},
+                        "3": {"count": 2},
+                        "1": {"count": 2},
+                        "2": {"count": 2},
+                    },
                 },
             },
         }
     }
+
     metadata = TaskMetadata(
         type="ImageMultilabelClassification",
         name="MockMultilingualImageMultilabelClassification",
@@ -2917,7 +3271,7 @@ class MockMultilingualImageMultilabelClassificationTask(
     metadata.eval_langs = multilingual_eval_langs
 
     def load_data(self, **kwargs):
-        images = [np.random.randint(0, 255, (100, 100, 3)) for _ in range(2)]  # noqa: NPY002
+        images = [self.np_rng.integers(0, 255, (100, 100, 3)) for _ in range(2)]
         images = [
             Image.fromarray(image.astype("uint8")).convert("RGBA") for image in images
         ]
@@ -2950,11 +3304,13 @@ class MockMultilingualImageMultilabelClassificationTask(
 class MockImageTextPairClassificationTask(AbsTaskImageTextPairClassification):
     expected_stats = {
         "test": {
-            "average_image_size": 26.0,
-            "average_text_length": 30.0,
             "num_samples": 2,
-            "unique_labels": 2,
-            "labels": {"1": {"count": 1}, "0": {"count": 1}},
+            "num_images": 2,
+            "num_texts": 2,
+            "num_unique_texts": 2,
+            "min_text_length": 23,
+            "average_text_length": 26.0,
+            "max_text_length": 29,
         }
     }
 
@@ -2968,7 +3324,7 @@ class MockImageTextPairClassificationTask(AbsTaskImageTextPairClassification):
     metadata.category = "i2t"
 
     def load_data(self, **kwargs):
-        images = [np.random.randint(0, 255, (100, 100, 3)) for _ in range(2)]  # noqa: NPY002
+        images = [self.np_rng.integers(0, 255, (100, 100, 3)) for _ in range(2)]
         images = [
             Image.fromarray(image.astype("uint8")).convert("RGBA") for image in images
         ]
@@ -2992,27 +3348,26 @@ class MockMultilingualImageTextPairClassificationTask(
 ):
     expected_stats = {
         "test": {
-            "average_image_size": 26.0,
-            "average_text_length": 30.0,
-            "num_samples": 4,
-            "unique_labels": 2,
-            "labels": {"1": {"count": 2}, "0": {"count": 2}},
             "hf_subset_descriptive_stats": {
                 "eng": {
-                    "average_image_size": 26.0,
-                    "average_text_length": 30.0,
                     "num_samples": 2,
-                    "unique_labels": 2,
-                    "labels": {"1": {"count": 1}, "0": {"count": 1}},
+                    "num_images": 2,
+                    "num_texts": 2,
+                    "num_unique_texts": 2,
+                    "min_text_length": 23,
+                    "average_text_length": 26.0,
+                    "max_text_length": 29,
                 },
                 "fra": {
-                    "average_image_size": 26.0,
-                    "average_text_length": 30.0,
                     "num_samples": 2,
-                    "unique_labels": 2,
-                    "labels": {"1": {"count": 1}, "0": {"count": 1}},
+                    "num_images": 2,
+                    "num_texts": 2,
+                    "num_unique_texts": 2,
+                    "min_text_length": 23,
+                    "average_text_length": 26.0,
+                    "max_text_length": 29,
                 },
-            },
+            }
         }
     }
 
@@ -3028,7 +3383,7 @@ class MockMultilingualImageTextPairClassificationTask(
     metadata.eval_langs = multilingual_eval_langs
 
     def load_data(self, **kwargs):
-        images = [np.random.randint(0, 255, (100, 100, 3)) for _ in range(2)]  # noqa: NPY002
+        images = [self.np_rng.integers(0, 255, (100, 100, 3)) for _ in range(2)]
         images = [
             Image.fromarray(image.astype("uint8")).convert("RGBA") for image in images
         ]
@@ -3039,7 +3394,7 @@ class MockMultilingualImageTextPairClassificationTask(
                     "image": images,
                     "caption": texts,
                 }
-            ),
+            )
         }
 
         self.dataset = DatasetDict(
@@ -3051,13 +3406,33 @@ class MockMultilingualImageTextPairClassificationTask(
         self.data_loaded = True
 
 
-class MockVisualSTSTask(AbsTaskVisualSTS):
+class MockVisualSTSTask(AbsTaskAnySTS):
     expected_stats = {
         "test": {
-            "average_image_size": 26.0,
-            "average_text_length": 30.0,
             "num_samples": 2,
-            "average_score": 0.5,
+            "number_of_characters": None,
+            "unique_pairs": None,
+            "text1_statistics": None,
+            "text2_statistics": None,
+            "image1_statistics": {
+                "min_image_width": 100,
+                "average_image_width": 100.0,
+                "max_image_width": 100,
+                "min_image_height": 100,
+                "average_image_height": 100.0,
+                "max_image_height": 100,
+                "unique_images": 2,
+            },
+            "image2_statistics": {
+                "min_image_width": 100,
+                "average_image_width": 100.0,
+                "max_image_width": 100,
+                "min_image_height": 100,
+                "average_image_height": 100.0,
+                "max_image_height": 100,
+                "unique_images": 2,
+            },
+            "label_statistics": {"min_score": 0.5, "avg_score": 0.5, "max_score": 0.5},
         }
     }
 
@@ -3067,11 +3442,11 @@ class MockVisualSTSTask(AbsTaskVisualSTS):
         main_score="cosine_spearman",
         **general_args,  # type: ignore
     )
-    metadata.modalities = ["image", "text"]
+    metadata.modalities = ["image"]
     metadata.category = "i2i"
 
     def load_data(self, **kwargs):
-        images = [np.random.randint(0, 255, (100, 100, 3)) for _ in range(2)]  # noqa: NPY002
+        images = [self.np_rng.integers(0, 255, (100, 100, 3)) for _ in range(2)]
 
         images = [
             Image.fromarray(image.astype("uint8")).convert("RGBA") for image in images
@@ -3092,13 +3467,35 @@ class MockVisualSTSTask(AbsTaskVisualSTS):
         self.data_loaded = True
 
 
-class MockZeroShotClassificationTask(AbsTaskZeroShotClassification):
+class MockZeroShotClassificationTask(AbsTaskAnyZeroShotClassification):
     expected_stats = {
         "test": {
-            "average_text_length": 26.0,
             "num_samples": 2,
-            "unique_labels": 2,
-            "labels": {"1": {"count": 1}, "0": {"count": 1}},
+            "number_of_characters": None,
+            "text_statistics": None,
+            "image_statistics": {
+                "min_image_width": 100,
+                "average_image_width": 100.0,
+                "max_image_width": 100,
+                "min_image_height": 100,
+                "average_image_height": 100.0,
+                "max_image_height": 100,
+                "unique_images": 2,
+            },
+            "label_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 2,
+                "labels": {"label1": {"count": 1}, "label2": {"count": 1}},
+            },
+            "candidates_labels_text_statistics": {
+                "total_text_length": 52,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
         }
     }
 
@@ -3112,7 +3509,7 @@ class MockZeroShotClassificationTask(AbsTaskZeroShotClassification):
     metadata.category = "i2t"
 
     def load_data(self, **kwargs):
-        images = [np.random.randint(0, 255, (100, 100, 3)) for _ in range(2)]  # noqa: NPY002
+        images = [self.np_rng.integers(0, 255, (100, 100, 3)) for _ in range(2)]
 
         images = [
             Image.fromarray(image.astype("uint8")).convert("RGBA") for image in images
@@ -3124,6 +3521,66 @@ class MockZeroShotClassificationTask(AbsTaskZeroShotClassification):
                 "test": Dataset.from_dict(
                     {
                         "image": images,
+                        "label": labels,
+                    }
+                ),
+            }
+        )
+        self.data_loaded = True
+
+    def get_candidate_labels(self) -> list[str]:
+        return ["This is a test sentence", "This is another test sentence"]
+
+
+class MockTextZeroShotClassificationTask(AbsTaskAnyZeroShotClassification):
+    expected_stats = {
+        "test": {
+            "num_samples": 2,
+            "number_of_characters": None,
+            "text_statistics": {
+                "total_text_length": 52,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+            "image_statistics": None,
+            "label_statistics": {
+                "min_labels_per_text": 1,
+                "average_label_per_text": 1.0,
+                "max_labels_per_text": 1,
+                "unique_labels": 2,
+                "labels": {"label1": {"count": 1}, "label2": {"count": 1}},
+            },
+            "candidates_labels_text_statistics": {
+                "total_text_length": 52,
+                "min_text_length": 23,
+                "average_text_length": 26.0,
+                "max_text_length": 29,
+                "unique_texts": 2,
+            },
+        }
+    }
+
+    metadata = TaskMetadata(
+        type="ZeroShotClassification",
+        name="MockTextZeroShotClassification",
+        main_score="accuracy",
+        **general_args,  # type: ignore
+    )
+    metadata.modalities = ["text"]
+    metadata.category = "t2t"
+    input_column_name = "text"
+
+    def load_data(self, **kwargs):
+        texts = ["This is a test sentence", "This is another test sentence"]
+        labels = ["label1", "label2"]
+
+        self.dataset = DatasetDict(
+            {
+                "test": Dataset.from_dict(
+                    {
+                        "text": texts,
                         "label": labels,
                     }
                 ),

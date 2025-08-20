@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from mteb.abstasks.Image.AbsTaskAny2AnyRetrieval import AbsTaskAny2AnyRetrieval
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 class SOPI2IRetrieval(AbsTaskAny2AnyRetrieval):
@@ -26,13 +26,14 @@ class SOPI2IRetrieval(AbsTaskAny2AnyRetrieval):
         dialect=[],
         modalities=["image"],
         sample_creation="created",
-        bibtex_citation="""@inproceedings{oh2016deep,
-  title={Deep metric learning via lifted structured feature embedding},
-  author={Oh Song, Hyun and Xiang, Yu and Jegelka, Stefanie and Savarese, Silvio},
-  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
-  pages={4004--4012},
-  year={2016}
+        bibtex_citation=r"""
+@inproceedings{oh2016deep,
+  author = {Oh Song, Hyun and Xiang, Yu and Jegelka, Stefanie and Savarese, Silvio},
+  booktitle = {Proceedings of the IEEE conference on computer vision and pattern recognition},
+  pages = {4004--4012},
+  title = {Deep metric learning via lifted structured feature embedding},
+  year = {2016},
 }
-        """,
+""",
     )
     skip_first_result = True

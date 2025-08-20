@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 
@@ -14,7 +14,7 @@ class FeedbackQARetrieval(AbsTaskRetrieval):
         reference="https://arxiv.org/abs/2204.03025",
         dataset={
             "path": "lt2c/fqa",
-            "revision": "1ee1cd0",
+            "revision": "a5cb615179f91ae10605b39cf21e40e3ebb577e3",
         },
         type="Retrieval",
         category="t2t",
@@ -29,25 +29,25 @@ class FeedbackQARetrieval(AbsTaskRetrieval):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="created",
-        bibtex_citation="""
+        bibtex_citation=r"""
 @inproceedings{li-etal-2022-using,
-    title = "Using Interactive Feedback to Improve the Accuracy and Explainability of Question Answering Systems Post-Deployment",
-    author = "Li, Zichao  and
-      Sharma, Prakhar  and
-      Lu, Xing Han  and
-      Cheung, Jackie  and
-      Reddy, Siva",
-    editor = "Muresan, Smaranda  and
-      Nakov, Preslav  and
-      Villavicencio, Aline",
-    booktitle = "Findings of the Association for Computational Linguistics: ACL 2022",
-    month = may,
-    year = "2022",
-    address = "Dublin, Ireland",
-    publisher = "Association for Computational Linguistics",
-    url = "https://aclanthology.org/2022.findings-acl.75",
-    doi = "10.18653/v1/2022.findings-acl.75",
-    pages = "926--937"
+  address = {Dublin, Ireland},
+  author = {Li, Zichao  and
+Sharma, Prakhar  and
+Lu, Xing Han  and
+Cheung, Jackie  and
+Reddy, Siva},
+  booktitle = {Findings of the Association for Computational Linguistics: ACL 2022},
+  doi = {10.18653/v1/2022.findings-acl.75},
+  editor = {Muresan, Smaranda  and
+Nakov, Preslav  and
+Villavicencio, Aline},
+  month = may,
+  pages = {926--937},
+  publisher = {Association for Computational Linguistics},
+  title = {Using Interactive Feedback to Improve the Accuracy and Explainability of Question Answering Systems Post-Deployment},
+  url = {https://aclanthology.org/2022.findings-acl.75},
+  year = {2022},
 }
 """,
     )

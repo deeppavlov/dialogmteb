@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
+from ....evaluation.evaluators.retrieval_metrics import paired_accuracy
 
 
 class NevIR(AbsTaskRetrieval):
@@ -27,11 +28,25 @@ class NevIR(AbsTaskRetrieval):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="created",
-        bibtex_citation="""@inproceedings{Weller2023NevIRNI,
-  title={{NevIR: Negation in Neural Information Retrieval}},
-  author={{Orion Weller and Dawn J Lawrie and Benjamin Van Durme}},
-  booktitle={{Conference of the European Chapter of the Association for Computational Linguistics}},
-  year={{2023}},
-  url={{https://api.semanticscholar.org/CorpusID:258676146}}
-}""",
+        bibtex_citation=r"""
+@inproceedings{Weller2023NevIRNI,
+  author = {{Orion Weller and Dawn J Lawrie and Benjamin Van Durme}},
+  booktitle = {{Conference of the European Chapter of the Association for Computational Linguistics}},
+  title = {{NevIR: Negation in Neural Information Retrieval}},
+  url = {{https://api.semanticscholar.org/CorpusID:258676146}},
+  year = {{2023}},
+}
+""",
     )
+
+    def task_specific_scores(
+        self,
+        scores: dict[str, dict[str, float]],
+        qrels: dict[str, dict[str, int]],
+        results: dict[str, dict[str, float]],
+        hf_split: str,
+        hf_subset: str,
+    ) -> dict[str, float]:
+        return {
+            "paired_accuracy": paired_accuracy(qrels, results, scores),
+        }
