@@ -1,22 +1,21 @@
 from __future__ import annotations
 
 import logging
-from collections import Counter, defaultdict
+from collections import defaultdict
 from typing import Any
 
 import numpy as np
 from datasets import Dataset, DatasetDict
+from sklearn.base import BaseEstimator
+from sklearn.linear_model import LogisticRegression
 from tqdm import tqdm
 
-from mteb.abstasks.TaskMetadata import DescriptiveStatistics
-from mteb.encoder_interface import Encoder
-from . import AbsTaskClassification
+from mteb.abstasks.task_metadata import DescriptiveStatistics
 
-from ..evaluation.evaluators import (
-    logRegClassificationEvaluator,
-)
+from .. import Encoder
+from ..evaluation import ClassificationEvaluator
 from ..load_results.task_results import HFSubset, ScoresDict
-from .AbsTask import AbsTask
+from . import AbsTaskAnyClassification
 
 logger = logging.getLogger(__name__)
 
@@ -57,8 +56,12 @@ class ClassificationDescriptiveStatistics(DescriptiveStatistics):
     labels: dict[str, dict[str, int]]
 
 
-class AbsTaskDST(AbsTaskClassification):
-    evaluator = logRegClassificationEvaluator
+class AbsTaskDST(AbsTaskAnyClassification):
+    evaluator: type[ClassificationEvaluator] = ClassificationEvaluator
+    classifier: BaseEstimator = LogisticRegression(
+        n_jobs=-1,
+        max_iter=100,
+    )
     abstask_prompt = "Classify user passages."
     samples_per_label: int = 8
     n_experiments: int = 10
@@ -120,12 +123,8 @@ class AbsTaskDST(AbsTaskClassification):
         total_scores = {}
 
         for column in tqdm(self.classification_columns):
-            current_train_split = train_split.rename_column(
-                column, "label"
-            )
-            current_eval_split = eval_split.rename_column(
-                column, "label"
-            )
+            current_train_split = train_split.rename_column(column, "label")
+            current_eval_split = eval_split.rename_column(column, "label")
 
             scores = []
             test_cache, idxs = (
@@ -143,15 +142,18 @@ class AbsTaskDST(AbsTaskClassification):
                     self.samples_per_label,
                     idxs,
                 )
-
                 evaluator = self.evaluator(
                     train_dataset,
                     current_eval_split,
+                    self.input_column_name,
+                    "label",
                     task_metadata=self.metadata,
                     hf_split=hf_split,
                     hf_subset=hf_subset,
+                    classifier=self.classifier,
                     **params,
                 )
+
                 scores_exp, test_cache = evaluator(
                     model, encode_kwargs=encode_kwargs, test_cache=test_cache
                 )
