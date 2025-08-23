@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from mteb.abstasks.TaskMetadata import TaskMetadata
-
-from ....abstasks.AbsTaskPairClassification import AbsTaskPairClassification
+from mteb.abstasks.AbsTaskPairClassification import AbsTaskPairClassification
+from mteb.abstasks.task_metadata import TaskMetadata
 
 
 class FalseFriendsDeEnPC(AbsTaskPairClassification):

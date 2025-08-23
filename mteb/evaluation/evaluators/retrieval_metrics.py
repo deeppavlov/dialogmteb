@@ -10,6 +10,8 @@ import torch
 from packaging.version import Version
 from sklearn.metrics import auc
 
+from mteb.types import RelevantDocumentsType, RetrievalEvaluationResult
+
 logger = logging.getLogger(__name__)
 
 
@@ -22,7 +24,7 @@ except Exception:
 
 
 def mrr(
-    qrels: dict[str, dict[str, int]],
+    qrels: RelevantDocumentsType,
     results: dict[str, dict[str, float]],
     k_values: list[int],
 ) -> dict[str, list[float]]:
@@ -50,7 +52,7 @@ def mrr(
 
 
 def recall_cap(
-    qrels: dict[str, dict[str, int]],
+    qrels: RelevantDocumentsType,
     results: dict[str, dict[str, float]],
     k_values: list[int],
 ) -> dict[str, list[float]]:
@@ -77,7 +79,7 @@ def recall_cap(
 
 
 def hole(
-    qrels: dict[str, dict[str, int]],
+    qrels: RelevantDocumentsType,
     results: dict[str, dict[str, float]],
     k_values: list[int],
 ) -> dict[str, list[float]]:
@@ -103,7 +105,7 @@ def hole(
 
 
 def top_k_accuracy(
-    qrels: dict[str, dict[str, int]],
+    qrels: RelevantDocumentsType,
     results: dict[str, dict[str, float]],
     k_values: list[int],
 ) -> dict[str, list[float]]:
@@ -178,7 +180,7 @@ def calculate_pmrr(original_run, new_run, changed_qrels):
 
 
 def evaluate_p_mrr_change(
-    qrels: dict[str, dict[str, float]],
+    qrels: RelevantDocumentsType,
     results: dict[str, dict[str, float]],
     changed_qrels: dict[str, list[str]],
     k_values: list[int],
@@ -328,7 +330,7 @@ def nAUC(
 
 
 def paired_accuracy(
-    qrels: dict[str, dict[str, float]],
+    qrels: RelevantDocumentsType,
     results: dict[str, dict[str, float]],
     scores: dict[str, dict[str, float]],
 ) -> float:
@@ -359,7 +361,7 @@ def paired_accuracy(
 
 
 def robustness_at_10(
-    qrels: dict[str, dict[str, float]],
+    qrels: RelevantDocumentsType,
     results: dict[str, dict[str, float]],
     scores: dict[str, dict[str, float]],
 ) -> float:
@@ -462,7 +464,7 @@ def parse_metrics_from_scores(
 
 
 def max_over_subqueries(
-    qrels: dict[str, dict[str, float]],
+    qrels: RelevantDocumentsType,
     results: dict[str, dict[str, float]],
     k_values: list[int],
 ) -> dict[str, float]:
@@ -503,18 +505,9 @@ def max_over_subqueries(
 
 def calculate_retrieval_scores(
     results: dict[str, dict[str, float]],
-    qrels: dict[str, dict[str, float]],
+    qrels: RelevantDocumentsType,
     k_values: list[int],
-) -> tuple[
-    dict[str, dict[str, float]],
-    dict[str, float],
-    dict[str, float],
-    dict[str, float],
-    dict[str, float],
-    dict[str, float],
-    dict[str, float],
-    dict[str, float],
-]:
+) -> RetrievalEvaluationResult:
     map_string = "map_cut." + ",".join([str(k) for k in k_values])
     ndcg_string = "ndcg_cut." + ",".join([str(k) for k in k_values])
     recall_string = "recall." + ",".join([str(k) for k in k_values])
@@ -543,8 +536,16 @@ def calculate_retrieval_scores(
     naucs_mrr = evaluate_abstention(results, mrr_scores)
 
     avg_mrr = {k: sum(mrr_scores[k]) / len(mrr_scores[k]) for k in mrr_scores.keys()}
-
-    return scores, ndcg, _map, recall, precision, naucs, avg_mrr, naucs_mrr
+    return RetrievalEvaluationResult(
+        all_scores=scores,
+        ndcg=ndcg,
+        map=_map,
+        recall=recall,
+        precision=precision,
+        naucs=naucs,
+        mrr=avg_mrr,
+        naucs_mrr=naucs_mrr,
+    )
 
 
 def evaluate_abstention(

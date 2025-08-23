@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from mteb.abstasks.AbsTaskClassification import AbsTaskClassification
-from mteb.abstasks.MultilingualTask import MultilingualTask
-from mteb.abstasks.TaskMetadata import TaskMetadata
+from mteb.abstasks.AbsTaskAnyClassification import AbsTaskAnyClassification
+from mteb.abstasks.task_metadata import TaskMetadata
 
 _LANGUAGES = {
     "da": ["dan-Latn"],
@@ -13,7 +12,7 @@ _LANGUAGES = {
 }
 
 
-class ScandiSentClassification(MultilingualTask, AbsTaskClassification):
+class ScandiSentClassification(AbsTaskAnyClassification):
     metadata = TaskMetadata(
         name="ScandiSentClassification",
         dataset={
@@ -23,7 +22,7 @@ class ScandiSentClassification(MultilingualTask, AbsTaskClassification):
         description="The corpus is crawled from se.trustpilot.com, no.trustpilot.com, dk.trustpilot.com, fi.trustpilot.com and trustpilot.com.",
         reference="https://github.com/timpal0l/ScandiSent",
         type="Classification",
-        category="s2s",
+        category="t2c",
         modalities=["text"],
         eval_splits=["test"],
         eval_langs=_LANGUAGES,

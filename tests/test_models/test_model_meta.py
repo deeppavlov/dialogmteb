@@ -7,15 +7,15 @@ from sentence_transformers import CrossEncoder, SentenceTransformer
 
 import mteb
 from mteb import MTEB, AbsTask
-from mteb.model_meta import ModelMeta
+from mteb.models.model_meta import ModelMeta
 from tests.test_benchmark.mock_tasks import MockRetrievalTask
 
 
 @pytest.mark.parametrize(
     "training_datasets",
     [
-        {"Touche2020": []},  # parent task
-        {"Touche2020-NL": []},  # child task
+        {"Touche2020"},  # parent task
+        {"Touche2020-NL"},  # child task
     ],
 )
 def test_model_similar_tasks(training_datasets):
@@ -49,7 +49,7 @@ def test_model_similar_tasks(training_datasets):
         "Touche2020-PL",
         "Touche2020Retrieval.v3",
     ]
-    assert sorted(dummy_model_meta.get_training_datasets().keys()) == expected
+    assert sorted(dummy_model_meta.get_training_datasets()) == expected
 
 
 def test_model_name_without_prefix():

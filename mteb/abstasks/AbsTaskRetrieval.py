@@ -7,16 +7,39 @@ from pathlib import Path
 from time import time
 from typing import Any, Callable
 
-from datasets import Dataset, DatasetDict
+from datasets import Dataset, DatasetDict, concatenate_datasets
 
-from mteb.encoder_interface import Encoder
-from mteb.types import HFSubset, ScoresDict
-from mteb.types.statistics import DescriptiveStatistics
+from mteb.models.models_protocols import Encoder
+from mteb.types import (
+    HFSubset,
+    RelevantDocumentsType,
+    ScoresDict,
+)
+from mteb.types.statistics import (
+    DescriptiveStatistics,
+    RelevantDocsStatistics,
+    TextStatistics,
+    TopRankedStatistics,
+)
 
+from ..create_dataloaders import (
+    combine_queries_with_instruction_text,
+    convert_conv_history_to_query,
+    corpus_to_dict,
+)
 from ..evaluation.evaluators import RetrievalEvaluator
 from ..evaluation.evaluators.retrieval_metrics import make_score_dict
+from ._statistics_calculation import (
+    calculate_relevant_docs_statistics,
+    calculate_text_statistics,
+    calculate_top_ranked_statistics,
+)
 from .AbsTask import AbsTask
-from .dataset_loaders import RetrievalDatasetLoader, RetrievalSplitData
+from .retrieval_dataset_loaders import (
+    RetrievalDatasetLoader,
+    RetrievalSplitData,
+    combine_queries_with_instructions_datasets,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -26,73 +49,24 @@ class RetrievalDescriptiveStatistics(DescriptiveStatistics):
 
     Attributes:
         num_samples: Number of queries and documents
-        num_relevant_docs: Number of relevant documents
+        number_of_characters: Total number of characters in queries and documents
 
-        num_documents: Number of documents
-        min_document_length: Minimum length of documents
-        average_document_length: Average length of documents
-        max_document_length: Maximum length of documents
-        unique_documents: Number of unique documents
-
-        num_queries: number of queries in the dataset
-        min_query_length: Minimum length of queries
-        average_query_length: Average length of queries
-        max_query_length: Maximum length of queries
-        unique_queries: Number of unique queries
-        none_queries: Number of none queries
-
-        number_of_characters: Total number of symbols in the dataset
-        min_relevant_docs_per_query: Minimum number of relevant documents per query
-        average_relevant_docs_per_query: Average number of relevant documents per query
-        max_relevant_docs_per_query: Maximum number of relevant documents per query
-        unique_relevant_docs: Number of unique relevant documents
-
-        num_instructions: Number of instructions
-        min_instruction_length: Minimum length of instructions
-        average_instruction_length: Average length of instructions
-        max_instruction_length: Maximum length of instructions
-        unique_instructions: Number of unique instructions
-
-        num_top_ranked: Number of top ranked documents
-        min_top_ranked_per_query: Minimum number of top ranked documents per query
-        average_top_ranked_per_query: Average number of top ranked documents per query
-        max_top_ranked_per_query: Maximum number of relevant documents per query
+        documents_statistics: Statistics for documents
+        queries_statistics: Statistics for queries
+        relevant_docs_statistics: Statistics for relevant documents
+        top_ranked_statistics: Statistics for top ranked documents (if available)
     """
 
     num_samples: int
     number_of_characters: int
 
-    num_documents: int
-    min_document_length: int
-    average_document_length: float
-    max_document_length: int
-    unique_documents: int
+    documents_statistics: TextStatistics
+    queries_statistics: TextStatistics
 
-    num_queries: int
-    min_query_length: int
-    average_query_length: float
-    max_query_length: int
-    unique_queries: int
-    none_queries: int
-
-    num_relevant_docs: int
-    min_relevant_docs_per_query: int
-    average_relevant_docs_per_query: float
-    max_relevant_docs_per_query: float
-    unique_relevant_docs: int
-
-    # these are for datasets with instructions
-    num_instructions: int | None
-    min_instruction_length: int | None
-    average_instruction_length: float | None
-    max_instruction_length: float | None
-    unique_instructions: int | None
+    relevant_docs_statistics: RelevantDocsStatistics
 
     # this is for datasets that do reranking
-    num_top_ranked: int | None
-    min_top_ranked_per_query: int | None
-    average_top_ranked_per_query: float | None
-    max_top_ranked_per_query: int | None
+    top_ranked_statistics: TopRankedStatistics | None
 
 
 class AbsTaskRetrieval(AbsTask):
@@ -132,31 +106,35 @@ class AbsTaskRetrieval(AbsTask):
     top_k: int = max(k_values)
     dataset: dict[str, dict[str, RetrievalSplitData]]
     cross_encoder_top_k: int = 100
+    support_cross_encoder: bool = True
+    support_search: bool = True
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        empty_dataset = Dataset.from_dict({})
         self.dataset = defaultdict(
             lambda: defaultdict(
                 lambda: RetrievalSplitData(
-                    corpus={},
-                    queries={},
+                    corpus=empty_dataset,
+                    queries=empty_dataset,
                     relevant_docs={},
-                    instructions=None,
                     top_ranked=None,
                 )
             )
         )
 
     def convert_v1_dataset_format_to_v2(self):
+        # check if dataset is `v1` version
         if not hasattr(self, "queries"):
             return
+        empty_dataset = Dataset.from_dict({})
+
         self.dataset = defaultdict(
             lambda: defaultdict(
                 lambda: RetrievalSplitData(
-                    corpus={},
-                    queries={},
+                    corpus=empty_dataset,
+                    queries=empty_dataset,
                     relevant_docs={},
-                    instructions=None,
                     top_ranked=None,
                 )
             )
@@ -165,15 +143,32 @@ class AbsTaskRetrieval(AbsTask):
         if self.metadata.is_multilingual:
             for subset in self.queries:
                 for split in self.queries[subset]:
-                    self.dataset[subset][split]["queries"] = self.queries[subset][split]
-                    self.dataset[subset][split]["corpus"] = self.corpus[subset][split]
+                    queries = self.queries[subset][split]
+                    corpus = self.corpus[subset][split]
+                    self.dataset[subset][split]["queries"] = Dataset.from_list(
+                        [{"id": k, "text": v} for k, v in queries.items()]
+                    )
+                    self.dataset[subset][split]["corpus"] = Dataset.from_list(
+                        [
+                            {
+                                "id": k,
+                                "text": v["text"],
+                                "title": v.get("title", ""),
+                            }
+                            for k, v in corpus.items()
+                        ]
+                    )
                     self.dataset[subset][split]["relevant_docs"] = self.relevant_docs[
                         subset
                     ][split]
                     if hasattr(self, "instructions"):
-                        self.dataset[subset][split]["instructions"] = self.instructions[
-                            subset
-                        ][split]
+                        instructions = self.instructions[subset][split]
+                        self.dataset[subset][split]["queries"] = (
+                            combine_queries_with_instructions_datasets(
+                                self.dataset[subset][split]["queries"],
+                                instructions,
+                            )
+                        )
                     if hasattr(self, "top_ranked"):
                         self.dataset[subset][split]["top_ranked"] = self.top_ranked[
                             subset
@@ -181,15 +176,32 @@ class AbsTaskRetrieval(AbsTask):
         else:
             subset = "default"
             for split in self.queries:
-                self.dataset[subset][split]["queries"] = self.queries[split].copy()
-                self.dataset[subset][split]["corpus"] = self.corpus[split].copy()
+                queries = self.queries[split]
+                corpus = self.corpus[split]
+                self.dataset[subset][split]["queries"] = Dataset.from_list(
+                    [{"id": k, "text": v} for k, v in queries.items()]
+                )
+                self.dataset[subset][split]["corpus"] = Dataset.from_list(
+                    [
+                        {
+                            "id": k,
+                            "text": v["text"],
+                            "title": v.get("title", ""),
+                        }
+                        for k, v in corpus.items()
+                    ]
+                )
                 self.dataset[subset][split]["relevant_docs"] = self.relevant_docs[
                     split
                 ].copy()
                 if hasattr(self, "instructions"):
-                    self.dataset[subset][split]["instructions"] = self.instructions[
-                        split
-                    ].copy()
+                    instructions = self.instructions[split]
+                    self.dataset[subset][split]["queries"] = (
+                        combine_queries_with_instructions_datasets(
+                            self.dataset[subset][split]["queries"],
+                            instructions,
+                        )
+                    )
                 if hasattr(self, "top_ranked"):
                     self.dataset[subset][split]["top_ranked"] = self.top_ranked[
                         split
@@ -273,7 +285,7 @@ class AbsTaskRetrieval(AbsTask):
     def _evaluate_subset(
         self,
         model: Encoder,
-        data_split: DatasetDict | Dataset,
+        data_split: RetrievalSplitData,
         encode_kwargs: dict[str, Any],
         hf_split: str,
         hf_subset: str,
@@ -309,7 +321,6 @@ class AbsTaskRetrieval(AbsTask):
             task_metadata=self.metadata,
             hf_split=hf_split,
             hf_subset=hf_subset,
-            instructions=data_split["instructions"],
             top_ranked=data_split["top_ranked"],
             top_k=self.top_k,
             **kwargs,
@@ -414,7 +425,7 @@ class AbsTaskRetrieval(AbsTask):
     def task_specific_scores(
         self,
         scores: dict[str, dict[str, float]],
-        qrels: dict[str, dict[str, int]],
+        qrels: RelevantDocumentsType,
         results: dict[str, dict[str, float]],
         hf_split: str,
         hf_subset: str,
@@ -430,31 +441,33 @@ class AbsTaskRetrieval(AbsTask):
             queries = split_data["queries"]
             corpus = split_data["corpus"]
             relevant_docs = split_data["relevant_docs"]
-            instructions = split_data["instructions"]
             top_ranked = split_data["top_ranked"]
         elif compute_overall:
-            queries = {}
-            corpus = {}
+            queries = None
+            corpus = None
             relevant_docs = {}
-            instructions = {}
             top_ranked = {}
             for hf_subset in self.metadata.eval_langs:
                 split_data = self.dataset[hf_subset][split]
-                queries.update(process_docs(split_data["queries"], hf_subset, split))
-                corpus.update(process_docs(split_data["corpus"], hf_subset, split))
+                if queries is None:
+                    queries = split_data["queries"]
+                else:
+                    queries = concatenate_datasets([queries, split_data["queries"]])
+                if corpus is None:
+                    corpus = split_data["corpus"]
+                else:
+                    corpus = concatenate_datasets([corpus, split_data["corpus"]])
+
                 relevant_docs.update(
                     process_relevant_docs(split_data["relevant_docs"], hf_subset, split)
                 )
-                if (
-                    "instructions" in split_data
-                    and split_data["instructions"] is not None
-                ):
-                    instructions.update(
-                        process_docs(split_data["instructions"], hf_subset, split)
-                    )
+
                 if "top_ranked" in split_data and split_data["top_ranked"] is not None:
                     top_ranked.update(
-                        process_docs(split_data["top_ranked"], hf_subset, split)
+                        {
+                            f"{split}_{hf_subset}_{k}": v
+                            for k, v in split_data["top_ranked"].items()
+                        }
                     )
         else:
             if "default" in self.dataset and split != "default":
@@ -465,142 +478,99 @@ class AbsTaskRetrieval(AbsTask):
             queries = split_data["queries"]
             corpus = split_data["corpus"]
             relevant_docs = split_data["relevant_docs"]
-            instructions = split_data["instructions"]
             top_ranked = split_data["top_ranked"]
 
-        query_len = calculate_queries_length(queries)
-        doc_len = calculate_corpus_length(corpus)
-        num_documents = len(doc_len) if corpus is not None else 0
-        num_queries = len(query_len)
-        num_relevant_docs = sum(len(relevant_docs[qid]) for qid in relevant_docs)
-        none_queries = sum(q is None or len(q) == 0 for q in queries.values())
+        corpus = corpus.map(corpus_to_dict)["text"]
+        queries_texts = [q for q in queries["text"] if isinstance(q, str)]
+        num_documents = len(corpus)
+        num_queries = len(queries_texts)
 
-        # create a list of number of relevant docs per query
-        qrels_lengths = [
-            len(relevant_docs[qid]) for qid in relevant_docs if qid in queries
-        ]
-        unique_qrels = len({doc for qid in relevant_docs for doc in relevant_docs[qid]})
-        # number of qrels that are not 0
-        num_qrels_non_zero = sum(
-            sum(1 for doc_id in docs if docs[doc_id] != 0)
-            for docs in relevant_docs.values()
-        )
-        qrels_per_doc = num_qrels_non_zero / len(relevant_docs) if num_queries else 0
-
-        if instructions is not None and len(instructions) > 0:
-            instructions_len = [
-                len(instruction) for instruction in instructions.values()
-            ]
-            num_instructions = len(instructions)
-            average_instruction_length = sum(instructions_len)
-            min_instruction_length = min(instructions_len)
-            max_instruction_length = max(instructions_len)
-            unique_instructions = len(set(instructions))
-        else:
-            num_instructions = None
-            average_instruction_length = None
-            min_instruction_length = None
-            max_instruction_length = None
-            unique_instructions = None
+        relevant_docs_statistics = calculate_relevant_docs_statistics(relevant_docs)
 
         if top_ranked is not None and num_queries and len(top_ranked) > 0:
-            top_ranked_per_query = [len(docs) for docs in top_ranked.values()]
-            num_top_ranked = len(top_ranked_per_query)
-            min_top_ranked_per_query = min(top_ranked_per_query)
-            average_top_ranked_per_query = sum(top_ranked_per_query) / num_queries
-            max_top_ranked_per_query = max(top_ranked_per_query)
+            top_ranked_statistics = calculate_top_ranked_statistics(
+                top_ranked, num_queries
+            )
         else:
-            num_top_ranked = None
-            min_top_ranked_per_query = None
-            average_top_ranked_per_query = None
-            max_top_ranked_per_query = None
+            top_ranked_statistics = None
+
+        corpus_statistics = calculate_text_statistics(corpus)
+        if isinstance(queries["text"][0], (dict, list)):
+            queries = queries.map(convert_conv_history_to_query)
+        if "instruction" in queries[0]:
+            queries = queries.map(combine_queries_with_instruction_text)
+        queries_statistics = calculate_text_statistics(queries["text"])
+
+        number_of_characters = (
+            corpus_statistics["total_text_length"]
+            + queries_statistics["total_text_length"]
+        )
 
         return RetrievalDescriptiveStatistics(
             num_samples=num_documents + num_queries,
-            number_of_characters=sum(query_len) + sum(doc_len),
-            # documents
-            num_documents=num_documents,
-            min_document_length=min(doc_len),
-            average_document_length=sum(doc_len) / num_documents,
-            max_document_length=max(doc_len),
-            unique_documents=len(set(corpus)),
-            # queries
-            num_queries=num_queries,
-            min_query_length=min(query_len),
-            average_query_length=sum(query_len) / num_queries,
-            max_query_length=max(query_len),
-            unique_queries=len(set(queries)),
-            none_queries=none_queries,
-            # relevant docs
-            num_relevant_docs=num_relevant_docs,
-            min_relevant_docs_per_query=min(qrels_lengths),
-            average_relevant_docs_per_query=qrels_per_doc,
-            max_relevant_docs_per_query=max(qrels_lengths),
-            unique_relevant_docs=unique_qrels,
-            # instructions
-            num_instructions=num_instructions,
-            min_instruction_length=min_instruction_length,
-            average_instruction_length=average_instruction_length,
-            max_instruction_length=max_instruction_length,
-            unique_instructions=unique_instructions,
-            # top ranked
-            num_top_ranked=num_top_ranked,
-            min_top_ranked_per_query=min_top_ranked_per_query,
-            average_top_ranked_per_query=average_top_ranked_per_query,
-            max_top_ranked_per_query=max_top_ranked_per_query,
+            number_of_characters=number_of_characters,
+            documents_statistics=corpus_statistics,
+            queries_statistics=queries_statistics,
+            relevant_docs_statistics=relevant_docs_statistics,
+            top_ranked_statistics=top_ranked_statistics,
         )
 
     def _push_dataset_to_hub(self, repo_name: str) -> None:
-        def format_text_field(text: str | dict[str, str]) -> str:
-            if isinstance(text, str):
-                return text
-            return (
-                f"{text['title']} {text['text']}".strip()
-                if text.get("title", None) is not None
-                else text["text"]
-            )
+        self.convert_v1_dataset_format_to_v2()
 
-        def push_section(
+        def _push_section(
             data: dict[str, dict[Any, Any]],
-            column: str,
-            suffix: str,
-            converter: Callable[[Any, Any], dict[str, Any]],
+            subset_item: str,
+            hf_subset_name: str,
+            converter: Callable[[Any, Any], dict[str, Any]] | None = None,
         ) -> None:
+            """Helper function to push dataset
+
+            Args:
+                data: Dataset with all items
+                subset_item: Select which part to take. E. g. corpus, queries etc
+                hf_subset_name: Name of the current item on HF
+                converter: Function to convert dict to datasets format
+            """
             sections = {}
             for split in data.keys():
                 # skip empty instructions and top ranked
-                if column not in data[split] or data[split][column] is None:
+                if subset_item not in data[split] or data[split][subset_item] is None:
                     continue
-                sections[split] = Dataset.from_list(
-                    [converter(idx, item) for idx, item in data[split][column].items()]
-                )
+                if isinstance(sections[split], Dataset):
+                    sections[split] = data[split][subset_item]
+                elif converter is not None:
+                    sections[split] = Dataset.from_list(
+                        [
+                            converter(idx, item)
+                            for idx, item in data[split][subset_item].items()
+                        ]
+                    )
+                else:
+                    raise ValueError(
+                        f"Unexpected subset item type {subset_item} without converter"
+                    )
             if len(sections) > 0:
-                DatasetDict(sections).push_to_hub(repo_name, suffix)
+                DatasetDict(sections).push_to_hub(repo_name, hf_subset_name)
 
         for subset in self.dataset:
             logger.info(f"Converting {subset} of {self.metadata.name}")
-            push_section(
+            _push_section(
                 self.dataset[subset],
                 "queries",
                 f"{subset}-queries" if subset != "default" else "queries",
-                lambda idx, text: {"_id": idx, "text": text},
             )
-            push_section(
+            _push_section(
                 self.dataset[subset],
                 "corpus",
                 f"{subset}-corpus" if subset != "default" else "corpus",
-                lambda idx, text: {
-                    "_id": idx,
-                    "text": format_text_field(text),
-                    "title": text.get("title", "") if isinstance(text, dict) else "",
-                },
             )
             # Handle relevant_docs separately since one entry expands to multiple records.
             relevant_sections = {}
             for split, values in self.dataset[subset].items():
-                relecant_docs = values["relevant_docs"]
+                relevant_docs = values["relevant_docs"]
                 entries = []
-                for query_id, docs in relecant_docs.items():
+                for query_id, docs in relevant_docs.items():
                     for doc_id, score in docs.items():
                         entries.append(
                             {
@@ -614,13 +584,7 @@ class AbsTaskRetrieval(AbsTask):
                 repo_name, f"{subset}-qrels" if subset != "default" else "qrels"
             )
 
-            push_section(
-                self.dataset[subset],
-                "instructions",
-                f"{subset}-instruction" if subset != "default" else "instruction",
-                lambda idx, text: {"query-id": idx, "instruction": text},
-            )
-            push_section(
+            _push_section(
                 self.dataset[subset],
                 "top_ranked",
                 f"{subset}-top_ranked" if subset != "default" else "top_ranked",
@@ -628,46 +592,11 @@ class AbsTaskRetrieval(AbsTask):
             )
 
 
-def calculate_queries_length(queries: dict[str, str]) -> list[int] | None:
-    queries_lens = []
-    for query in queries.values():
-        if query is None or len(query) == 0:
-            continue
-
-        if isinstance(query[0], str):
-            queries_lens.append(len(query))
-        else:
-            queries_lens.extend([len(turn) for turn in query])
-    return queries_lens
-
-
-def calculate_corpus_length(
-    corpus: dict[str, str | dict[str, str]],
-) -> list[int] | None:
-    doc_lens = []
-    if corpus is None:
-        return None
-    for doc in corpus.values():
-        if isinstance(doc, dict):
-            doc_lens.append(len(doc["text"]) + len(doc.get("title", "")))
-        else:
-            doc_lens.append(len(doc))
-
-    return doc_lens
-
-
-def process_docs(
-    collection: dict[str, dict[str, str] | str], hf_subset: str, split: str
-) -> dict[str, str]:
-    """Collections can contain overlapping ids in different splits. Prepend split to avoid this"""
-    return {f"{split}_{hf_subset}_{k}": v for k, v in collection.items()}
-
-
 def process_relevant_docs(
-    collection: dict[str, dict[str, int]],
+    collection: dict[str, dict[str, float]],
     hf_subset: str,
     split: str,
-) -> dict[str, dict[str, int]]:
+) -> dict[str, dict[str, float]]:
     """Collections can contain overlapping ids in different splits. Prepend split to avoid this"""
     return_collection = {}
     for query_id, relevant in collection.items():
