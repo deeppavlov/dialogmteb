@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import datasets
-
 from mteb.abstasks.AbsTaskClusteringFast import AbsTaskClusteringFast
 from mteb.abstasks.task_metadata import TaskMetadata
 

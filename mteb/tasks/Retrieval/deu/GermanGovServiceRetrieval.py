@@ -3,7 +3,6 @@ from __future__ import annotations
 import hashlib
 
 import datasets
-
 from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval

@@ -3,8 +3,8 @@ from __future__ import annotations
 import itertools
 
 import numpy as np
-from datasets import Dataset, DatasetDict
 
+from datasets import Dataset, DatasetDict
 from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskAnyClustering import AbsTaskAnyClustering

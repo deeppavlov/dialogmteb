@@ -5,8 +5,8 @@ import logging
 from typing import Any
 
 import torch
-from datasets import Dataset
 
+from datasets import Dataset
 from mteb.abstasks.task_metadata import TaskMetadata
 from mteb.create_dataloaders import (
     create_dataloader_for_retrieval_corpus,

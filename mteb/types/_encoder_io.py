@@ -6,9 +6,10 @@ from typing import TypedDict, Union
 
 import numpy as np
 import torch
-from datasets import Dataset
 from PIL import Image
 from typing_extensions import NotRequired
+
+from datasets import Dataset
 
 # --- Output types ---
 # should be as Union, because `|` won't work for python3.9

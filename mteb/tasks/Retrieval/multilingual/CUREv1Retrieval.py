@@ -3,7 +3,6 @@ from __future__ import annotations
 from enum import Enum
 
 from datasets import DatasetDict, load_dataset
-
 from mteb.abstasks.task_metadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval

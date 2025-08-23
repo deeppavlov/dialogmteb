@@ -6,13 +6,13 @@ from collections import defaultdict
 from typing import Any
 
 import numpy as np
-from datasets import Dataset, DatasetDict
 from sklearn.base import ClassifierMixin, clone
 from sklearn.metrics import f1_score, label_ranking_average_precision_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import MultiLabelBinarizer
 from torch.utils.data import DataLoader
 
+from datasets import Dataset, DatasetDict
 from mteb.models.models_protocols import Encoder
 from mteb.types import ScoresDict
 

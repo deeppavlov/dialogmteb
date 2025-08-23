@@ -55,7 +55,7 @@ def process_bitod_data(file_path, all_columns=None):
 
             if event["Agent"] == "User":
                 # Initialize entry with default values
-                entry = {col: "none" for col in all_action_columns | all_state_columns}
+                entry = dict.fromkeys(all_action_columns | all_state_columns, "none")
                 entry["dialogue_id"] = dialogue_id
                 entry["text"] = event.get("Text", "")
                 entry["history"] = history.copy()
@@ -110,12 +110,17 @@ def process_bitod_data(file_path, all_columns=None):
                 # Add wizard's response to history
                 history.append({"role": "assistant", "content": event["Text"]})
 
-    return Dataset.from_list(transformed_data), {"action": all_action_columns, "state": all_state_columns}
+    return Dataset.from_list(transformed_data), {
+        "action": all_action_columns,
+        "state": all_state_columns,
+    }
 
 
 def load_bitod_data():
     """Load and process all BiToD data files."""
-    base_path = Path("/home/samoed/Desktop/mteb/dialogmteb/datasets/dialogues/dialogues/bitod/data")
+    base_path = Path(
+        "/home/samoed/Desktop/mteb/dialogmteb/datasets/dialogues/dialogues/bitod/data"
+    )
     all_datasets = {}
 
     for lang in ["en", "zh"]:
@@ -130,7 +135,7 @@ def load_bitod_data():
             if "fewshot" in file_path.stem:
                 continue
 
-            split_name = file_path.stem.split('_')[-1]
+            split_name = file_path.stem.split("_")[-1]
             if split_name not in ["test", "train", "valid"]:
                 continue
 
@@ -149,7 +154,9 @@ def load_bitod_data():
                                 act_name = action["act"]
                                 slot_name = action.get("slot", "")
                                 if slot_name:
-                                    all_action_columns.add(f"action-{act_name}-{slot_name}")
+                                    all_action_columns.add(
+                                        f"action-{act_name}-{slot_name}"
+                                    )
                                 else:
                                     all_action_columns.add(f"action-{act_name}")
 
@@ -165,7 +172,7 @@ def load_bitod_data():
             if "fewshot" in file_path.stem:
                 continue
 
-            split_name = file_path.stem.split('_')[-1]
+            split_name = file_path.stem.split("_")[-1]
             if split_name not in ["test", "train", "valid"]:
                 continue
 
@@ -187,8 +194,5 @@ if __name__ == "__main__":
     # Push to hub
     for lang, ds in all_datasets.items():
         if ds:
-            ds.push_to_hub(
-                "DeepPavlov/BiToD",
-                config_name=lang
-            )
+            ds.push_to_hub("DeepPavlov/BiToD", config_name=lang)
             print(f"Pushed {lang} configuration to hub")

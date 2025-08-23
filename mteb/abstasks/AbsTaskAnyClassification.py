@@ -5,11 +5,11 @@ from collections import defaultdict
 from typing import Any
 
 import numpy as np
-from datasets import Dataset, DatasetDict
 from PIL import ImageFile
 from sklearn.base import BaseEstimator
 from sklearn.linear_model import LogisticRegression
 
+from datasets import Dataset, DatasetDict
 from mteb.models.models_protocols import Encoder
 from mteb.types import HFSubset, ScoresDict
 from mteb.types.statistics import (

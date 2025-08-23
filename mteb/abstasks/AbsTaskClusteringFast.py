@@ -9,10 +9,10 @@ from typing import Any
 import numpy as np
 import sklearn
 import sklearn.cluster
-from datasets import Dataset, DatasetDict
 from sklearn.metrics.cluster import v_measure_score
 from torch.utils.data import DataLoader
 
+from datasets import Dataset, DatasetDict
 from mteb.models.models_protocols import Encoder
 from mteb.types import HFSubset
 from mteb.types.statistics import DescriptiveStatistics, LabelStatistics, TextStatistics

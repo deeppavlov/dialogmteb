@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from collections import Counter
 
-import datasets
 import numpy as np
 
+import datasets
 from mteb.abstasks.AbsTaskAnyClustering import AbsTaskAnyClustering
 from mteb.abstasks.AbsTaskClusteringFast import (
     AbsTaskClusteringFast,

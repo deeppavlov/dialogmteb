@@ -3,11 +3,11 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from datasets import Dataset
 from scipy.optimize import linear_sum_assignment
 from sklearn import cluster, metrics
 from torch.utils.data import DataLoader
 
+from datasets import Dataset
 from mteb.abstasks.task_metadata import TaskMetadata
 from mteb.models.models_protocols import Encoder
 

@@ -5,11 +5,11 @@ from collections import defaultdict
 from typing import Any
 
 import numpy as np
-from datasets import Dataset, DatasetDict
 from sklearn.base import BaseEstimator
 from sklearn.linear_model import LogisticRegression
 from tqdm import tqdm
 
+from datasets import Dataset, DatasetDict
 from mteb.abstasks.task_metadata import DescriptiveStatistics
 
 from .. import Encoder

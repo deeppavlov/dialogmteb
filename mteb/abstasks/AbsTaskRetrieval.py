@@ -8,7 +8,6 @@ from time import time
 from typing import Any, Callable
 
 from datasets import Dataset, DatasetDict, concatenate_datasets
-
 from mteb.models.models_protocols import Encoder
 from mteb.types import (
     HFSubset,

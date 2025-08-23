@@ -3,7 +3,6 @@ from __future__ import annotations
 import random
 
 from datasets import Dataset, DatasetDict
-
 from mteb.abstasks.AbsTaskAnyClustering import AbsTaskAnyClustering
 from mteb.abstasks.task_metadata import TaskMetadata
 

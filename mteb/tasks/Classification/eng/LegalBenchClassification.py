@@ -4,7 +4,6 @@ from typing import Any
 
 import datasets
 from datasets import concatenate_datasets
-
 from mteb.abstasks.AbsTaskAnyClassification import AbsTaskAnyClassification
 from mteb.abstasks.task_metadata import TaskMetadata
 

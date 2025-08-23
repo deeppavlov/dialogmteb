@@ -3,7 +3,6 @@ from __future__ import annotations
 import random
 
 from datasets import load_dataset
-
 from mteb.abstasks.AbsTaskRetrieval import AbsTaskRetrieval
 from mteb.abstasks.task_metadata import TaskMetadata
 

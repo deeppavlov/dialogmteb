@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from .air_dialogue_classification import RuAirDialogueClassification
 from .AmazonPolarityClassification import AmazonPolarityClassification
 from .ArxivClassification import ArxivClassification
 from .Banking77Classification import Banking77Classification
@@ -174,7 +175,6 @@ from .WikipediaTheoreticalAppliedClassification import (
 )
 from .YahooAnswersTopicsClassification import YahooAnswersTopicsClassification
 from .YelpReviewFullClassification import YelpReviewFullClassification
-from .air_dialogue_classification import RuAirDialogueClassification
 
 __all__ = [
     "AmazonPolarityClassification",

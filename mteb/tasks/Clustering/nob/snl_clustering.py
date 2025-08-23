@@ -6,7 +6,6 @@ from itertools import islice
 from typing import TypeVar
 
 import datasets
-
 from mteb.abstasks.AbsTaskAnyClustering import AbsTaskAnyClustering
 from mteb.abstasks.task_metadata import TaskMetadata
 

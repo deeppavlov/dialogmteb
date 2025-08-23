@@ -6,9 +6,9 @@ from typing import Any
 import numpy as np
 import torch
 import tqdm
-from datasets import Dataset
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
 
+from datasets import Dataset
 from mteb.abstasks.task_metadata import TaskMetadata
 from mteb.models.models_protocols import Encoder
 

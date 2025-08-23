@@ -27,9 +27,20 @@ def load_multi2woz_data(language_dir):
         for dialogue_id, dialogue_data in data.items():
             for turn in dialogue_data.get(log_key, []):
                 if "metadata" in turn:
-                    for domain in ["taxi", "police", "restaurant", "bus",
-                                   "hospital", "hotel", "attraction", "train"]:
-                        if domain in turn["metadata"] and "semi" in turn["metadata"][domain]:
+                    for domain in [
+                        "taxi",
+                        "police",
+                        "restaurant",
+                        "bus",
+                        "hospital",
+                        "hotel",
+                        "attraction",
+                        "train",
+                    ]:
+                        if (
+                            domain in turn["metadata"]
+                            and "semi" in turn["metadata"][domain]
+                        ):
                             for slot_name in turn["metadata"][domain]["semi"].keys():
                                 all_slots.add(f"{domain}-{slot_name}")
         all_slots = set(sorted(all_slots))
@@ -43,7 +54,7 @@ def load_multi2woz_data(language_dir):
                 # Process only user turns (even indices)
                 if turn_idx % 2 == 0:
                     # Initialize entry with all slots as "none"
-                    entry = {slot: "none" for slot in all_slots}
+                    entry = dict.fromkeys(all_slots, "none")
                     entry["dialogue_id"] = dialogue_id
                     entry["text"] = turn["text"]
                     entry["history"] = history.copy()
@@ -63,17 +74,32 @@ def load_multi2woz_data(language_dir):
                         # Get the entry we just added (for the previous user turn)
                         entry = transformed_data[-1]
 
-                        for domain in ["taxi", "police", "restaurant", "bus",
-                                       "hospital", "hotel", "attraction", "train"]:
-                            if domain in turn["metadata"] and "semi" in turn["metadata"][domain]:
-                                for slot_name, slot_value in turn["metadata"][domain]["semi"].items():
+                        for domain in [
+                            "taxi",
+                            "police",
+                            "restaurant",
+                            "bus",
+                            "hospital",
+                            "hotel",
+                            "attraction",
+                            "train",
+                        ]:
+                            if (
+                                domain in turn["metadata"]
+                                and "semi" in turn["metadata"][domain]
+                            ):
+                                for slot_name, slot_value in turn["metadata"][domain][
+                                    "semi"
+                                ].items():
                                     full_slot_name = f"{domain}-{slot_name}"
                                     if slot_value and slot_value != "not mentioned":
                                         entry[full_slot_name] = slot_value
 
         # Create dataset for this split
         datasets[split_name] = Dataset.from_list(transformed_data)
-        print(f"Created {split_name} dataset with {len(transformed_data)} examples for {lang_code}")
+        print(
+            f"Created {split_name} dataset with {len(transformed_data)} examples for {lang_code}"
+        )
 
     return DatasetDict(datasets), sorted(all_slots)
 
@@ -96,8 +122,5 @@ if __name__ == "__main__":
 
     # Push all configurations to the hub as a single repository
     for lang_code, ds in all_configs.items():
-        ds.push_to_hub(
-            "DeepPavlov/Multi2WOZ",
-            config_name=lang_code
-        )
+        ds.push_to_hub("DeepPavlov/Multi2WOZ", config_name=lang_code)
         print(f"Pushed {lang_code} configuration to hub")

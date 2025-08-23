@@ -2,11 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from datasets import load_dataset
-
 import mteb
+from datasets import load_dataset
 from mteb.abstasks import AbsTaskAnyClassification
-from mteb.abstasks.abs_dialog_state_tracking import AbsTaskDST
 from mteb.abstasks.task_metadata import TaskMetadata
 
 
@@ -26,7 +24,13 @@ class PrestoClassification(AbsTaskAnyClassification):
         modalities=["text"],
         # eval_splits=["test", "dev"],
         eval_splits=["test"],
-        eval_langs=["eng-Latn", "fra-Latn", "hin-Deva", "jpn-Jpan", "spa-Latn", ],
+        eval_langs=[
+            "eng-Latn",
+            "fra-Latn",
+            "hin-Deva",
+            "jpn-Jpan",
+            "spa-Latn",
+        ],
         main_score="accuracy",
         date=None,
         domains=None,
@@ -67,18 +71,19 @@ class PrestoClassification(AbsTaskAnyClassification):
             return row
 
         for subset in self.dataset:
-            self.dataset[subset] = self.dataset[subset].map(
-                process_history,
-                remove_columns=["dialog"],
-            ).select_columns(["text", "label"])
+            self.dataset[subset] = (
+                self.dataset[subset]
+                .map(
+                    process_history,
+                    remove_columns=["dialog"],
+                )
+                .select_columns(["text", "label"])
+            )
+
 
 if __name__ == "__main__":
     model = mteb.get_model("minishlab/potion-base-2M")
-    evaluator = mteb.MTEB(
-        [
-            PrestoClassification()
-        ]
-    )
+    evaluator = mteb.MTEB([PrestoClassification()])
 
     evaluator.run(
         model,

@@ -4,7 +4,6 @@ from collections import Counter
 
 import datasets
 from datasets import DatasetDict
-
 from mteb.abstasks.AbsTaskAnyClassification import AbsTaskAnyClassification
 from mteb.abstasks.task_metadata import TaskMetadata
 

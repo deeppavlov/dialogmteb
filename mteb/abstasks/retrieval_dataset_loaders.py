@@ -13,7 +13,6 @@ from datasets import (
     get_dataset_split_names,
     load_dataset,
 )
-
 from mteb.types import (
     CorpusDatasetType,
     InstructionDatasetType,

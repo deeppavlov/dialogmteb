@@ -10,9 +10,9 @@ from typing import Any
 import numpy as np
 import pytrec_eval
 import torch
-from datasets import Dataset
 from PIL import Image
 
+from datasets import Dataset
 from mteb.abstasks.task_metadata import TaskMetadata
 from mteb.create_dataloaders import create_image_dataloader
 from mteb.models.models_protocols import Encoder

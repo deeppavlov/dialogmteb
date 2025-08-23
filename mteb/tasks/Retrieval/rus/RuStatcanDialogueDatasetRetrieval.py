@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 
 import datasets
-
 from mteb.abstasks.TaskMetadata import TaskMetadata
 
 from ....abstasks.AbsTaskRetrieval import AbsTaskRetrieval
@@ -42,7 +41,10 @@ def _load_statcan_data(
 
             for row in query_table:
                 query = json.loads(row["query_ru"])
-                query = [{**d, "content_en": d["content"], "content": d["content_ru"]} for d in query]
+                query = [
+                    {**d, "content_en": d["content"], "content": d["content_ru"]}
+                    for d in query
+                ]
                 query_id = row["query_id"]
                 doc_id = row["doc_id"]
                 queries[lang][split][query_id] = query

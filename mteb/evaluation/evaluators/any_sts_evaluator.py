@@ -3,7 +3,6 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from datasets import Dataset
 from scipy.stats import pearsonr, spearmanr
 from sklearn.metrics.pairwise import (
     paired_cosine_distances,
@@ -11,6 +10,7 @@ from sklearn.metrics.pairwise import (
     paired_manhattan_distances,
 )
 
+from datasets import Dataset
 from mteb.abstasks.task_metadata import TaskMetadata
 from mteb.models.models_protocols import Encoder
 

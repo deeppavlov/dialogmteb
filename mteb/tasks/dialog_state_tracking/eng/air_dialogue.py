@@ -65,19 +65,20 @@ class AirDialogueClassification(AbsTaskAnyClassification):
             return row
 
         for subset in self.dataset:
-            self.dataset[subset] = self.dataset[subset].map(
-                process_history,
-            ).select_columns(["text", "label"])
+            self.dataset[subset] = (
+                self.dataset[subset]
+                .map(
+                    process_history,
+                )
+                .select_columns(["text", "label"])
+            )
 
 
 if __name__ == "__main__":
     import mteb
+
     model = mteb.get_model("minishlab/potion-base-2M")
-    evaluator = mteb.MTEB(
-        [
-            AirDialogueClassification()
-        ]
-    )
+    evaluator = mteb.MTEB([AirDialogueClassification()])
 
     evaluator.run(
         model,

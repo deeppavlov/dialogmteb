@@ -4,7 +4,6 @@ import logging
 from collections import defaultdict
 
 from datasets import Dataset
-
 from mteb.types import ScoresDict
 from mteb.types.statistics import DescriptiveStatistics, LabelStatistics, TextStatistics
 

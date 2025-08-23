@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import datasets
-
 from mteb.abstasks.Image.AbsTaskImageTextPairClassification import (
     AbsTaskImageTextPairClassification,
 )

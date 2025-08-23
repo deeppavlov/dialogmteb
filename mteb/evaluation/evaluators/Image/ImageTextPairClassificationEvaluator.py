@@ -5,10 +5,10 @@ from typing import Any
 
 import torch
 import torch.nn.functional as F
-from datasets import Dataset
 from PIL.Image import Image
 from torch.utils.data import DataLoader
 
+from datasets import Dataset
 from mteb.abstasks.task_metadata import TaskMetadata
 from mteb.create_dataloaders import (
     transform_image_to_rgb,

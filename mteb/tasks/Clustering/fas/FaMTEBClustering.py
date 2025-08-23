@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import numpy as np
-from datasets import Dataset, DatasetDict
 
+from datasets import Dataset, DatasetDict
 from mteb.abstasks.AbsTaskClusteringFast import (
     AbsTaskClusteringFast,
     check_label_distribution,

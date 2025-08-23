@@ -3,10 +3,10 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from datasets import Dataset
 from sklearn import metrics
 from torch.utils.data import DataLoader
 
+from datasets import Dataset
 from mteb.abstasks.task_metadata import TaskMetadata
 from mteb.create_dataloaders import (
     create_dataloader_from_texts,

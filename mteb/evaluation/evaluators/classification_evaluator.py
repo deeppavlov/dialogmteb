@@ -4,7 +4,6 @@ import logging
 from typing import Any
 
 import numpy as np
-from datasets import Dataset
 from sklearn.base import BaseEstimator
 from sklearn.metrics import (
     accuracy_score,
@@ -15,6 +14,7 @@ from sklearn.metrics import (
 )
 from torch.utils.data import DataLoader
 
+from datasets import Dataset
 from mteb.abstasks.task_metadata import TaskMetadata
 from mteb.models.models_protocols import Encoder
 

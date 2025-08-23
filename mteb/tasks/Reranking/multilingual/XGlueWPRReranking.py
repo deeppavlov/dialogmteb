@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import logging
 
-import datasets
 import pandas as pd
 
+import datasets
 from mteb.abstasks.AbsTaskReranking import AbsTaskReranking
 from mteb.abstasks.task_metadata import TaskMetadata
 

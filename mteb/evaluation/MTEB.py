@@ -23,9 +23,9 @@ if sys.version_info >= (3, 13):
 else:
     from typing_extensions import deprecated
 
-import datasets
 from sentence_transformers import CrossEncoder, SentenceTransformer
 
+import datasets
 import mteb
 from mteb.abstasks.AbsTask import AbsTask
 from mteb.load_results.task_results import TaskResult

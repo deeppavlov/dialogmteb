@@ -54,7 +54,7 @@ def process_risawoz_data(file_path, all_slots):
                 "turn_domain": turn_domain,
                 "text": user_text,
                 "history": history.copy(),
-                "user_acts": turn.get("user_acts", [])
+                "user_acts": turn.get("user_acts", []),
             }
 
             # Add system acts if available
@@ -88,13 +88,15 @@ def process_risawoz_data(file_path, all_slots):
 
 def load_risawoz_data():
     """Load and process all RiSAWOZ data files."""
-    base_path = Path("/home/samoed/Desktop/mteb/dialogmteb/datasets/RiSAWOZ/RiSAWOZ-data/task2-data-DST")
+    base_path = Path(
+        "/home/samoed/Desktop/mteb/dialogmteb/datasets/RiSAWOZ/RiSAWOZ-data/task2-data-DST"
+    )
 
     # Define file mapping (filename -> split_name)
     file_mapping = {
         "dst_all_train10000.json": "train",
         "dst_all_dev600.json": "validation",
-        "dst_all_test600_new.json": "test"
+        "dst_all_test600_new.json": "test",
     }
 
     print("\nProcessing RiSAWOZ data...")

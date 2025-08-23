@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import datasets
 from datasets import Dataset
-
 from mteb.abstasks.AbsTaskReranking import AbsTaskReranking
 from mteb.abstasks.task_metadata import TaskMetadata
 

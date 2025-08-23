@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datasets import DatasetDict, load_dataset
-
 from mteb.abstasks.AbsTaskBitextMining import AbsTaskBitextMining
 from mteb.abstasks.task_metadata import TaskMetadata
 

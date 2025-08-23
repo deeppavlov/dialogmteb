@@ -5,8 +5,8 @@ from typing import Any
 
 import numpy as np
 import tqdm
-from datasets import Dataset
 
+from datasets import Dataset
 from mteb.models.models_protocols import Encoder
 from mteb.types import ScoresDict
 from mteb.types.statistics import (

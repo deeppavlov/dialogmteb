@@ -17,7 +17,7 @@ def transform_dialogue_data(input_json, all_slots):
         history = []
         for turn_idx, turn in enumerate(dialogue_entry["dialogue"]):
             # Create a new entry for each turn with all slots initialized to None
-            entry = {slot: "none" for slot in all_slots}
+            entry = dict.fromkeys(all_slots, "none")
 
             # Add dialogue ID
             entry["dialogue_id"] = dialogue_id
@@ -51,7 +51,9 @@ def transform_dialogue_data(input_json, all_slots):
 if __name__ == "__main__":
     # Load the input JSON file
     # First pass: collect all possible slot categories
-    for lang_path in Path("/home/samoed/Desktop/mteb/dialogmteb/datasets/Multi2WOZ/").glob("*"):
+    for lang_path in Path(
+        "/home/samoed/Desktop/mteb/dialogmteb/datasets/Multi2WOZ/"
+    ).glob("*"):
         all_slots = set()
         for split_path in lang_path.glob("*.json"):
             with split_path.open() as f:

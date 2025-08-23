@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import datasets
 from datasets import Dataset, DatasetDict
-
 from mteb.abstasks.Image.AbsTaskAny2AnyRetrieval import AbsTaskAny2AnyRetrieval
 from mteb.abstasks.task_metadata import TaskMetadata
 

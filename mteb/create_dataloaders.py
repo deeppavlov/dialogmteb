@@ -4,9 +4,9 @@ import logging
 from typing import Any, Callable
 
 import torch
-from datasets import Dataset
 from torch.utils.data import DataLoader, default_collate
 
+from datasets import Dataset
 from mteb.abstasks.task_metadata import TaskMetadata
 from mteb.types import (
     BatchedInput,

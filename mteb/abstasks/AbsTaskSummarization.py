@@ -4,8 +4,8 @@ import logging
 from typing import Any
 
 import numpy as np
-from datasets import Dataset
 
+from datasets import Dataset
 from mteb.models.models_protocols import Encoder
 from mteb.types import ScoresDict
 from mteb.types.statistics import DescriptiveStatistics, ScoreStatistics, TextStatistics

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datasets import Dataset, load_dataset
-
 from mteb.abstasks.Image.AbsTaskAny2AnyMultiChoice import AbsTaskAny2AnyMultiChoice
 from mteb.abstasks.task_metadata import TaskMetadata
 

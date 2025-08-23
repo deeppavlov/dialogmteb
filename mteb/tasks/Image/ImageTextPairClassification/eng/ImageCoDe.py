@@ -1,8 +1,8 @@
 from __future__ import annotations
 
 import numpy as np
-from datasets import DatasetDict, load_dataset
 
+from datasets import DatasetDict, load_dataset
 from mteb.abstasks.Image.AbsTaskImageTextPairClassification import (
     AbsTaskImageTextPairClassification,
 )
