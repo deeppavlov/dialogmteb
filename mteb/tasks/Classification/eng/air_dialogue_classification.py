@@ -22,7 +22,7 @@ class AirDialogueClassification(AbsTaskAnyClassification):
         date=("2018-01-01", "2022-06-07"),
         domains=[],
         task_subtypes=["Intent classification"],
-        license="not specified",
+        license="cc-by-nc-4",
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="found",
