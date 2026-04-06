@@ -5264,7 +5264,7 @@ wheels = [
 
 [[package]]
 name = "mteb"
-version = "2.12.9"
+version = "2.12.14"
 source = { editable = "." }
 dependencies = [
     { name = "datasets" },
@@ -5537,6 +5537,7 @@ lint = [
     { name = "typos" },
 ]
 test = [
+    { name = "bibtexparser" },
     { name = "gitpython" },
     { name = "iso639" },
     { name = "pytest" },
@@ -5723,6 +5724,7 @@ lint = [
     { name = "typos", specifier = ">1" },
 ]
 test = [
+    { name = "bibtexparser", specifier = ">=1.4.3" },
     { name = "gitpython", specifier = ">=3.0.0" },
     { name = "iso639", specifier = ">=0.1.4" },
     { name = "pytest", specifier = ">=8.3.4,<8.4.0" },
