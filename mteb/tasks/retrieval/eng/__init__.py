@@ -120,6 +120,7 @@ from .hotpot_qa_retrieval import (
     HotpotQAHardNegatives,
     HotpotQAHardNegativesV2,
 )
+from .iKAT2023 import iKAT2023
 from .image_co_de_t2i_retrieval import ImageCoDeT2IRetrieval
 from .info_seek_it2it_retrieval import InfoSeekIT2ITRetrieval
 from .info_seek_it2t_retrieval import InfoSeekIT2TRetrieval
@@ -388,6 +389,7 @@ __all__ = [
     "HotpotQAHardNegativesV2",
     "IRPapersT2IRetrieval",
     "IRPapersT2ITRetrieval",
+    "iKAT2023",
     "ImageCoDeT2IRetrieval",
     "InfoSeekIT2ITRetrieval",
     "InfoSeekIT2TRetrieval",
