@@ -42,7 +42,7 @@ class DailyDialogClassificationAct(AbsTaskClassification):
 }""",
     )
 
-    def dataset_transform(self):
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
         self.dataset = self.dataset.map(combine_dialogs)
         self.dataset = self.dataset.rename_columns(
             {"act_label": "label", "dialog": "text"}
@@ -82,7 +82,7 @@ class DailyDialogClassificationEmotion(AbsTaskClassification):
 }""",
     )
 
-    def dataset_transform(self):
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
         self.dataset = self.dataset.map(combine_dialogs)
         self.dataset = self.dataset.rename_columns(
             {"emotion_label": "label", "dialog": "text"}

@@ -44,7 +44,7 @@ Mirco Ravanelli},
     input_column_name: str = "audio"
     label_column_name: str = "gender"
 
-    def dataset_transform(self):
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
         self.dataset = self.stratified_subsampling(
             self.dataset, seed=self.seed, splits=["test"], label=self.label_column_name
         )

@@ -43,7 +43,7 @@ class RuWebLINXCandidatesReranking(AbsTaskReranking):
 """,
     )
 
-    def dataset_transform(self):
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
         self.dataset = self.dataset.rename_columns(
             {"query": "query_en", "query_ru": "query"}
         )

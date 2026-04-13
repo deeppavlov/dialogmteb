@@ -52,7 +52,7 @@ Dupoux, Emmanuel},
     max_fraction_of_documents_to_embed = None
     input_column_name: str = "audio"
 
-    def dataset_transform(self) -> None:
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         """Filter out samples with empty audio arrays."""
         for split in self.dataset:
             self.dataset[split] = self.dataset[split].filter(

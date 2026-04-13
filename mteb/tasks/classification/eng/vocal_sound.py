@@ -41,5 +41,5 @@ class VocalSoundClassification(AbsTaskClassification):
     input_column_name: str = "audio"
     label_column_name: str = "answer"
 
-    def dataset_transform(self):
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
         self.dataset["train"] = self.dataset["val"]

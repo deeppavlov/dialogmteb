@@ -53,7 +53,7 @@ Dupoux, Emmanuel},
 
     is_cross_validation: bool = True
 
-    def dataset_transform(self):
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
         import numpy as np
         from datasets import DatasetDict
 

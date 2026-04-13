@@ -47,7 +47,7 @@ class IEMOCAPGenderClassification(AbsTaskClassification):
 
     is_cross_validation: bool = True
 
-    def dataset_transform(self):
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
         # Define label mapping
         label2id = {"Female": 0, "Male": 1}
 

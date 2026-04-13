@@ -39,7 +39,7 @@ class MultiWoz21Attraction(AbsTaskDST):
         prompt=None,
     )
 
-    def dataset_transform(self) -> None:
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
             history = row["history"]
             text = ""
@@ -90,7 +90,7 @@ class MultiWoz21Hospital(AbsTaskDST):
         prompt=None,
     )
 
-    def dataset_transform(self) -> None:
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
             history = row["history"]
             text = ""
@@ -152,7 +152,7 @@ class MultiWoz21Hotel(AbsTaskDST):
         prompt=None,
     )
 
-    def dataset_transform(self) -> None:
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
             history = row["history"]
             text = ""
@@ -211,7 +211,7 @@ class MultiWoz21Restaurant(AbsTaskDST):
         prompt=None,
     )
 
-    def dataset_transform(self) -> None:
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
             history = row["history"]
             text = ""
@@ -267,7 +267,7 @@ class MultiWoz21Taxi(AbsTaskDST):
         prompt=None,
     )
 
-    def dataset_transform(self) -> None:
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
             history = row["history"]
             text = ""
@@ -325,7 +325,7 @@ class MultiWoz21Train(AbsTaskDST):
         prompt=None,
     )
 
-    def dataset_transform(self) -> None:
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
             history = row["history"]
             text = ""
