@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from mteb.abstasks.classification import AbsTaskClassification
 from mteb.abstasks.task_metadata import TaskMetadata
 

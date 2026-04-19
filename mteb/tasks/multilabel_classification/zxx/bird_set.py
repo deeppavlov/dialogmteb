@@ -1,3 +1,5 @@
+from typing import Any
+
 from datasets import Sequence, Value
 from sklearn.linear_model import LogisticRegression
 from sklearn.multioutput import MultiOutputClassifier

@@ -1,3 +1,5 @@
+from typing import Any
+
 from mteb.abstasks import AbsTaskClustering
 from mteb.abstasks.task_metadata import TaskMetadata
 
