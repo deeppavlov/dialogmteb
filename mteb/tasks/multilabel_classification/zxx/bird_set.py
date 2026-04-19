@@ -1,10 +1,11 @@
+from typing import Any
+
 from datasets import Sequence, Value
 from sklearn.linear_model import LogisticRegression
 from sklearn.multioutput import MultiOutputClassifier
 
 from mteb.abstasks import AbsTaskMultilabelClassification
 from mteb.abstasks.task_metadata import TaskMetadata
-from typing import Any
 
 
 class BirdSetMultilabelClassification(AbsTaskMultilabelClassification):

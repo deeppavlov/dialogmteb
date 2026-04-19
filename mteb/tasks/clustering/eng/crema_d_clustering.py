@@ -1,6 +1,7 @@
+from typing import Any
+
 from mteb.abstasks import AbsTaskClustering
 from mteb.abstasks.task_metadata import TaskMetadata
-from typing import Any
 
 
 class CREMADClustering(AbsTaskClustering):
