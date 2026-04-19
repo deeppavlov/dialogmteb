@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from mteb.abstasks.classification import AbsTaskClassification
 from mteb.abstasks.task_metadata import TaskMetadata
