@@ -20,7 +20,7 @@ class iKAT2023(AbsTaskRetrieval):
         date=("2023-11-14", "2023-11-17"),
         domains=["Spoken"],
         task_subtypes=["Article retrieval"],
-        license="MIT License",
+        license="mit",
         annotations_creators="derived",
         dialect=[],
         sample_creation="found",
