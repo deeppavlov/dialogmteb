@@ -11,7 +11,7 @@ class SkillOfMind(AbsTaskRetrieval):
             "path": "DeepPavlov/multifaceted-skill-of-mind",
             "revision": "9b6081971002156832360e3fe82f84acc90beae2",
         },
-        type="TextClassification",
+        type="MultilabelClassification",
         category="t2c",
         modalities=["text"],
         eval_splits=["test"],
