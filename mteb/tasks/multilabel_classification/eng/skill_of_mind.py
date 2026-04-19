@@ -1,3 +1,5 @@
+from typing import Any
+
 from mteb.abstasks.retrieval import AbsTaskRetrieval
 from mteb.abstasks.task_metadata import TaskMetadata
 
@@ -36,3 +38,25 @@ class SkillOfMind(AbsTaskRetrieval):
 }
 """,
     )
+
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
+        def process_history(row: dict[str, Any]) -> dict[str, Any]:
+            history = row["text"]
+            text = ""
+            if len(history) > 0:
+                for entry in history:
+                    if entry["role"] == "user":
+                        text += f"User: {entry['content']}\n"
+                    else:
+                        text += f"Assistant: {entry['content']}\n"
+            row["text"] = text
+            return row
+
+        for subset in self.dataset:
+            self.dataset[subset] = (
+                self.dataset[subset]
+                .map(
+                    process_history,
+                )
+                .select_columns(["text", "label"])
+            )
