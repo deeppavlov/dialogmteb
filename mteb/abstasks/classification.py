@@ -226,7 +226,9 @@ class AbsTaskClassification(AbsTask):
             raise TypeError("Expected model to be an instance of EncoderProtocol")
 
         if isinstance(data_split, Dataset | DatasetDict):
-            data_split = data_split.select_columns([self.label_column_name, self.input_column_name])
+            data_split = data_split.select_columns(
+                [self.label_column_name, self.input_column_name]
+            )
 
         train_split = data_split[self.train_split]
         eval_split = data_split[hf_split]
