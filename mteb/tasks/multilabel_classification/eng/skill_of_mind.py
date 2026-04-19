@@ -1,10 +1,10 @@
 from typing import Any
 
-from mteb.abstasks.retrieval import AbsTaskRetrieval
+from mteb.abstasks import AbsTaskMultilabelClassification
 from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class SkillOfMind(AbsTaskRetrieval):
+class SkillOfMind(AbsTaskMultilabelClassification):
     metadata = TaskMetadata(
         name="SkillOfMind",
         description="The task is to understand which skills are the most relevant to use in this case",
