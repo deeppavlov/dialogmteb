@@ -1,3 +1,5 @@
+from typing import Any
+
 from mteb.abstasks import AbsTaskClustering
 from mteb.abstasks.task_metadata import TaskMetadata
 
@@ -40,7 +42,7 @@ class VoxCelebClustering(AbsTaskClustering):
     max_fraction_of_documents_to_embed = None
     input_column_name: str = "audio"
 
-    def dataset_transform(self):
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
         ds = self.dataset
         # Remove 'Disagreement' samples and '<mixed>' samples
         ds = ds.filter(lambda x: x["label"] not in ["Disagreement", "<mixed>"])  # noqa: PLR6201

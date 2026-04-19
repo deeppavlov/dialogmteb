@@ -300,9 +300,9 @@ from .yelp_review_full_classification import (
 )
 
 __all__ = [
-    "AirDialogueClassification",
     "CREMAD",
     "FSDD",
+    "AirDialogueClassification",
     "AmazonPolarityClassification",
     "AmazonPolarityClassificationV2",
     "ArxivClassification",

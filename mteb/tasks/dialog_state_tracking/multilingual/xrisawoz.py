@@ -50,7 +50,7 @@ class XRisaWozAttraction(AbsTaskDST):
         prompt=None,
     )
 
-    def dataset_transform(self) -> None:
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
             history = row["history"]
             text = ""
@@ -120,7 +120,7 @@ class XRisaWozCar(AbsTaskDST):
         prompt=None,
     )
 
-    def dataset_transform(self) -> None:
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
             history = row["history"]
             text = ""
@@ -188,7 +188,7 @@ class XRisaWozClass(AbsTaskDST):
         prompt=None,
     )
 
-    def dataset_transform(self) -> None:
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
             history = row["history"]
             text = ""
@@ -255,7 +255,7 @@ class XRisaWozHospital(AbsTaskDST):
         prompt=None,
     )
 
-    def dataset_transform(self) -> None:
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
             history = row["history"]
             text = ""
@@ -324,7 +324,7 @@ class XRisaWozMovie(AbsTaskDST):
         prompt=None,
     )
 
-    def dataset_transform(self) -> None:
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
             history = row["history"]
             text = ""
@@ -394,7 +394,7 @@ class XRisaWozPC(AbsTaskDST):
         prompt=None,
     )
 
-    def dataset_transform(self) -> None:
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
             history = row["history"]
             text = ""
@@ -459,7 +459,7 @@ class XRisaWozTrain(AbsTaskDST):
         prompt=None,
     )
 
-    def dataset_transform(self) -> None:
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
             history = row["history"]
             text = ""
@@ -526,7 +526,7 @@ class XRisaWozTransport(AbsTaskDST):
         prompt=None,
     )
 
-    def dataset_transform(self) -> None:
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
             history = row["history"]
             text = ""
