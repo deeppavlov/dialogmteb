@@ -1,5 +1,6 @@
 from mteb.abstasks import AbsTaskReranking
 from mteb.abstasks.task_metadata import TaskMetadata
+from typing import Any
 
 
 class RuWebLINXCandidatesReranking(AbsTaskReranking):

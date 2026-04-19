@@ -1,5 +1,6 @@
 from mteb.abstasks.classification import AbsTaskClassification
 from mteb.abstasks.task_metadata import TaskMetadata
+from typing import Any
 
 
 class CommonLanguageGenderDetection(AbsTaskClassification):

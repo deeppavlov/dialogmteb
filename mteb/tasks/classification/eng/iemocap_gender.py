@@ -2,6 +2,7 @@ import logging
 
 from mteb.abstasks.classification import AbsTaskClassification
 from mteb.abstasks.task_metadata import TaskMetadata
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
