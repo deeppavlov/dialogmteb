@@ -11,7 +11,7 @@ from datasets import Dataset, DatasetDict
 from tqdm import tqdm
 
 from mteb.models.models_protocols import EncoderProtocol
-from mteb.types import ScoresDict
+from mteb.types import EncodeKwargs, ScoresDict
 
 from .classification import AbsTaskClassification
 
@@ -28,7 +28,7 @@ class AbsTaskDST(AbsTaskClassification):
         model: EncoderProtocol,
         data_split: DatasetDict,
         *,
-        encode_kwargs: dict[str, Any],
+        encode_kwargs: EncodeKwargs,
         hf_split: str,
         hf_subset: str,
         prediction_folder: Path | None = None,
@@ -59,8 +59,8 @@ class AbsTaskDST(AbsTaskClassification):
                 evaluator = self.evaluator(
                     train_dataset,
                     current_eval_split,
-                    self.input_column_name,
-                    "label",
+                    values_column_name=self.input_column_name,
+                    label_column_name="label",
                     task_metadata=self.metadata,
                     hf_split=hf_split,
                     hf_subset=hf_subset,

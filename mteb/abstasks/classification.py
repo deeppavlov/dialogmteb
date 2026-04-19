@@ -191,8 +191,6 @@ class AbsTaskClassification(AbsTask):
             else:
                 ds = self.dataset[hf_subset]
 
-            if isinstance(ds, Dataset | DatasetDict):
-                ds = ds.select_columns([self.label_column_name, self.input_column_name])
             eval_function = (
                 self._evaluate_subset
                 if not self.is_cross_validation
@@ -226,6 +224,9 @@ class AbsTaskClassification(AbsTask):
     ) -> FullClassificationMetrics:
         if not isinstance(model, EncoderProtocol):
             raise TypeError("Expected model to be an instance of EncoderProtocol")
+
+        if isinstance(data_split, Dataset | DatasetDict):
+            data_split = data_split.select_columns([self.label_column_name, self.input_column_name])
 
         train_split = data_split[self.train_split]
         eval_split = data_split[hf_split]
