@@ -11,7 +11,7 @@ class SkillOfMind(AbsTaskMultilabelClassification):
         reference="https://huggingface.co/datasets/passing2961/multifaceted-skill-of-mind",
         dataset={
             "path": "DeepPavlov/multifaceted-skill-of-mind",
-            "revision": "b8655d3ea167182c596c18c38c498e545c33ee52",
+            "revision": "e19199040b03e41b02578e24d906e5af7394233a",
         },
         type="MultilabelClassification",
         category="t2c",
