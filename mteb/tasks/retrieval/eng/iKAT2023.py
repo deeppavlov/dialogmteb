@@ -2,7 +2,7 @@ from mteb.abstasks.retrieval import AbsTaskRetrieval
 from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class iKAT2023(AbsTaskRetrieval):
+class IKAT2023(AbsTaskRetrieval):
     metadata = TaskMetadata(
         name="iKAT2023",
         description="The task is to retrieve the case document that most closely matches or is most relevant to the scenario described in the provided query.",
