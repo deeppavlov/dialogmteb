@@ -390,7 +390,6 @@ __all__ = [
     "HotpotQAHardNegativesV2",
     "IRPapersT2IRetrieval",
     "IRPapersT2ITRetrieval",
-    "IKAT2023",
     "ImageCoDeT2IRetrieval",
     "InfoSeekIT2ITRetrieval",
     "InfoSeekIT2TRetrieval",
