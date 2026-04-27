@@ -257,6 +257,7 @@ __all__ = [
     "CUB200I2I",
     "FEVER",
     "FORBI2I",
+    "IKAT2023",
     "MSMARCO",
     "NQ",
     "PIQA",
