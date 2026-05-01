@@ -12,6 +12,6 @@ __all__ = [
     "AudioSetMultilingualClassification",
     "FSD50HFMultilingualClassification",
     "FSD2019KaggleMultilingualClassification",
-    "VOC2007Classification",
     "SkillOfMind",
+    "VOC2007Classification",
 ]
