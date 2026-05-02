@@ -78,6 +78,7 @@ from .mkqa_retrieval import MKQARetrieval
 from .mlqa_retrieval import MLQARetrieval
 from .mr_tidy_retrieval import MrTidyRetrieval
 from .multi_long_doc_retrieval import MultiLongDocRetrieval
+from .mupler_retrieval import MuPLeRRetrieval
 from .neu_clir2022_retrieval import (
     NeuCLIR2022Retrieval,
     NeuCLIR2022RetrievalHardNegatives,
@@ -86,6 +87,7 @@ from .neu_clir2023_retrieval import (
     NeuCLIR2023Retrieval,
     NeuCLIR2023RetrievalHardNegatives,
 )
+from .news_retrieval import GlobalNewsRetrieval, PublicNewsRetrieval
 from .public_health_qa_retrieval import PublicHealthQARetrieval
 from .ru_sci_bench_retrieval import RuSciBenchCiteRetrieval, RuSciBenchCociteRetrieval
 from .statcan_dialogue_dataset_retrieval import StatcanDialogueDatasetRetrieval
@@ -98,15 +100,25 @@ from .vidore2_bench_retrieval import (
 )
 from .vidore3_bench_retrieval import (
     Vidore3ComputerScienceRetrieval,
+    Vidore3ComputerScienceRetrievalv2,
     Vidore3EnergyRetrieval,
+    Vidore3EnergyRetrievalv2,
     Vidore3FinanceEnRetrieval,
+    Vidore3FinanceEnRetrievalv2,
     Vidore3FinanceFrRetrieval,
+    Vidore3FinanceFrRetrievalv2,
     Vidore3HrRetrieval,
+    Vidore3HrRetrievalv2,
     Vidore3IndustrialRetrieval,
+    Vidore3IndustrialRetrievalv2,
     Vidore3NuclearRetrieval,
+    Vidore3NuclearRetrievalv2,
     Vidore3PharmaceuticalsRetrieval,
+    Vidore3PharmaceuticalsRetrievalv2,
     Vidore3PhysicsRetrieval,
+    Vidore3PhysicsRetrievalv2,
     Vidore3TelecomRetrieval,
+    Vidore3TelecomRetrievalv2,
 )
 from .web_faq_retrieval import WebFAQRetrieval
 from .wikipedia_retrieval_multilingual import WikipediaRetrievalMultilingual
@@ -131,6 +143,7 @@ __all__ = [
     "EuroPIRQRetrieval",
     "FleursA2TRetrieval",
     "FleursT2ARetrieval",
+    "GlobalNewsRetrieval",
     "GoogleSVQA2TRetrieval",
     "GoogleSVQT2ARetrieval",
     "IndicQARetrieval",
@@ -188,12 +201,14 @@ __all__ = [
     "MLQARetrieval",
     "MintakaRetrieval",
     "MrTidyRetrieval",
+    "MuPLeRRetrieval",
     "MultiLongDocRetrieval",
     "NeuCLIR2022Retrieval",
     "NeuCLIR2022RetrievalHardNegatives",
     "NeuCLIR2023Retrieval",
     "NeuCLIR2023RetrievalHardNegatives",
     "PublicHealthQARetrieval",
+    "PublicNewsRetrieval",
     "RuSciBenchCiteRetrieval",
     "RuSciBenchCociteRetrieval",
     "StatcanDialogueDatasetRetrieval",
@@ -203,15 +218,25 @@ __all__ = [
     "Vidore2ESGReportsRetrieval",
     "Vidore2EconomicsReportsRetrieval",
     "Vidore3ComputerScienceRetrieval",
+    "Vidore3ComputerScienceRetrievalv2",
     "Vidore3EnergyRetrieval",
+    "Vidore3EnergyRetrievalv2",
     "Vidore3FinanceEnRetrieval",
+    "Vidore3FinanceEnRetrievalv2",
     "Vidore3FinanceFrRetrieval",
+    "Vidore3FinanceFrRetrievalv2",
     "Vidore3HrRetrieval",
+    "Vidore3HrRetrievalv2",
     "Vidore3IndustrialRetrieval",
+    "Vidore3IndustrialRetrievalv2",
     "Vidore3NuclearRetrieval",
+    "Vidore3NuclearRetrievalv2",
     "Vidore3PharmaceuticalsRetrieval",
+    "Vidore3PharmaceuticalsRetrievalv2",
     "Vidore3PhysicsRetrieval",
+    "Vidore3PhysicsRetrievalv2",
     "Vidore3TelecomRetrieval",
+    "Vidore3TelecomRetrievalv2",
     "WITT2IRetrieval",
     "WebFAQRetrieval",
     "WikipediaRetrievalMultilingual",

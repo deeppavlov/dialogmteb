@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING, Any
 import torch
 from tqdm.auto import tqdm
 
-from mteb._requires_package import requires_package
 from mteb.models.abs_encoder import AbsEncoder
 from mteb.models.model_meta import ModelMeta, ScoringFunction
 
@@ -24,9 +23,6 @@ BLIP2_CITATION = """@inproceedings{li2023blip2,
 
 
 def blip2_loader(model_name, **kwargs):
-    requires_package(
-        blip2_loader, "salesforce-lavis", model_name, "pip install 'mteb[blip2]'"
-    )
     from lavis.models.blip2_models.blip2_image_text_matching import (
         Blip2ITM,
     )
@@ -177,7 +173,7 @@ blip2_opt_2_7b = ModelMeta(
     release_date="2024-03-22",
     modalities=["image", "text"],
     n_parameters=3_740_000_000,
-    n_embedding_parameters=None,
+    n_embedding_parameters=128696320,
     memory_usage_mb=14285,
     max_tokens=None,
     embed_dim=768,
@@ -191,6 +187,7 @@ blip2_opt_2_7b = ModelMeta(
     use_instructions=False,
     training_datasets=blip2_training_datasets,
     citation=BLIP2_CITATION,
+    extra_requirements_groups=["blip2"],
 )
 
 blip2_opt_6_7b_coco = ModelMeta(
@@ -202,7 +199,7 @@ blip2_opt_6_7b_coco = ModelMeta(
     release_date="2024-03-31",
     modalities=["image", "text"],
     n_parameters=7_750_000_000,
-    n_embedding_parameters=None,
+    n_embedding_parameters=205914112,
     memory_usage_mb=29577,
     max_tokens=None,
     embed_dim=768,
@@ -216,4 +213,5 @@ blip2_opt_6_7b_coco = ModelMeta(
     use_instructions=False,
     training_datasets=blip2_training_datasets,
     citation=BLIP2_CITATION,
+    extra_requirements_groups=["blip2"],
 )

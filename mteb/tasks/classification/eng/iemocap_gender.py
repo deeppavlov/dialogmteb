@@ -1,5 +1,10 @@
+import logging
+from typing import Any
+
 from mteb.abstasks.classification import AbsTaskClassification
 from mteb.abstasks.task_metadata import TaskMetadata
+
+logger = logging.getLogger(__name__)
 
 
 class IEMOCAPGenderClassification(AbsTaskClassification):
@@ -43,7 +48,7 @@ class IEMOCAPGenderClassification(AbsTaskClassification):
 
     is_cross_validation: bool = True
 
-    def dataset_transform(self):
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
         # Define label mapping
         label2id = {"Female": 0, "Male": 1}
 
@@ -54,5 +59,7 @@ class IEMOCAPGenderClassification(AbsTaskClassification):
                 example["gender_id"] = label2id[example["gender"]]
                 return example
 
-            print(f"Converting gender labels to numeric IDs for split '{split}'...")
+            logger.info(
+                f"Converting gender labels to numeric IDs for split '{split}'..."
+            )
             self.dataset[split] = self.dataset[split].map(add_gender_id)

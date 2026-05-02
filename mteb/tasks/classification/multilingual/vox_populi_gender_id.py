@@ -1,3 +1,5 @@
+from typing import Any
+
 from mteb.abstasks.classification import AbsTaskClassification
 from mteb.abstasks.task_metadata import TaskMetadata
 
@@ -58,7 +60,7 @@ Dupoux, Emmanuel},
     label_column_name: str = "gender_id"
     is_cross_validation: bool = True
 
-    def dataset_transform(self):
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
         # Define label mapping
         label2id = {"female": 0, "male": 1}
 

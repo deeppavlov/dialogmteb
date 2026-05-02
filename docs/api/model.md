@@ -1,3 +1,8 @@
+---
+title: "Model"
+icon: lucide/bot
+---
+
 # Models
 
 A model in `mteb` covers two concepts: metadata and implementation.
@@ -44,6 +49,11 @@ length, valid frameworks, license, and degree of openness.
 :::mteb.models.cache_wrappers.cache_backends.NumpyCache
 
 :::mteb.models.cache_wrappers.cache_backends.FaissCache
+
+
+## Compression Wrapper
+
+:::mteb.models.CompressionWrapper
 
 
 ## Search Index Backends

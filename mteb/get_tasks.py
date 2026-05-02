@@ -10,6 +10,7 @@ from typing import TYPE_CHECKING, Any
 
 import pandas as pd
 
+from mteb._log_once import LogOnce
 from mteb.abstasks import (
     AbsTask,
 )
@@ -22,11 +23,12 @@ if TYPE_CHECKING:
     from mteb.types import Modalities
 
 logger = logging.getLogger(__name__)
+log_once = LogOnce(logger)
 
 
 # Create task registry
 def _gather_tasks() -> tuple[type[AbsTask], ...]:
-    import mteb.tasks as tasks
+    from mteb import tasks
 
     return tuple(
         t
@@ -224,9 +226,8 @@ class MTEBTasks(tuple[AbsTask]):
         return df.to_latex()
 
 
-def get_tasks(
+def get_tasks(  # noqa: PLR0913, PLR0917
     tasks: Sequence[str] | None = None,
-    *,
     languages: Sequence[str] | None = None,
     script: Sequence[str] | None = None,
     domains: Sequence[TaskDomain] | None = None,
@@ -239,6 +240,8 @@ def get_tasks(
     exclusive_modality_filter: bool = False,
     exclude_aggregate: bool = False,
     exclude_private: bool = True,
+    *,
+    exclude_beta: bool = True,
 ) -> MTEBTasks:
     """Get a list of tasks based on the specified filters.
 
@@ -262,6 +265,7 @@ def get_tasks(
             If False, keep tasks if _any_ of the task's modalities match the filter modalities.
         exclude_aggregate: If True, exclude aggregate tasks. If False, both aggregate and non-aggregate tasks are returned.
         exclude_private: If True (default), exclude private/closed datasets (is_public=False). If False, include both public and private datasets.
+        exclude_beta: If True datasets that are in beta are excluded. If False, include both beta and non-beta datasets.
 
     Returns:
         A list of all initialized tasks objects which pass all of the filters (AND operation).
@@ -279,16 +283,22 @@ def get_tasks(
                 "When `tasks` is provided, other filters like domains, task_types, and categories are ignored. "
                 + "If you want to filter a list of tasks, please use `mteb.filter_tasks` instead."
             )
-        _tasks = [
-            get_task(
-                task,
-                languages,
-                script,
-                eval_splits=eval_splits,
-                exclusive_language_filter=exclusive_language_filter,
-            )
-            for task in tasks
-        ]
+        _tasks = []
+        for task in tasks:
+            try:
+                _tasks.append(
+                    get_task(
+                        task,
+                        languages=languages,
+                        script=script,
+                        eval_splits=eval_splits,
+                        exclusive_language_filter=exclusive_language_filter,
+                    )
+                )
+            except ValueError:
+                log_once.warning(
+                    f"Skipping task '{task}': no subsets match the language filter {languages}."
+                )
         return MTEBTasks(_tasks)
 
     tasks_: Sequence[type[AbsTask]] = filter_tasks(
@@ -303,6 +313,7 @@ def get_tasks(
         exclude_superseded=exclude_superseded,
         exclude_aggregate=exclude_aggregate,
         exclude_private=exclude_private,
+        exclude_beta=exclude_beta,
     )
     return MTEBTasks(
         [

@@ -48,6 +48,7 @@ Licenses = (
         "msr-la-nc",
         "multiple",
         "gemma",
+        "eupl-1.2",
     ]
 )
 """The different licenses that a dataset or model can have. This list can be extended as needed."""
@@ -58,11 +59,11 @@ ModelName = str
 Revision = str
 """The revision of a model, typically a git commit hash. For APIs this can be a version string e.g. `1`."""
 
-
 # MODALITY TYPES
 Modalities = Literal[
     "text",
     "image",
     "audio",
+    "video",
 ]
 """The different modalities that a model can support."""

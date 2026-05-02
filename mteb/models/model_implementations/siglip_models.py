@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Any
 
 import torch
 from tqdm.auto import tqdm
+from transformers.modeling_outputs import BaseModelOutputWithPooling
 
 from mteb.models.abs_encoder import AbsEncoder
 from mteb.models.model_meta import ModelMeta, ScoringFunction
@@ -34,13 +35,6 @@ class SiglipModelWrapper(AbsEncoder):
     ):
         from transformers import AutoModel, AutoProcessor
 
-        try:
-            import sentencepiece  # noqa: F401
-        except ImportError:
-            raise ImportError(
-                "The `sentencepiece` package is required to run `pip install sentencepiece`"
-            )
-
         self.model_name = model_name
         self.device = device
         self.model = AutoModel.from_pretrained(model_name, revision=revision).to(
@@ -68,7 +62,11 @@ class SiglipModelWrapper(AbsEncoder):
                 )
                 inputs = {k: v.to(self.device) for k, v in inputs.items()}
                 text_outputs = self.model.get_text_features(**inputs)
-                all_text_embeddings.append(text_outputs.cpu())
+                if isinstance(text_outputs, BaseModelOutputWithPooling):
+                    embeddings = text_outputs.pooler_output
+                else:
+                    embeddings = text_outputs
+                all_text_embeddings.append(embeddings.cpu())
 
         all_text_embeddings = torch.cat(all_text_embeddings, dim=0)
         return all_text_embeddings
@@ -83,12 +81,17 @@ class SiglipModelWrapper(AbsEncoder):
 
         with torch.no_grad():
             for batch in tqdm(images):
+                _images = [img.convert("RGB") for img in batch["image"]]
                 inputs = self.processor(
-                    images=batch["image"], return_tensors="pt", padding=True
+                    images=_images, return_tensors="pt", padding=True
                 )
                 inputs = {k: v.to(self.device) for k, v in inputs.items()}
                 image_outputs = self.model.get_image_features(**inputs)
-                all_image_embeddings.append(image_outputs.cpu())
+                if isinstance(image_outputs, BaseModelOutputWithPooling):
+                    embeddings = image_outputs.pooler_output
+                else:
+                    embeddings = image_outputs
+                all_image_embeddings.append(embeddings.cpu())
         all_image_embeddings = torch.cat(all_image_embeddings, dim=0)
         return all_image_embeddings
 
@@ -150,6 +153,10 @@ siglip_so400m_patch14_224 = ModelMeta(
     use_instructions=False,
     training_datasets=siglip_training_datasets,
     citation=SIGLIP_CITATION,
+    extra_requirements_groups=[
+        "siglip",
+        "image",
+    ],
 )
 
 siglip_so400m_patch14_384 = ModelMeta(
@@ -175,6 +182,10 @@ siglip_so400m_patch14_384 = ModelMeta(
     use_instructions=False,
     training_datasets=siglip_training_datasets,
     citation=SIGLIP_CITATION,
+    extra_requirements_groups=[
+        "siglip",
+        "image",
+    ],
 )
 
 siglip_so400m_patch16_256_i18n = ModelMeta(
@@ -200,6 +211,10 @@ siglip_so400m_patch16_256_i18n = ModelMeta(
     use_instructions=False,
     training_datasets=siglip_training_datasets,
     citation=SIGLIP_CITATION,
+    extra_requirements_groups=[
+        "siglip",
+        "image",
+    ],
 )
 
 siglip_base_patch16_256_multilingual = ModelMeta(
@@ -225,6 +240,10 @@ siglip_base_patch16_256_multilingual = ModelMeta(
     use_instructions=False,
     training_datasets=siglip_training_datasets,
     citation=SIGLIP_CITATION,
+    extra_requirements_groups=[
+        "siglip",
+        "image",
+    ],
 )
 
 siglip_base_patch16_256 = ModelMeta(
@@ -250,6 +269,10 @@ siglip_base_patch16_256 = ModelMeta(
     use_instructions=False,
     training_datasets=siglip_training_datasets,
     citation=SIGLIP_CITATION,
+    extra_requirements_groups=[
+        "siglip",
+        "image",
+    ],
 )
 
 siglip_base_patch16_512 = ModelMeta(
@@ -275,6 +298,10 @@ siglip_base_patch16_512 = ModelMeta(
     use_instructions=False,
     training_datasets=siglip_training_datasets,
     citation=SIGLIP_CITATION,
+    extra_requirements_groups=[
+        "siglip",
+        "image",
+    ],
 )
 
 siglip_base_patch16_384 = ModelMeta(
@@ -300,6 +327,10 @@ siglip_base_patch16_384 = ModelMeta(
     use_instructions=False,
     training_datasets=siglip_training_datasets,
     citation=SIGLIP_CITATION,
+    extra_requirements_groups=[
+        "siglip",
+        "image",
+    ],
 )
 
 siglip_base_patch16_224 = ModelMeta(
@@ -325,6 +356,10 @@ siglip_base_patch16_224 = ModelMeta(
     use_instructions=False,
     training_datasets=siglip_training_datasets,
     citation=SIGLIP_CITATION,
+    extra_requirements_groups=[
+        "siglip",
+        "image",
+    ],
 )
 
 siglip_large_patch16_256 = ModelMeta(
@@ -350,6 +385,10 @@ siglip_large_patch16_256 = ModelMeta(
     use_instructions=False,
     training_datasets=siglip_training_datasets,
     citation=SIGLIP_CITATION,
+    extra_requirements_groups=[
+        "siglip",
+        "image",
+    ],
 )
 
 siglip_large_patch16_384 = ModelMeta(
@@ -375,4 +414,8 @@ siglip_large_patch16_384 = ModelMeta(
     use_instructions=False,
     training_datasets=siglip_training_datasets,
     citation=SIGLIP_CITATION,
+    extra_requirements_groups=[
+        "siglip",
+        "image",
+    ],
 )

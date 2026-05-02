@@ -18,10 +18,6 @@ from typing import TYPE_CHECKING, Any
 import torch
 from tqdm.auto import tqdm
 
-from mteb._requires_package import (
-    requires_image_dependencies,
-    requires_package,
-)
 from mteb.models.abs_encoder import AbsEncoder
 from mteb.models.model_implementations.colpali_models import (
     COLPALI_CITATION,
@@ -67,11 +63,6 @@ class SLMBaseWrapper(AbsEncoder):
         use_flash_attn: bool = True,
         **kwargs,
     ):
-        requires_image_dependencies()
-        requires_package(
-            self, "sauerkrautlm_colpali", model_name, "pip install sauerkrautlm-colpali"
-        )
-
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self._load_model_and_processor(model_name, revision, use_flash_attn, **kwargs)
         self.mdl = self.mdl.to(self.device)
@@ -174,14 +165,6 @@ class SLMBaseWrapper(AbsEncoder):
         )
         return padded
 
-    def calculate_probs(
-        self,
-        text_embeddings: torch.Tensor,
-        image_embeddings: torch.Tensor,
-    ) -> torch.Tensor:
-        scores = self.similarity(text_embeddings, image_embeddings).T
-        return scores.softmax(dim=-1)
-
     def similarity(
         self,
         a: torch.Tensor | list,
@@ -277,6 +260,7 @@ slm_colqwen3_1_7b_turbo = ModelMeta(
     modalities=["image", "text"],
     model_type=["late-interaction"],
     n_parameters=1_756_572_288,
+    n_embedding_parameters=311164928,
     memory_usage_mb=3350,
     max_tokens=262144,
     embed_dim=128,
@@ -291,6 +275,7 @@ slm_colqwen3_1_7b_turbo = ModelMeta(
     adapted_from="Qwen/Qwen3-VL-2B-Instruct",
     training_datasets=COLPALI_TRAINING_DATA,
     citation=SAUERKRAUTLM_CITATION + COLPALI_CITATION,
+    extra_requirements_groups=["sauerkrautlm-colpali"],
 )
 
 slm_colqwen3_2b = ModelMeta(
@@ -302,6 +287,7 @@ slm_colqwen3_2b = ModelMeta(
     modalities=["image", "text"],
     model_type=["late-interaction"],
     n_parameters=2_127_794_304,
+    n_embedding_parameters=311164928,
     memory_usage_mb=4058,
     max_tokens=262144,
     embed_dim=128,
@@ -316,6 +302,7 @@ slm_colqwen3_2b = ModelMeta(
     adapted_from="Qwen/Qwen3-VL-2B-Instruct",
     training_datasets=COLPALI_TRAINING_DATA,
     citation=SAUERKRAUTLM_CITATION + COLPALI_CITATION,
+    extra_requirements_groups=["sauerkrautlm-colpali"],
 )
 
 slm_colqwen3_4b = ModelMeta(
@@ -327,6 +314,7 @@ slm_colqwen3_4b = ModelMeta(
     modalities=["image", "text"],
     model_type=["late-interaction"],
     n_parameters=4_438_143_616,
+    n_embedding_parameters=388956160,
     memory_usage_mb=8465,
     max_tokens=262144,
     embed_dim=128,
@@ -341,6 +329,7 @@ slm_colqwen3_4b = ModelMeta(
     adapted_from="Qwen/Qwen3-VL-4B-Instruct",
     training_datasets=COLPALI_TRAINING_DATA,
     citation=SAUERKRAUTLM_CITATION + COLPALI_CITATION,
+    extra_requirements_groups=["sauerkrautlm-colpali"],
 )
 
 slm_colqwen3_8b = ModelMeta(
@@ -352,6 +341,7 @@ slm_colqwen3_8b = ModelMeta(
     modalities=["image", "text"],
     model_type=["late-interaction"],
     n_parameters=8_145_318_256,
+    n_embedding_parameters=622329856,
     memory_usage_mb=15536,
     max_tokens=262144,
     embed_dim=128,
@@ -366,6 +356,7 @@ slm_colqwen3_8b = ModelMeta(
     adapted_from="Qwen/Qwen3-VL-8B-Instruct",
     training_datasets=COLPALI_TRAINING_DATA,
     citation=SAUERKRAUTLM_CITATION + COLPALI_CITATION,
+    extra_requirements_groups=["sauerkrautlm-colpali"],
 )
 
 slm_collfm2_450m = ModelMeta(
@@ -391,6 +382,7 @@ slm_collfm2_450m = ModelMeta(
     adapted_from="LiquidAI/LFM2-VL-450M",
     training_datasets=COLPALI_TRAINING_DATA,
     citation=SAUERKRAUTLM_CITATION + COLPALI_CITATION,
+    extra_requirements_groups=["sauerkrautlm-colpali"],
 )
 
 slm_colministral3_3b = ModelMeta(
@@ -402,6 +394,7 @@ slm_colministral3_3b = ModelMeta(
     modalities=["image", "text"],
     model_type=["late-interaction"],
     n_parameters=4_252_136_448,
+    n_embedding_parameters=402653184,
     memory_usage_mb=8110,
     max_tokens=262144,
     embed_dim=128,
@@ -416,4 +409,5 @@ slm_colministral3_3b = ModelMeta(
     adapted_from="mistralai/Ministral-3B-Instruct-2410",
     training_datasets=COLPALI_TRAINING_DATA,
     citation=SAUERKRAUTLM_CITATION + COLPALI_CITATION,
+    extra_requirements_groups=["sauerkrautlm-colpali"],
 )

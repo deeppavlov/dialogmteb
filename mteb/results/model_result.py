@@ -12,6 +12,12 @@ import pandas as pd
 from pydantic import BaseModel, ConfigDict, Field
 from typing_extensions import overload
 
+from mteb._hf_integration.eval_result_model import (
+    HFEvalResult,
+    HFEvalResultDataset,
+    HFEvalResults,
+    HFEvalResultSource,
+)
 from mteb.types import Modalities
 
 from .task_result import TaskError, TaskResult
@@ -24,6 +30,7 @@ if TYPE_CHECKING:
         TaskDomain,
         TaskType,
     )
+    from mteb.benchmarks import Benchmark
     from mteb.types import (
         ISOLanguage,
         ISOLanguageScript,
@@ -41,7 +48,7 @@ def _aggregate_and_pivot(
     columns: list[str],
     aggregation_level: Literal["subset", "split", "task", "language"],
     format: Literal["wide", "long"],
-    aggregation_fn: Callable[[list[Score]], Any] | None,
+    aggregation_fn: Callable[[list[Score]], Any] | str | None,
 ) -> pd.DataFrame:
     if aggregation_level == "subset":
         index_columns = ["task_name", "split", "subset"]
@@ -59,20 +66,21 @@ def _aggregate_and_pivot(
         )  # each language in its own row before aggregation
 
     # perform aggregation
-    if aggregation_fn is None:
-        aggregation_fn = np.mean
+    # Pass "mean" string rather than np.mean to avoid a pandas FutureWarning:
+    aggregation_fn_pandas = "mean" if aggregation_fn is None else aggregation_fn
 
     if format == "wide":
         return df.pivot_table(
             index=index_columns,
             columns=columns,
             values="score",
-            aggfunc=aggregation_fn,  # type: ignore[arg-type]
+            aggfunc=aggregation_fn_pandas,  # type: ignore[arg-type]
+            observed=True,
         ).reset_index()
     elif format == "long":
         return (
-            df.groupby(columns + index_columns)
-            .agg(score=("score", aggregation_fn))
+            df.groupby(columns + index_columns, observed=True)
+            .agg(score=("score", aggregation_fn_pandas))
             .reset_index()
         )
 
@@ -103,9 +111,9 @@ class ModelResult(BaseModel):
     def __repr__(self) -> str:
         n_entries = len(self.task_results)
         return (
-            f"ModelResult(model_name={self.model_name}, model_revision={self.model_revision}, "
+            f"ModelResult(model_name='{self.model_name}', model_revision='{self.model_revision}', "
             f"{'experiment_name=' + self.experiment_name + ', ' if self.experiment_name else ''}"
-            f"task_results=[...](#{n_entries}))"
+            f"task_results=[...](#{n_entries}), ...)"
         )
 
     @classmethod
@@ -124,6 +132,7 @@ class ModelResult(BaseModel):
     def _filter_tasks(
         self,
         task_names: list[str] | None = None,
+        *,
         languages: list[str] | None = None,
         domains: list[TaskDomain] | None = None,
         task_types: list[TaskType] | None = None,
@@ -180,6 +189,7 @@ class ModelResult(BaseModel):
     @overload
     def _get_scores(
         self,
+        *,
         splits: list[SplitName] | None = None,
         languages: list[ISOLanguage | ISOLanguageScript] | None = None,
         scripts: list[ISOLanguageScript] | None = None,
@@ -191,6 +201,7 @@ class ModelResult(BaseModel):
     @overload
     def _get_scores(
         self,
+        *,
         splits: list[SplitName] | None = None,
         languages: list[ISOLanguage | ISOLanguageScript] | None = None,
         scripts: list[ISOLanguageScript] | None = None,
@@ -201,6 +212,7 @@ class ModelResult(BaseModel):
 
     def _get_scores(
         self,
+        *,
         splits: list[SplitName] | None = None,
         languages: list[ISOLanguage | ISOLanguageScript] | None = None,
         scripts: list[ISOLanguageScript] | None = None,
@@ -298,7 +310,7 @@ class ModelResult(BaseModel):
     def to_dataframe(
         self,
         aggregation_level: Literal["subset", "split", "task"] = "task",
-        aggregation_fn: Callable[[list[Score]], Any] | None = None,
+        aggregation_fn: Callable[[list[Score]], Any] | str | None = None,
         include_model_revision: bool = False,
         format: Literal["wide", "long"] = "wide",
     ) -> pd.DataFrame:
@@ -432,7 +444,7 @@ class ModelResult(BaseModel):
         Args:
             path: The path to the file to save.
         """
-        with path.open("w") as f:
+        with path.open("w") as f:  # noqa: PLW1514
             f.write(self.model_dump_json(indent=2))
 
     @classmethod
@@ -449,14 +461,37 @@ class ModelResult(BaseModel):
             return cls.model_validate_json(f.read())
 
     def push_model_results(
-        self, user: str | None = None, *, create_pr: bool = False
+        self,
+        user: str | None = None,
+        *,
+        benchmark: Benchmark | None = None,
+        create_pr: bool = False,
     ) -> None:
         """Push the model results to the Hugging Face Hub.
 
         Args:
             user: The user or organization of results source.
+            benchmark: Whether to push the benchmark results.
             create_pr: Whether to create a pull request
         """
+        benchmark_result = None
+        if benchmark is not None:
+            benchmark_score = benchmark._get_model_score(self)["Mean(Task)"]
+            benchmark_result = HFEvalResult(
+                dataset=HFEvalResultDataset(
+                    id=benchmark.benchmark_hf_repo,
+                    task_id=benchmark.name,
+                    revision="1",
+                ),
+                value=benchmark_score,
+                date=None,
+                notes="Obtained using MTEB",
+                source=HFEvalResultSource(
+                    url="https://github.com/embeddings-benchmark/mteb/",
+                    user=user,
+                    name="Obtained using MTEB",
+                ),
+            )
         with tempfile.TemporaryDirectory() as tmpdir:
             path = Path(tmpdir)
             for task_result in self.task_results:
@@ -465,6 +500,14 @@ class ModelResult(BaseModel):
                     "w", encoding="utf-8"
                 ) as f:
                     f.write(task_results.to_yaml())
+
+            if (
+                benchmark_result is not None
+                and benchmark is not None
+                and benchmark.name is not None
+            ):
+                with (path / f"{benchmark.name}.yaml").open("w", encoding="utf-8") as f:
+                    f.write(HFEvalResults.model_validate([benchmark_result]).to_yaml())
 
             huggingface_hub.upload_folder(
                 repo_id=self.model_name,

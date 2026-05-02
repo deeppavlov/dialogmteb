@@ -6,9 +6,6 @@ from typing import TYPE_CHECKING, Any
 import torch
 from tqdm.auto import tqdm
 
-from mteb._requires_package import (
-    requires_image_dependencies,
-)
 from mteb.models.model_meta import ModelMeta
 
 if TYPE_CHECKING:
@@ -32,8 +29,6 @@ class GraniteVisionEmbeddingWrapper:
     ):
         from transformers import AutoModel, AutoProcessor
         from transformers.utils.import_utils import is_flash_attn_2_available
-
-        requires_image_dependencies()
 
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.model_name = model_name
@@ -153,10 +148,6 @@ class GraniteVisionEmbeddingWrapper:
             return image_embeddings
         raise ValueError
 
-    def calculate_probs(self, text_embeddings, image_embeddings):
-        scores = self.similarity(text_embeddings, image_embeddings)
-        return (scores * 100).softmax(dim=-1)
-
     def similarity(self, a, b):
         return self.processor.score_multi_vector(a, b)
 
@@ -173,7 +164,7 @@ granite_vision_embedding = ModelMeta(
     release_date="2025-06-11",
     modalities=["image", "text"],
     n_parameters=2_980_000_000,
-    n_embedding_parameters=None,
+    n_embedding_parameters=100671488,
     memory_usage_mb=11351,
     max_tokens=128000,
     embed_dim=128,

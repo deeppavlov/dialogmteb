@@ -7,12 +7,14 @@ from prettify_list import pretty_long_list
 from slugify import slugify_anchor
 
 import mteb
+from mteb.abstasks.task_metadata import _TASKTYPE2SIMPLIFIEDTASKTYPE  # noqa: PLC2701
 
 if TYPE_CHECKING:
     from mteb.get_tasks import MTEBTasks
 
+
 benchmark_entry = """
-####  {benchmark_name}
+###  `{benchmark_name}` {{ .model-copy }}
 
 {description}
 
@@ -47,13 +49,13 @@ def create_table(benchmark: mteb.Benchmark) -> str:
     # format: http://127.0.0.1:8000/overview/available_tasks/retrieval/#treccovid
     df["name"] = df.apply(
         lambda row: (
-            f"[{row['name']}](./available_tasks/{row['type'].lower()}.md"
+            f"[{row['name']}](./available_tasks/{_TASKTYPE2SIMPLIFIEDTASKTYPE.get(row['type'], row['type'].lower())}.md"
             f"#{slugify_anchor(row['name'])})"
         ),
         axis=1,
     )
-    df["modalities"] = df["modalities"].apply(lambda x: pretty_long_list(x))
-    df["languages"] = df["languages"].apply(lambda x: pretty_long_list(x))
+    df["modalities"] = df["modalities"].apply(lambda x: pretty_long_list(x))  # noqa: PLW0108
+    df["languages"] = df["languages"].apply(lambda x: pretty_long_list(x))  # noqa: PLW0108
 
     tasks_md = df.to_markdown(index=False)
 
@@ -84,6 +86,17 @@ def format_benchmark_entry(benchmark: mteb.Benchmark) -> str:
     return entry
 
 
+header = """---
+icon: lucide/square-stack
+---
+
+# Available Benchmarks
+
+<!-- This document is auto-generated. Changes will be overwritten. Please change the generating script. -->
+
+"""
+
+
 def main(path: Path) -> None:
     benchmarks = mteb.get_benchmarks()
 
@@ -91,9 +104,9 @@ def main(path: Path) -> None:
     for benchmark in sorted(benchmarks, key=lambda b: b.name):
         benchmark_entries += format_benchmark_entry(benchmark) + "\n"
 
-    content = "# Available Benchmarks\n\n"
+    content = header
     new_content = content + benchmark_entries.strip()
-    with path.open("w") as f:
+    with path.open("w") as f:  # noqa: PLW1514
         f.write(new_content)
 
 

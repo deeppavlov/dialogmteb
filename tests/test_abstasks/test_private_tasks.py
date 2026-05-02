@@ -17,6 +17,12 @@ ACCEPTED_PRIVATE_TASKS = [
     "JapaneseLegal1Retrieval",
     "Vidore3TelecomRetrieval",
     "Vidore3NuclearRetrieval",
+    "Vidore3TelecomRetrieval.v2",
+    "Vidore3NuclearRetrieval.v2",
+    "GlobalNewsRetrieval",
+    "PublicNewsRetrieval",
+    "LexRetrieval.v1",
+    "ElasticKBRetrieval",
     # Add task names here that are allowed to be private
 ]
 

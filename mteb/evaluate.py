@@ -272,7 +272,7 @@ def _requires_merge(task: AbsTask, existing_results: TaskResult) -> bool:
     return False
 
 
-def evaluate(
+def evaluate(  # noqa: PLR0913, PLR0914
     model: ModelMeta | MTEBModels | SentenceTransformer | CrossEncoder,
     tasks: AbsTask | Iterable[AbsTask],
     *,
@@ -421,7 +421,7 @@ def evaluate(
     if (
         existing_results
         and overwrite_strategy
-        not in (OverwriteStrategy.ALWAYS, OverwriteStrategy.NEVER)
+        not in (OverwriteStrategy.ALWAYS, OverwriteStrategy.NEVER)  # noqa: PLR6201
         and (
             not _requires_merge(task, existing_results)
             or existing_results.is_mergeable(task)
@@ -447,10 +447,14 @@ def evaluate(
             model_revision=model_revision,
             task_results=[existing_results],
         )
-    if missing_eval and overwrite_strategy in [
+    if missing_eval and overwrite_strategy in [  # noqa: PLR6201
         OverwriteStrategy.NEVER,
         OverwriteStrategy.ONLY_CACHE,
     ]:
+        if existing_results is None:
+            raise ValueError(
+                f"overwrite_strategy is set to '{overwrite_strategy.value}' but no results found in cache for task {task.metadata.name}."
+            )
         raise ValueError(
             f"overwrite_strategy is set to '{overwrite_strategy.value}' and the results file exists for task {task.metadata.name}. "
             + f"However there are the following missing splits (and subsets): {missing_eval}. To rerun these set overwrite_strategy to 'only-missing'."
