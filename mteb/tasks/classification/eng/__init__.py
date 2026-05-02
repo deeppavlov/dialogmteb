@@ -46,6 +46,7 @@ from .amazon_polarity_classification import (
     AmazonPolarityClassificationV2,
 )
 from .arxiv_classification import ArxivClassification, ArxivClassificationV2
+from .atis_intent_classification import AtisIntentClassification
 from .ave_dataset_classification import (
     AVEDatasetClassification,
     AVEDatasetVideoClassification,
@@ -54,7 +55,6 @@ from .avmeme_exam_classification import (
     AVMemeAudioVideoClassification,
     AVMemeVideoClassification,
 )
-from .atis_intent_classification import AtisIntentClassification
 from .banking77_classification import Banking77Classification, Banking77ClassificationV2
 from .birdsnap_classification import BirdsnapClassification
 from .breakfast_classification import BreakfastClassification
@@ -270,7 +270,6 @@ from .ucf101_classification import (
     UCF101VideoClassification,
 )
 from .vggsound import VGGSoundVAClassification, VGGSoundVClassification
-from .ucf101_classification import UCF101Classification
 from .vira_intent_classification import ViraIntentClassification
 from .wikipedia_bio_met_chem_classification import (
     WikipediaBioMetChemClassification,
@@ -448,9 +447,9 @@ __all__ = [
     "HUMEEmotionClassification",
     "HUMEToxicConversationsClassification",
     "HUMETweetSentimentExtractionClassification",
+    "HWUIntentClassification",
     "HumanAnimalCartoonVAClassification",
     "HumanAnimalCartoonVClassification",
-    "HWUIntentClassification",
     "IEMOCAPEmotionClassification",
     "IEMOCAPGenderClassification",
     "Imagenet1kClassification",
