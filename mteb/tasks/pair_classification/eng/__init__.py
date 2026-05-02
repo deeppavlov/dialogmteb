@@ -17,8 +17,8 @@ from .vocal_sound import VocalSoundPairClassification
 from .vox_populi_accent import VoxPopuliAccentPairClassification
 
 __all__ = [
-    "AVSpeakerBenchPairClassification",
     "QRECC",
+    "AVSpeakerBenchPairClassification",
     "CREMADPairClassification",
     "ClarQA",
     "LegalBenchPC",

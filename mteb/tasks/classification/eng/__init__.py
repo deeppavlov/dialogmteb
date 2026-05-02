@@ -220,8 +220,8 @@ from .legal_bench_classification import (
     UCCVCommonLawLegalBenchClassification,
     UnfairTOSLegalBenchClassification,
 )
-from .meld_classification import MELDAudioVideoClassification, MELDVideoClassification
 from .mantis import Mantis
+from .meld_classification import MELDAudioVideoClassification, MELDVideoClassification
 from .mnist_classification import MNISTClassification
 from .music_avqa_classification import (
     MusicAVQACLSAudioVideoClassification,
@@ -341,8 +341,8 @@ __all__ = [
     "AVEDatasetVideoClassification",
     "AVMemeAudioVideoClassification",
     "AVMemeVideoClassification",
-    "AirDialogueClassification",
     "AbgCosQA",
+    "AirDialogueClassification",
     "AirDialogueClassification",
     "AmazonPolarityClassification",
     "AmazonPolarityClassificationV2",
@@ -493,9 +493,9 @@ __all__ = [
     "MELDAudioVideoClassification",
     "MELDVideoClassification",
     "MNISTClassification",
+    "Mantis",
     "MusicAVQACLSAudioVideoClassification",
     "MusicAVQACLSVideoClassification",
-    "Mantis",
     "NYSJudicialEthicsLegalBenchClassification",
     "NewsClassification",
     "NewsClassificationV2",

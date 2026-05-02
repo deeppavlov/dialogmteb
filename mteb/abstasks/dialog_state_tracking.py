@@ -14,8 +14,9 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from datasets import Dataset, DatasetDict
+
     from mteb.models.models_protocols import EncoderProtocol
-    from mteb.types import ScoresDict
+    from mteb.types import EncodeKwargs, ScoresDict
 
 logger = logging.getLogger(__name__)
 
