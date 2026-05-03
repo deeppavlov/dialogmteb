@@ -11,7 +11,7 @@ class RuWebLINXCandidatesReranking(AbsTaskReranking):
         reference="https://mcgill-nlp.github.io/weblinx",
         dataset={
             "path": "DeepPavlov/WebLINX-ru",
-            "revision": "fdc93113fd2d43ee6aae0fd59a53ebd7bc201287",
+            "revision": "93bb1574170e51418637de06191cd15724df181d",
         },
         type="Reranking",
         category="t2t",
