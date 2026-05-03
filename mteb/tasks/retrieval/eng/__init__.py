@@ -78,6 +78,7 @@ from .climate_fever_retrieval import (
 )
 from .clotho import ClothoA2TRetrieval, ClothoT2ARetrieval
 from .cmu_arctic import CMUArcticA2TRetrieval, CMUArcticT2ARetrieval
+from .coral import Coral
 from .cqa_dupstack_android_retrieval import CQADupstackAndroidRetrieval
 from .cqa_dupstack_english_retrieval import CQADupstackEnglishRetrieval
 from .cqa_dupstack_gaming_retrieval import CQADupstackGamingRetrieval
@@ -467,6 +468,7 @@ __all__ = [
     "ClimateFEVERRetrievalv2",
     "ClothoA2TRetrieval",
     "ClothoT2ARetrieval",
+    "Coral",
     "DAPFAMAllTitlAbsClmToFullTextRetrieval",
     "DAPFAMAllTitlAbsClmToTitlAbsClmRetrieval",
     "DAPFAMAllTitlAbsClmToTitlAbsRetrieval",
