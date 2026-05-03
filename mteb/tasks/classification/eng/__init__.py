@@ -92,6 +92,7 @@ from .hume_toxic_conversations_classification import (
 from .hume_tweet_sentiment_extraction_classification import (
     HUMETweetSentimentExtractionClassification,
 )
+from .multi_woz import MultiWoz21
 from .hwu_intent_classification import HWUIntentClassification
 from .imagenet1k import Imagenet1kClassification
 from .imdb_classification import ImdbClassification, ImdbClassificationV2
@@ -596,4 +597,5 @@ __all__ = [
     "YahooAnswersTopicsClassificationV2",
     "YelpReviewFullClassification",
     "YelpReviewFullClassificationV2",
+    "MultiWoz21",
 ]

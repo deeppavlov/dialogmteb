@@ -1,0 +1,58 @@
+{
+    "test": {
+        "num_samples": 10000,
+        "samples_in_train": 8,
+        "text_statistics": {
+            "total_text_length": 7914492,
+            "min_text_length": 56,
+            "average_text_length": 791.4492,
+            "max_text_length": 5491,
+            "unique_texts": 9998
+        },
+        "image_statistics": null,
+        "audio_statistics": null,
+        "video_statistics": null,
+        "label_statistics": {
+            "min_labels_per_text": 178,
+            "average_label_per_text": 178.0,
+            "max_labels_per_text": 178,
+            "unique_labels": 2,
+            "labels": {
+                "0": {
+                    "count": 1767876
+                },
+                "1": {
+                    "count": 12124
+                }
+            }
+        }
+    },
+    "train": {
+        "num_samples": 89997,
+        "samples_in_train": null,
+        "text_statistics": {
+            "total_text_length": 71193892,
+            "min_text_length": 42,
+            "average_text_length": 791.0696134315589,
+            "max_text_length": 6797,
+            "unique_texts": 89976
+        },
+        "image_statistics": null,
+        "audio_statistics": null,
+        "video_statistics": null,
+        "label_statistics": {
+            "min_labels_per_text": 178,
+            "average_label_per_text": 178.0,
+            "max_labels_per_text": 178,
+            "unique_labels": 2,
+            "labels": {
+                "0": {
+                    "count": 15910604
+                },
+                "1": {
+                    "count": 108862
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,702 @@
+{
+    "test": {
+        "num_samples": 23215,
+        "samples_in_train": 0,
+        "text_statistics": {
+            "total_text_length": 14223974,
+            "min_text_length": 12,
+            "average_text_length": 612.7061813482662,
+            "max_text_length": 4285,
+            "unique_texts": 23197
+        },
+        "image_statistics": null,
+        "audio_statistics": null,
+        "video_statistics": null,
+        "label_statistics": {
+            "min_labels_per_text": 1,
+            "average_label_per_text": 1.0,
+            "max_labels_per_text": 1,
+            "unique_labels": 12,
+            "labels": {
+                "Attraction": {
+                    "count": 4700
+                },
+                "Restaurant": {
+                    "count": 1215
+                },
+                "Hotel": {
+                    "count": 700
+                },
+                "Train": {
+                    "count": 3585
+                },
+                "Flight": {
+                    "count": 2100
+                },
+                "Weather": {
+                    "count": 665
+                },
+                "Movie": {
+                    "count": 3280
+                },
+                "TV": {
+                    "count": 1020
+                },
+                "Hospital": {
+                    "count": 1475
+                },
+                "PC": {
+                    "count": 1810
+                },
+                "Car": {
+                    "count": 1060
+                },
+                "Class": {
+                    "count": 1605
+                }
+            }
+        },
+        "hf_subset_descriptive_stats": {
+            "en": {
+                "num_samples": 4643,
+                "samples_in_train": 0,
+                "text_statistics": {
+                    "total_text_length": 2968660,
+                    "min_text_length": 12,
+                    "average_text_length": 639.384018953263,
+                    "max_text_length": 3694,
+                    "unique_texts": 4639
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 12,
+                    "labels": {
+                        "Attraction": {
+                            "count": 940
+                        },
+                        "Restaurant": {
+                            "count": 243
+                        },
+                        "Hotel": {
+                            "count": 140
+                        },
+                        "Train": {
+                            "count": 717
+                        },
+                        "Flight": {
+                            "count": 420
+                        },
+                        "Weather": {
+                            "count": 133
+                        },
+                        "Movie": {
+                            "count": 656
+                        },
+                        "TV": {
+                            "count": 204
+                        },
+                        "Hospital": {
+                            "count": 295
+                        },
+                        "PC": {
+                            "count": 362
+                        },
+                        "Car": {
+                            "count": 212
+                        },
+                        "Class": {
+                            "count": 321
+                        }
+                    }
+                }
+            },
+            "fr": {
+                "num_samples": 4643,
+                "samples_in_train": 0,
+                "text_statistics": {
+                    "total_text_length": 3403786,
+                    "min_text_length": 15,
+                    "average_text_length": 733.1005815205687,
+                    "max_text_length": 4285,
+                    "unique_texts": 4639
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 12,
+                    "labels": {
+                        "Attraction": {
+                            "count": 940
+                        },
+                        "Restaurant": {
+                            "count": 243
+                        },
+                        "Hotel": {
+                            "count": 140
+                        },
+                        "Train": {
+                            "count": 717
+                        },
+                        "Flight": {
+                            "count": 420
+                        },
+                        "Weather": {
+                            "count": 133
+                        },
+                        "Movie": {
+                            "count": 656
+                        },
+                        "TV": {
+                            "count": 204
+                        },
+                        "Hospital": {
+                            "count": 295
+                        },
+                        "PC": {
+                            "count": 362
+                        },
+                        "Car": {
+                            "count": 212
+                        },
+                        "Class": {
+                            "count": 321
+                        }
+                    }
+                }
+            },
+            "enhi": {
+                "num_samples": 4643,
+                "samples_in_train": 0,
+                "text_statistics": {
+                    "total_text_length": 3122316,
+                    "min_text_length": 13,
+                    "average_text_length": 672.4781391341805,
+                    "max_text_length": 3829,
+                    "unique_texts": 4641
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 12,
+                    "labels": {
+                        "Attraction": {
+                            "count": 940
+                        },
+                        "Restaurant": {
+                            "count": 243
+                        },
+                        "Hotel": {
+                            "count": 140
+                        },
+                        "Train": {
+                            "count": 717
+                        },
+                        "Flight": {
+                            "count": 420
+                        },
+                        "Weather": {
+                            "count": 133
+                        },
+                        "Movie": {
+                            "count": 656
+                        },
+                        "TV": {
+                            "count": 204
+                        },
+                        "Hospital": {
+                            "count": 295
+                        },
+                        "PC": {
+                            "count": 362
+                        },
+                        "Car": {
+                            "count": 212
+                        },
+                        "Class": {
+                            "count": 321
+                        }
+                    }
+                }
+            },
+            "hi": {
+                "num_samples": 4643,
+                "samples_in_train": 0,
+                "text_statistics": {
+                    "total_text_length": 3040736,
+                    "min_text_length": 14,
+                    "average_text_length": 654.9076028429895,
+                    "max_text_length": 3732,
+                    "unique_texts": 4639
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 12,
+                    "labels": {
+                        "Attraction": {
+                            "count": 940
+                        },
+                        "Restaurant": {
+                            "count": 243
+                        },
+                        "Hotel": {
+                            "count": 140
+                        },
+                        "Train": {
+                            "count": 717
+                        },
+                        "Flight": {
+                            "count": 420
+                        },
+                        "Weather": {
+                            "count": 133
+                        },
+                        "Movie": {
+                            "count": 656
+                        },
+                        "TV": {
+                            "count": 204
+                        },
+                        "Hospital": {
+                            "count": 295
+                        },
+                        "PC": {
+                            "count": 362
+                        },
+                        "Car": {
+                            "count": 212
+                        },
+                        "Class": {
+                            "count": 321
+                        }
+                    }
+                }
+            },
+            "ko": {
+                "num_samples": 4643,
+                "samples_in_train": 0,
+                "text_statistics": {
+                    "total_text_length": 1688476,
+                    "min_text_length": 12,
+                    "average_text_length": 363.66056429032955,
+                    "max_text_length": 1980,
+                    "unique_texts": 4640
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 12,
+                    "labels": {
+                        "Attraction": {
+                            "count": 940
+                        },
+                        "Restaurant": {
+                            "count": 243
+                        },
+                        "Hotel": {
+                            "count": 140
+                        },
+                        "Train": {
+                            "count": 717
+                        },
+                        "Flight": {
+                            "count": 420
+                        },
+                        "Weather": {
+                            "count": 133
+                        },
+                        "Movie": {
+                            "count": 656
+                        },
+                        "TV": {
+                            "count": 204
+                        },
+                        "Hospital": {
+                            "count": 295
+                        },
+                        "PC": {
+                            "count": 362
+                        },
+                        "Car": {
+                            "count": 212
+                        },
+                        "Class": {
+                            "count": 321
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "train": {
+        "num_samples": 3295,
+        "samples_in_train": null,
+        "text_statistics": {
+            "total_text_length": 1710209,
+            "min_text_length": 31,
+            "average_text_length": 519.0315629742033,
+            "max_text_length": 2352,
+            "unique_texts": 3295
+        },
+        "image_statistics": null,
+        "audio_statistics": null,
+        "video_statistics": null,
+        "label_statistics": {
+            "min_labels_per_text": 1,
+            "average_label_per_text": 1.0,
+            "max_labels_per_text": 1,
+            "unique_labels": 12,
+            "labels": {
+                "Movie": {
+                    "count": 315
+                },
+                "Attraction": {
+                    "count": 810
+                },
+                "Car": {
+                    "count": 175
+                },
+                "Restaurant": {
+                    "count": 255
+                },
+                "Hospital": {
+                    "count": 85
+                },
+                "Weather": {
+                    "count": 160
+                },
+                "Flight": {
+                    "count": 425
+                },
+                "TV": {
+                    "count": 150
+                },
+                "Hotel": {
+                    "count": 215
+                },
+                "PC": {
+                    "count": 220
+                },
+                "Train": {
+                    "count": 320
+                },
+                "Class": {
+                    "count": 165
+                }
+            }
+        },
+        "hf_subset_descriptive_stats": {
+            "en": {
+                "num_samples": 659,
+                "samples_in_train": null,
+                "text_statistics": {
+                    "total_text_length": 355987,
+                    "min_text_length": 45,
+                    "average_text_length": 540.1927162367223,
+                    "max_text_length": 2168,
+                    "unique_texts": 659
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 12,
+                    "labels": {
+                        "Movie": {
+                            "count": 63
+                        },
+                        "Attraction": {
+                            "count": 162
+                        },
+                        "Car": {
+                            "count": 35
+                        },
+                        "Restaurant": {
+                            "count": 51
+                        },
+                        "Hospital": {
+                            "count": 17
+                        },
+                        "Weather": {
+                            "count": 32
+                        },
+                        "Flight": {
+                            "count": 85
+                        },
+                        "TV": {
+                            "count": 30
+                        },
+                        "Hotel": {
+                            "count": 43
+                        },
+                        "PC": {
+                            "count": 44
+                        },
+                        "Train": {
+                            "count": 64
+                        },
+                        "Class": {
+                            "count": 33
+                        }
+                    }
+                }
+            },
+            "fr": {
+                "num_samples": 659,
+                "samples_in_train": null,
+                "text_statistics": {
+                    "total_text_length": 407453,
+                    "min_text_length": 68,
+                    "average_text_length": 618.2898330804248,
+                    "max_text_length": 2352,
+                    "unique_texts": 659
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 12,
+                    "labels": {
+                        "Movie": {
+                            "count": 63
+                        },
+                        "Attraction": {
+                            "count": 162
+                        },
+                        "Car": {
+                            "count": 35
+                        },
+                        "Restaurant": {
+                            "count": 51
+                        },
+                        "Hospital": {
+                            "count": 17
+                        },
+                        "Weather": {
+                            "count": 32
+                        },
+                        "Flight": {
+                            "count": 85
+                        },
+                        "TV": {
+                            "count": 30
+                        },
+                        "Hotel": {
+                            "count": 43
+                        },
+                        "PC": {
+                            "count": 44
+                        },
+                        "Train": {
+                            "count": 64
+                        },
+                        "Class": {
+                            "count": 33
+                        }
+                    }
+                }
+            },
+            "enhi": {
+                "num_samples": 659,
+                "samples_in_train": null,
+                "text_statistics": {
+                    "total_text_length": 374803,
+                    "min_text_length": 52,
+                    "average_text_length": 568.7450682852807,
+                    "max_text_length": 2272,
+                    "unique_texts": 659
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 12,
+                    "labels": {
+                        "Movie": {
+                            "count": 63
+                        },
+                        "Attraction": {
+                            "count": 162
+                        },
+                        "Car": {
+                            "count": 35
+                        },
+                        "Restaurant": {
+                            "count": 51
+                        },
+                        "Hospital": {
+                            "count": 17
+                        },
+                        "Weather": {
+                            "count": 32
+                        },
+                        "Flight": {
+                            "count": 85
+                        },
+                        "TV": {
+                            "count": 30
+                        },
+                        "Hotel": {
+                            "count": 43
+                        },
+                        "PC": {
+                            "count": 44
+                        },
+                        "Train": {
+                            "count": 64
+                        },
+                        "Class": {
+                            "count": 33
+                        }
+                    }
+                }
+            },
+            "hi": {
+                "num_samples": 659,
+                "samples_in_train": null,
+                "text_statistics": {
+                    "total_text_length": 366536,
+                    "min_text_length": 51,
+                    "average_text_length": 556.2003034901365,
+                    "max_text_length": 2203,
+                    "unique_texts": 659
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 12,
+                    "labels": {
+                        "Movie": {
+                            "count": 63
+                        },
+                        "Attraction": {
+                            "count": 162
+                        },
+                        "Car": {
+                            "count": 35
+                        },
+                        "Restaurant": {
+                            "count": 51
+                        },
+                        "Hospital": {
+                            "count": 17
+                        },
+                        "Weather": {
+                            "count": 32
+                        },
+                        "Flight": {
+                            "count": 85
+                        },
+                        "TV": {
+                            "count": 30
+                        },
+                        "Hotel": {
+                            "count": 43
+                        },
+                        "PC": {
+                            "count": 44
+                        },
+                        "Train": {
+                            "count": 64
+                        },
+                        "Class": {
+                            "count": 33
+                        }
+                    }
+                }
+            },
+            "ko": {
+                "num_samples": 659,
+                "samples_in_train": null,
+                "text_statistics": {
+                    "total_text_length": 205430,
+                    "min_text_length": 31,
+                    "average_text_length": 311.7298937784522,
+                    "max_text_length": 1155,
+                    "unique_texts": 659
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 12,
+                    "labels": {
+                        "Movie": {
+                            "count": 63
+                        },
+                        "Attraction": {
+                            "count": 162
+                        },
+                        "Car": {
+                            "count": 35
+                        },
+                        "Restaurant": {
+                            "count": 51
+                        },
+                        "Hospital": {
+                            "count": 17
+                        },
+                        "Weather": {
+                            "count": 32
+                        },
+                        "Flight": {
+                            "count": 85
+                        },
+                        "TV": {
+                            "count": 30
+                        },
+                        "Hotel": {
+                            "count": 43
+                        },
+                        "PC": {
+                            "count": 44
+                        },
+                        "Train": {
+                            "count": 64
+                        },
+                        "Class": {
+                            "count": 33
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

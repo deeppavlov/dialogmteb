@@ -19,7 +19,7 @@ class MultiWoz21(AbsTaskClassification):
         category="t2c",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs={"attraction": ["eng-Latn"]},
+        eval_langs=["eng-Latn"],
         main_score="accuracy",
         date=None,
         domains=None,

@@ -1,0 +1,82 @@
+{
+    "test": {
+        "num_samples": 7368,
+        "samples_in_train": 169,
+        "text_statistics": {
+            "total_text_length": 5055813,
+            "min_text_length": 27,
+            "average_text_length": 686.1852605863193,
+            "max_text_length": 2960,
+            "unique_texts": 7333
+        },
+        "image_statistics": null,
+        "audio_statistics": null,
+        "video_statistics": null,
+        "label_statistics": {
+            "min_labels_per_text": 1,
+            "average_label_per_text": 1.0,
+            "max_labels_per_text": 1,
+            "unique_labels": 5,
+            "labels": {
+                "taxi": {
+                    "count": 1573
+                },
+                "restaurant": {
+                    "count": 2488
+                },
+                "hotel": {
+                    "count": 1927
+                },
+                "attraction": {
+                    "count": 1223
+                },
+                "train": {
+                    "count": 157
+                }
+            }
+        }
+    },
+    "train": {
+        "num_samples": 56668,
+        "samples_in_train": null,
+        "text_statistics": {
+            "total_text_length": 36726121,
+            "min_text_length": 17,
+            "average_text_length": 648.0927684054493,
+            "max_text_length": 4233,
+            "unique_texts": 55584
+        },
+        "image_statistics": null,
+        "audio_statistics": null,
+        "video_statistics": null,
+        "label_statistics": {
+            "min_labels_per_text": 1,
+            "average_label_per_text": 1.0,
+            "max_labels_per_text": 1,
+            "unique_labels": 7,
+            "labels": {
+                "hotel": {
+                    "count": 14779
+                },
+                "unknown": {
+                    "count": 1269
+                },
+                "restaurant": {
+                    "count": 19893
+                },
+                "hospital": {
+                    "count": 386
+                },
+                "attraction": {
+                    "count": 6633
+                },
+                "taxi": {
+                    "count": 12129
+                },
+                "train": {
+                    "count": 1579
+                }
+            }
+        }
+    }
+}

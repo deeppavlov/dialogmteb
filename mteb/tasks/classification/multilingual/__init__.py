@@ -8,6 +8,7 @@ from .hin_dialect_classification import HinDialectClassification
 from .hume_multilingual_sentiment_classification import (
     HUMEMultilingualSentimentClassification,
 )
+from .xrisawoz import XRisaWoz
 from .indic_lang_classification import IndicLangClassification
 from .indic_nlp_news_classification import IndicNLPNewsClassification
 from .indic_sentiment_classification import IndicSentimentClassification
@@ -84,4 +85,5 @@ __all__ = [
     "TweetSentimentClassification",
     "VoxPopuliGenderID",
     "VoxPopuliLanguageID",
+    "XRisaWoz",
 ]

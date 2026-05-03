@@ -1,0 +1,121 @@
+{
+    "test": {
+        "num_samples": 2003,
+        "unique_pairs": 1987,
+        "number_of_characters": 2464498,
+        "text1_statistics": {
+            "total_text_length": 1258120,
+            "min_text_length": 57,
+            "average_text_length": 628.1178232651024,
+            "max_text_length": 17967,
+            "unique_texts": 1901
+        },
+        "image1_statistics": null,
+        "audio1_statistics": null,
+        "video1_statistics": null,
+        "text2_statistics": {
+            "total_text_length": 1206378,
+            "min_text_length": 21,
+            "average_text_length": 602.2855716425362,
+            "max_text_length": 22690,
+            "unique_texts": 1673
+        },
+        "image2_statistics": null,
+        "audio2_statistics": null,
+        "video2_statistics": null,
+        "labels_statistics": {
+            "min_labels_per_text": 1,
+            "average_label_per_text": 1.0,
+            "max_labels_per_text": 1,
+            "unique_labels": 2,
+            "labels": {
+                "0": {
+                    "count": 1116
+                },
+                "1": {
+                    "count": 887
+                }
+            }
+        },
+        "hf_subset_descriptive_stats": {
+            "single_turn": {
+                "num_samples": 1175,
+                "unique_pairs": 1171,
+                "number_of_characters": 1286911,
+                "text1_statistics": {
+                    "total_text_length": 661951,
+                    "min_text_length": 57,
+                    "average_text_length": 563.3625531914894,
+                    "max_text_length": 7056,
+                    "unique_texts": 1171
+                },
+                "image1_statistics": null,
+                "audio1_statistics": null,
+                "video1_statistics": null,
+                "text2_statistics": {
+                    "total_text_length": 624960,
+                    "min_text_length": 43,
+                    "average_text_length": 531.8808510638298,
+                    "max_text_length": 5064,
+                    "unique_texts": 1170
+                },
+                "image2_statistics": null,
+                "audio2_statistics": null,
+                "video2_statistics": null,
+                "labels_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 2,
+                    "labels": {
+                        "0": {
+                            "count": 672
+                        },
+                        "1": {
+                            "count": 503
+                        }
+                    }
+                }
+            },
+            "multi_turn": {
+                "num_samples": 828,
+                "unique_pairs": 816,
+                "number_of_characters": 1177587,
+                "text1_statistics": {
+                    "total_text_length": 596169,
+                    "min_text_length": 61,
+                    "average_text_length": 720.0108695652174,
+                    "max_text_length": 17967,
+                    "unique_texts": 730
+                },
+                "image1_statistics": null,
+                "audio1_statistics": null,
+                "video1_statistics": null,
+                "text2_statistics": {
+                    "total_text_length": 581418,
+                    "min_text_length": 21,
+                    "average_text_length": 702.195652173913,
+                    "max_text_length": 22690,
+                    "unique_texts": 503
+                },
+                "image2_statistics": null,
+                "audio2_statistics": null,
+                "video2_statistics": null,
+                "labels_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 2,
+                    "labels": {
+                        "0": {
+                            "count": 444
+                        },
+                        "1": {
+                            "count": 384
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
