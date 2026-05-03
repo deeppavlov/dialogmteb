@@ -28,13 +28,13 @@ class SkillOfMind(AbsTaskMultilabelClassification):
         sample_creation="found",
         bibtex_citation=r"""
 @misc{lee2024thanosenhancingconversationalagents,
-      title={Thanos: Enhancing Conversational Agents with Skill-of-Mind-Infused Large Language Model}, 
-      author={Young-Jun Lee and Dokyong Lee and Junyoung Youn and Kyeongjin Oh and Ho-Jin Choi},
-      year={2024},
-      eprint={2411.04496},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2411.04496}, 
+  archiveprefix = {arXiv},
+  author = {Young-Jun Lee and Dokyong Lee and Junyoung Youn and Kyeongjin Oh and Ho-Jin Choi},
+  eprint = {2411.04496},
+  primaryclass = {cs.CL},
+  title = {Thanos: Enhancing Conversational Agents with Skill-of-Mind-Infused Large Language Model},
+  url = {https://arxiv.org/abs/2411.04496},
+  year = {2024},
 }
 """,
     )
@@ -50,6 +50,11 @@ class SkillOfMind(AbsTaskMultilabelClassification):
                     else:
                         text += f"Assistant: {entry['content']}\n"
             row["text"] = text
+            labels = []
+            cur_labels = row["label"]
+            for label in range(178):
+                labels.append(label in cur_labels)
+            row["label"] = labels
             return row
 
         for subset in self.dataset:
