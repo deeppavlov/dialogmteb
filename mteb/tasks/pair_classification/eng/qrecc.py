@@ -28,13 +28,13 @@ class QRECC(AbsTaskPairClassification):
         sample_creation="created",
         bibtex_citation=r"""
 @misc{anantha2021opendomainquestionansweringgoes,
-      title={Open-Domain Question Answering Goes Conversational via Question Rewriting}, 
-      author={Raviteja Anantha and Svitlana Vakulenko and Zhucheng Tu and Shayne Longpre and Stephen Pulman and Srinivas Chappidi},
-      year={2021},
-      eprint={2010.04898},
-      archivePrefix={arXiv},
-      primaryClass={cs.IR},
-      url={https://arxiv.org/abs/2010.04898}, 
+  archiveprefix = {arXiv},
+  author = {Raviteja Anantha and Svitlana Vakulenko and Zhucheng Tu and Shayne Longpre and Stephen Pulman and Srinivas Chappidi},
+  eprint = {2010.04898},
+  primaryclass = {cs.IR},
+  title = {Open-Domain Question Answering Goes Conversational via Question Rewriting},
+  url = {https://arxiv.org/abs/2010.04898},
+  year = {2021},
 }
 """,
     )

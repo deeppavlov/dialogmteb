@@ -26,13 +26,15 @@ class AtisIntentClassification(AbsTaskClassification):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="created",
-        bibtex_citation="""@inproceedings{hemphill-etal-1990-atis,
-            title = "The {ATIS} Spoken Language Systems Pilot Corpus",
-            author = "Hemphill, Charles T.  and
-              Godfrey, John J.  and
-              Doddington, George R.",
-            booktitle = "Speech and Natural Language: Proceedings of a Workshop Held at Hidden Valley, {P}ennsylvania, June 24-27,1990",
-            year = "1990",
-            url = "https://aclanthology.org/H90-1021/"
-        }""",
+        bibtex_citation=r"""
+@inproceedings{hemphill-etal-1990-atis,
+  author = {Hemphill, Charles T.  and
+Godfrey, John J.  and
+Doddington, George R.},
+  booktitle = {Speech and Natural Language: Proceedings of a Workshop Held at Hidden Valley, {P}ennsylvania, June 24-27,1990},
+  title = {The {ATIS} Spoken Language Systems Pilot Corpus},
+  url = {https://aclanthology.org/H90-1021/},
+  year = {1990},
+}
+""",
     )

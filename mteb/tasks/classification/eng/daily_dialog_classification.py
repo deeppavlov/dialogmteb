@@ -33,15 +33,17 @@ class DailyDialogClassificationAct(AbsTaskClassification):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@misc{li2017dailydialogmanuallylabelledmultiturn,
-      title={DailyDialog: A Manually Labelled Multi-turn Dialogue Dataset}, 
-      author={Yanran Li and Hui Su and Xiaoyu Shen and Wenjie Li and Ziqiang Cao and Shuzi Niu},
-      year={2017},
-      eprint={1710.03957},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/1710.03957}, 
-}""",
+        bibtex_citation=r"""
+@misc{li2017dailydialogmanuallylabelledmultiturn,
+  archiveprefix = {arXiv},
+  author = {Yanran Li and Hui Su and Xiaoyu Shen and Wenjie Li and Ziqiang Cao and Shuzi Niu},
+  eprint = {1710.03957},
+  primaryclass = {cs.CL},
+  title = {DailyDialog: A Manually Labelled Multi-turn Dialogue Dataset},
+  url = {https://arxiv.org/abs/1710.03957},
+  year = {2017},
+}
+""",
     )
 
     def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
@@ -73,15 +75,17 @@ class DailyDialogClassificationEmotion(AbsTaskClassification):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@misc{li2017dailydialogmanuallylabelledmultiturn,
-      title={DailyDialog: A Manually Labelled Multi-turn Dialogue Dataset}, 
-      author={Yanran Li and Hui Su and Xiaoyu Shen and Wenjie Li and Ziqiang Cao and Shuzi Niu},
-      year={2017},
-      eprint={1710.03957},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/1710.03957}, 
-}""",
+        bibtex_citation=r"""
+@misc{li2017dailydialogmanuallylabelledmultiturn,
+  archiveprefix = {arXiv},
+  author = {Yanran Li and Hui Su and Xiaoyu Shen and Wenjie Li and Ziqiang Cao and Shuzi Niu},
+  eprint = {1710.03957},
+  primaryclass = {cs.CL},
+  title = {DailyDialog: A Manually Labelled Multi-turn Dialogue Dataset},
+  url = {https://arxiv.org/abs/1710.03957},
+  year = {2017},
+}
+""",
     )
 
     def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
