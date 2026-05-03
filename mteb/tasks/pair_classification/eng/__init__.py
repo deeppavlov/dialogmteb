@@ -1,3 +1,5 @@
+from .av_speakerbench_pc import AVSpeakerBenchPairClassification
+from .clarqa import ClarQA
 from .cremad import CREMADPairClassification
 from .legal_bench_pc import LegalBenchPC
 from .nmsqa import NMSQAPairClassification
@@ -5,14 +7,20 @@ from .pub_chem_ai_sentence_paraphrase_pc import PubChemAISentenceParaphrasePC
 from .pub_chem_smilespc import PubChemSMILESPC
 from .pub_chem_synonym_pc import PubChemSynonymPC
 from .pub_chem_wiki_paragraphs_pc import PubChemWikiParagraphsPC
+from .qrecc import QRECC
 from .sprint_duplicate_questions_pc import SprintDuplicateQuestionsPC
 from .twitter_sem_eval2015_pc import TwitterSemEval2015PC
 from .twitter_url_corpus_pc import TwitterURLCorpus
+from .videocon_pc import VideoConPairClassification
+from .vinoground_pc import VinogroundPairClassification
 from .vocal_sound import VocalSoundPairClassification
 from .vox_populi_accent import VoxPopuliAccentPairClassification
 
 __all__ = [
+    "QRECC",
+    "AVSpeakerBenchPairClassification",
     "CREMADPairClassification",
+    "ClarQA",
     "LegalBenchPC",
     "NMSQAPairClassification",
     "PubChemAISentenceParaphrasePC",
@@ -22,6 +30,8 @@ __all__ = [
     "SprintDuplicateQuestionsPC",
     "TwitterSemEval2015PC",
     "TwitterURLCorpus",
+    "VideoConPairClassification",
+    "VinogroundPairClassification",
     "VocalSoundPairClassification",
     "VoxPopuliAccentPairClassification",
 ]
