@@ -26,12 +26,14 @@ class AbgCosQA(AbsTaskClassification):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@inproceedings{guo2021abg,
-    title={Abg-coqa: Clarifying ambiguity in conversational question answering},
-    author={Guo, Meiqi and Zhang, Mingda and Reddy, Siva and Alikhani, Malihe},
-    booktitle={3rd Conference on Automated Knowledge Base Construction},
-    year={2021}
-}""",
+        bibtex_citation=r"""
+@inproceedings{guo2021abg,
+  author = {Guo, Meiqi and Zhang, Mingda and Reddy, Siva and Alikhani, Malihe},
+  booktitle = {3rd Conference on Automated Knowledge Base Construction},
+  title = {Abg-coqa: Clarifying ambiguity in conversational question answering},
+  year = {2021},
+}
+""",
     )
 
     def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:

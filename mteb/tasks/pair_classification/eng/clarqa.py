@@ -33,27 +33,27 @@ class ClarQA(AbsTaskPairClassification):
         sample_creation="created",
         bibtex_citation=r"""
 @inproceedings{xu-etal-2019-asking,
-    title = "Asking Clarification Questions in Knowledge-Based Question Answering",
-    author = "Xu, Jingjing  and
-      Wang, Yuechen  and
-      Tang, Duyu  and
-      Duan, Nan  and
-      Yang, Pengcheng  and
-      Zeng, Qi  and
-      Zhou, Ming  and
-      Sun, Xu",
-    editor = "Inui, Kentaro  and
-      Jiang, Jing  and
-      Ng, Vincent  and
-      Wan, Xiaojun",
-    booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)",
-    month = nov,
-    year = "2019",
-    address = "Hong Kong, China",
-    publisher = "Association for Computational Linguistics",
-    url = "https://aclanthology.org/D19-1172/",
-    doi = "10.18653/v1/D19-1172",
-    pages = "1618--1629",
+  address = {Hong Kong, China},
+  author = {Xu, Jingjing  and
+Wang, Yuechen  and
+Tang, Duyu  and
+Duan, Nan  and
+Yang, Pengcheng  and
+Zeng, Qi  and
+Zhou, Ming  and
+Sun, Xu},
+  booktitle = {Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)},
+  doi = {10.18653/v1/D19-1172},
+  editor = {Inui, Kentaro  and
+Jiang, Jing  and
+Ng, Vincent  and
+Wan, Xiaojun},
+  month = nov,
+  pages = {1618--1629},
+  publisher = {Association for Computational Linguistics},
+  title = {Asking Clarification Questions in Knowledge-Based Question Answering},
+  url = {https://aclanthology.org/D19-1172/},
+  year = {2019},
 }
 """,
     )

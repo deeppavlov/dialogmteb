@@ -26,12 +26,13 @@ class Clarq(AbsTaskRetrieval):
         sample_creation="found",
         bibtex_citation=r"""
 @misc{kumar2020clarqlargescalediversedataset,
-      title={ClarQ: A large-scale and diverse dataset for Clarification Question Generation}, 
-      author={Vaibhav Kumar and Alan W. black},
-      year={2020},
-      eprint={2006.05986},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL},
-      url={https://arxiv.org/abs/2006.05986}, 
-}""",
+  archiveprefix = {arXiv},
+  author = {Vaibhav Kumar and Alan W. black},
+  eprint = {2006.05986},
+  primaryclass = {cs.CL},
+  title = {ClarQ: A large-scale and diverse dataset for Clarification Question Generation},
+  url = {https://arxiv.org/abs/2006.05986},
+  year = {2020},
+}
+""",
     )

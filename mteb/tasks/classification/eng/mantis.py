@@ -26,14 +26,15 @@ class Mantis(AbsTaskClassification):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="found",
-        bibtex_citation="""@misc{penha2019introducingmantisnovelmultidomain,
-    title={Introducing MANtIS: a novel Multi-Domain Information Seeking Dialogues Dataset}, 
-    author={Gustavo Penha and Alexandru Balan and Claudia Hauff},
-    year={2019},
-    eprint={1912.04639},
-    archivePrefix={arXiv},
-    primaryClass={cs.CL},
-    url={https://arxiv.org/abs/1912.04639}, 
+        bibtex_citation=r"""
+@misc{penha2019introducingmantisnovelmultidomain,
+  archiveprefix = {arXiv},
+  author = {Gustavo Penha and Alexandru Balan and Claudia Hauff},
+  eprint = {1912.04639},
+  primaryclass = {cs.CL},
+  title = {Introducing MANtIS: a novel Multi-Domain Information Seeking Dialogues Dataset},
+  url = {https://arxiv.org/abs/1912.04639},
+  year = {2019},
 }
 """,
     )

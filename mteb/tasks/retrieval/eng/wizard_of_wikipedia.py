@@ -26,22 +26,22 @@ class WiardOfWikipedia(AbsTaskRetrieval):
         sample_creation="found",
         bibtex_citation=r"""
 @inproceedings{elgohary-etal-2019-unpack,
-    title = "Can You Unpack That? Learning to Rewrite Questions-in-Context",
-    author = "Elgohary, Ahmed  and
-      Peskov, Denis  and
-      Boyd-Graber, Jordan",
-    editor = "Inui, Kentaro  and
-      Jiang, Jing  and
-      Ng, Vincent  and
-      Wan, Xiaojun",
-    booktitle = "Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)",
-    month = nov,
-    year = "2019",
-    address = "Hong Kong, China",
-    publisher = "Association for Computational Linguistics",
-    url = "https://aclanthology.org/D19-1605/",
-    doi = "10.18653/v1/D19-1605",
-    pages = "5918--5924",
+  address = {Hong Kong, China},
+  author = {Elgohary, Ahmed  and
+Peskov, Denis  and
+Boyd-Graber, Jordan},
+  booktitle = {Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)},
+  doi = {10.18653/v1/D19-1605},
+  editor = {Inui, Kentaro  and
+Jiang, Jing  and
+Ng, Vincent  and
+Wan, Xiaojun},
+  month = nov,
+  pages = {5918--5924},
+  publisher = {Association for Computational Linguistics},
+  title = {Can You Unpack That? Learning to Rewrite Questions-in-Context},
+  url = {https://aclanthology.org/D19-1605/},
+  year = {2019},
 }
 """,
     )
