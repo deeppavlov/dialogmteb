@@ -40,6 +40,7 @@ from mteb.tasks.classification.eng.vox_celeb_sa import VoxCelebSA
 from mteb.tasks.classification.eng.vox_lingua107_top10 import VoxLingua107Top10
 from mteb.tasks.classification.eng.vox_populi_accent_id import VoxPopuliAccentID
 
+from .abg_cosqa import AbgCosQA
 from .air_dialogue import AirDialogueClassification
 from .amazon_polarity_classification import (
     AmazonPolarityClassification,
@@ -219,6 +220,7 @@ from .legal_bench_classification import (
     UCCVCommonLawLegalBenchClassification,
     UnfairTOSLegalBenchClassification,
 )
+from .mantis import Mantis
 from .meld_classification import MELDAudioVideoClassification, MELDVideoClassification
 from .mnist_classification import MNISTClassification
 from .music_avqa_classification import (
@@ -339,6 +341,8 @@ __all__ = [
     "AVEDatasetVideoClassification",
     "AVMemeAudioVideoClassification",
     "AVMemeVideoClassification",
+    "AbgCosQA",
+    "AirDialogueClassification",
     "AirDialogueClassification",
     "AmazonPolarityClassification",
     "AmazonPolarityClassificationV2",
@@ -489,6 +493,7 @@ __all__ = [
     "MELDAudioVideoClassification",
     "MELDVideoClassification",
     "MNISTClassification",
+    "Mantis",
     "MusicAVQACLSAudioVideoClassification",
     "MusicAVQACLSVideoClassification",
     "NYSJudicialEthicsLegalBenchClassification",

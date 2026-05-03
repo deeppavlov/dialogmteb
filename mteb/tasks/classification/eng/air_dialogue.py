@@ -67,6 +67,7 @@ class AirDialogueClassification(AbsTaskClassification):
                 self.dataset[subset]
                 .map(
                     process_history,
+                    num_proc=num_proc,
                 )
                 .select_columns(["text", "label"])
             )
