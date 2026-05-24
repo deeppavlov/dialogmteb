@@ -32,7 +32,7 @@ class WebLINXCandidatesReranking(AbsTaskRetrieval):
         dialect=[],
         sample_creation="created",
         bibtex_citation=r"""
-@misc{lù2024weblinx,
+@misc{lu2024weblinx,
   archiveprefix = {arXiv},
   author = {Xing Han Lù and Zdeněk Kasner and Siva Reddy},
   eprint = {2402.05930},
