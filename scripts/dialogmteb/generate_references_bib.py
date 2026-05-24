@@ -20,7 +20,6 @@ from scripts.dialogmteb._common import OUT_DIR, load_unique_tasks, RUN_MODELS
 import mteb
 
 
-
 # -----------------------------------------------------------------------
 # BibTeX utilities
 # -----------------------------------------------------------------------

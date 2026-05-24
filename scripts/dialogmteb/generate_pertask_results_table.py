@@ -28,23 +28,28 @@ from scripts.dialogmteb._common import (
 )
 
 # Map type name → xcolor-compatible hex (strip leading #)
-_TYPE_XCOLOR: dict[str, str] = {
-    k: v.lstrip("#") for k, v in TYPE_COLORS.items()
-}
+_TYPE_XCOLOR: dict[str, str] = {k: v.lstrip("#") for k, v in TYPE_COLORS.items()}
 
 
 def _escape(s: str) -> str:
-    return s.replace("_", "\\_").replace("&", "\\&").replace("%", "\\%").replace("#", "\\#")
+    return (
+        s.replace("_", "\\_")
+        .replace("&", "\\&")
+        .replace("%", "\\%")
+        .replace("#", "\\#")
+    )
 
 
 def _shorten(name: str, max_len: int = 22) -> str:
     """Shorten a task name for a rotated column header."""
     cuts = [
-        "DialogMTEB", "MASSIVE", "WebLINX",
+        "DialogMTEB",
+        "MASSIVE",
+        "WebLINX",
     ]
     for c in cuts:
         if name.startswith(c):
-            name = name[len(c):].lstrip()
+            name = name[len(c) :].lstrip()
     name = name.replace("Classification", "Clf.").replace("multilingual", "ml")
     if len(name) > max_len:
         name = name[: max_len - 1] + "."
@@ -106,22 +111,24 @@ def generate_table(benchmark_name: str, suffix: str) -> str:
     )
 
     # Per-task best score (for bold highlighting)
-    task_best: dict[str, float] = {
-        t: float(df.loc[t].max()) for t in ordered_tasks
-    }
+    task_best: dict[str, float] = {t: float(df.loc[t].max()) for t in ordered_tasks}
 
     n_tasks = len(ordered_tasks)
     n_cols = 2 + n_tasks + 1  # model + rank + tasks... + mean
 
     # Column spec: left-aligned model, right-aligned rank, narrow centred scores, right mean
-    col_spec = "l@{\\hspace{4pt}}r" + "@{\\hspace{1pt}}r" * n_tasks + "@{\\hspace{4pt}}r"
+    col_spec = (
+        "l@{\\hspace{4pt}}r" + "@{\\hspace{1pt}}r" * n_tasks + "@{\\hspace{4pt}}r"
+    )
 
     # Rotated task headers coloured by type
     def task_header(t: str) -> str:
         ttype = task_type_map.get(t, "")
         color = _TYPE_XCOLOR.get(ttype, "000000")
         short = _escape(_shorten(t))
-        return f"\\rotatebox{{90}}{{\\textcolor[HTML]{{{color}}}{{\\textit{{{short}}}}}}}"
+        return (
+            f"\\rotatebox{{90}}{{\\textcolor[HTML]{{{color}}}{{\\textit{{{short}}}}}}}"
+        )
 
     task_headers = " & ".join(task_header(t) for t in ordered_tasks)
 
@@ -153,13 +160,15 @@ def generate_table(benchmark_name: str, suffix: str) -> str:
         return " ".join(rules)
 
     # Repeated header (for longtable continuation)
-    header_block = "\n".join([
-        "\\toprule",
-        group_header_row(),
-        cmidrule_row(),
-        f"\\textbf{{Model}} & \\textbf{{Rk}} & {task_headers} & \\textbf{{Mean}} \\\\",
-        "\\midrule",
-    ])
+    header_block = "\n".join(
+        [
+            "\\toprule",
+            group_header_row(),
+            cmidrule_row(),
+            f"\\textbf{{Model}} & \\textbf{{Rk}} & {task_headers} & \\textbf{{Mean}} \\\\",
+            "\\midrule",
+        ]
+    )
 
     lines = [
         "% Requires: \\usepackage{pdflscape,longtable,booktabs,xcolor}",
@@ -201,11 +210,7 @@ def generate_table(benchmark_name: str, suffix: str) -> str:
         cell_parts: list[str] = []
         raw_vals: list[float] = []
         for t in ordered_tasks:
-            val = (
-                df.loc[t, model]
-                if t in df.index and model in df.columns
-                else np.nan
-            )
+            val = df.loc[t, model] if t in df.index and model in df.columns else np.nan
             if pd.isna(val):
                 cell_parts.append("-")
             else:

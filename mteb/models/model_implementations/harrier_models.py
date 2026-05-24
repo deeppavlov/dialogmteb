@@ -244,7 +244,7 @@ Harrier_OSS_v1_270m = ModelMeta(
     year = {2026},
     url = {https://huggingface.co/microsoft/harrier-oss-v1-270m},
 }
-"""
+""",
 )
 
 Harrier_OSS_v1_0B6 = ModelMeta(

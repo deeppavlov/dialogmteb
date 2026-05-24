@@ -248,7 +248,13 @@ def run_benchmark(benchmark_name: str, suffix: str, top_n: int) -> None:
 
     # All models
     table_all = generate_latex_table(
-        df_ranked, category_avgs, task_names, task_type_map, None, benchmark_name, f"{suffix}-all"
+        df_ranked,
+        category_avgs,
+        task_names,
+        task_type_map,
+        None,
+        benchmark_name,
+        f"{suffix}-all",
     )
     out_all = Path(__file__).parent / f"dialogmteb_{suffix}_results_table_all.tex"
     out_all.write_text(table_all)
@@ -257,9 +263,17 @@ def run_benchmark(benchmark_name: str, suffix: str, top_n: int) -> None:
     # Top N
     df_top = df_ranked.head(top_n)
     table_top = generate_latex_table(
-        df_top, category_avgs, task_names, task_type_map, top_n, benchmark_name, f"{suffix}-top{top_n}"
+        df_top,
+        category_avgs,
+        task_names,
+        task_type_map,
+        top_n,
+        benchmark_name,
+        f"{suffix}-top{top_n}",
     )
-    out_top = Path(__file__).parent / f"dialogmteb_{suffix}_results_table_top{top_n}.tex"
+    out_top = (
+        Path(__file__).parent / f"dialogmteb_{suffix}_results_table_top{top_n}.tex"
+    )
     out_top.write_text(table_top)
     print(f"  Written to {out_top}")
 

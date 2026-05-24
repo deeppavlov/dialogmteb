@@ -11,8 +11,6 @@ from transformers import (
     AutoTokenizer,
     BertModel,
     BertPreTrainedModel,
-    DistilBertModel,
-    DistilBertPreTrainedModel,
     RobertaModel,
     RobertaPreTrainedModel,
 )

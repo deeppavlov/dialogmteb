@@ -7,7 +7,7 @@ from mteb.abstasks.task_metadata import TaskMetadata
 class MELDAudioVideoClassification(AbsTaskClassification):
     metadata = TaskMetadata(
         name="MELDAudioVideoClassification",
-        description="MELD (Multimodal EmotionLines Dataset) is a multimodal emotion recognition dataset containing over 13,000 utterances from the Friends TV series, labeled with 7 emotion categories: Anger, Disgust, Sadness, Joy, Neutral, Surprise, and Fear",
+        description="MELD (Multimodal EmotionLines Dataset) is a multimodal emotion recognition dataset containing over 13,000 utterances from the Friends TV series, labeled with 7 emotion categories: Anger, Disgust, Sadness, Joy, Neutral, Surprise, and Fear Sampled the test split (~2,610 examples).",
         reference="https://aclanthology.org/P19-1050.pdf",
         dataset={
             "path": "mteb/MELD",
@@ -44,14 +44,18 @@ class MELDAudioVideoClassification(AbsTaskClassification):
 
     def dataset_transform(self, num_proc=None, **kwargs) -> None:
         self.dataset = self.stratified_subsampling(
-            self.dataset, seed=self.seed, splits=["test"], n_samples=2048
+            self.dataset,
+            seed=self.seed,
+            splits=["test"],
+            label=self.label_column_name,
+            n_samples=2048,
         )
 
 
 class MELDVideoClassification(AbsTaskClassification):
     metadata = TaskMetadata(
         name="MELDVideoClassification",
-        description="MELD (Multimodal EmotionLines Dataset) is a multimodal emotion recognition dataset containing over 13,000 utterances from the Friends TV series, labeled with 7 emotion categories: Anger, Disgust, Sadness, Joy, Neutral, Surprise, and Fear",
+        description="MELD (Multimodal EmotionLines Dataset) is a multimodal emotion recognition dataset containing over 13,000 utterances from the Friends TV series, labeled with 7 emotion categories: Anger, Disgust, Sadness, Joy, Neutral, Surprise, and Fear Sampled the test split (~2,610 examples).",
         reference="https://aclanthology.org/P19-1050.pdf",
         dataset={
             "path": "mteb/MELD",
@@ -88,5 +92,9 @@ class MELDVideoClassification(AbsTaskClassification):
 
     def dataset_transform(self, num_proc=None, **kwargs) -> None:
         self.dataset = self.stratified_subsampling(
-            self.dataset, seed=self.seed, splits=["test"], n_samples=2048
+            self.dataset,
+            seed=self.seed,
+            splits=["test"],
+            label=self.label_column_name,
+            n_samples=2048,
         )

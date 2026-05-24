@@ -116,8 +116,7 @@ def scatter_panel(
     ax.set_xlabel(f"{mteb_label} Mean (%)", fontsize=10)
     ax.set_ylabel(f"{dialog_label} Mean (%)", fontsize=10)
     ax.set_title(
-        f"{dialog_label} vs {mteb_label}\n"
-        f"Spearman ρ = {spearman_r:.3f}  (n={len(xv)})",
+        f"{dialog_label} vs {mteb_label}\nSpearman ρ = {spearman_r:.3f}  (n={len(xv)})",
         fontsize=10,
     )
     ax.grid(True, alpha=0.3)
@@ -180,9 +179,7 @@ def main():
             }
         )
 
-    fig.suptitle(
-        "DialogMTEB vs General MTEB — Rank Correlation", fontsize=12, y=1.01
-    )
+    fig.suptitle("DialogMTEB vs General MTEB — Rank Correlation", fontsize=12, y=1.01)
     fig.tight_layout()
     out = OUT_DIR / "plot_mteb_rank_correlation.pdf"
     fig.savefig(out, dpi=150, bbox_inches="tight")
