@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import tempfile
 from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
@@ -25,6 +26,8 @@ from ._benchmark_metrics import (
 if TYPE_CHECKING:
     from mteb.abstasks.aggregated_task import AbsTaskAggregate
     from mteb.results import BenchmarkResults, ModelResult
+
+logger = logging.getLogger(__name__)
 
 
 @lru_cache
@@ -231,13 +234,16 @@ class Benchmark:
             for task in self.tasks
         ]
 
-        return DatasetCard.from_template(
-            card_data=DatasetCardData(tags=["mteb", "benchmark"]),
-            template_path=str(template_path),
-            benchmark_name=self.name,
-            benchmark_description=self.description,
-            tasks=task_rows,
-            citation=self.citation,
+        return cast(
+            "DatasetCard",
+            DatasetCard.from_template(
+                card_data=DatasetCardData(tags=["mteb", "benchmark"]),
+                template_path=str(template_path),
+                benchmark_name=self.name,
+                benchmark_description=self.description,
+                tasks=task_rows,
+                citation=self.citation,
+            ),
         )
 
     def push_benchmark_card_to_hub(
@@ -333,6 +339,10 @@ class Benchmark:
     ) -> dict[str, float | None]:
         """Compute aggregated scores for a single model."""
         filtered = model_result.select_tasks(self.tasks).task_results
+        if len(filtered) < len(self.tasks):
+            raise ValueError(
+                "Some scores of benchmark are missing. Please, run model on full benchmark tasks"
+            )
         return {
             "Mean(Task)": _compute_mean_task(filtered),
             "Mean(TaskType)": _compute_mean_task_type(filtered),
@@ -341,6 +351,8 @@ class Benchmark:
     def get_score(
         self,
         results: BenchmarkResults,
+        *,
+        raise_error: bool = False,
     ) -> dict[str, dict[str, float | None]]:
         """Get aggregated scores for all models in *results*.
 
@@ -350,6 +362,7 @@ class Benchmark:
         Args:
             results: A `BenchmarkResults` object containing the model
                 results to score.
+            raise_error: Weather to raise an error on missing results.
 
         Returns:
             A dict mapping each model name to a dict with the keys:
@@ -367,8 +380,21 @@ class Benchmark:
         per_task_rows: dict[str, dict[str, float | None]] = {}
 
         for model_result in bench_results:
-            scores[model_result.model_name] = self._get_model_score(model_result)
+            per_task_rows[model_result.model_name] = {}
             filtered = model_result.select_tasks(self.tasks).task_results
+            try:
+                scores[model_result.model_name] = self._get_model_score(model_result)
+            except ValueError:
+                if raise_error:
+                    raise
+                logger.warning(
+                    "Some task results are missing. Filling results with None"
+                )
+                scores[model_result.model_name] = {
+                    t.metadata.name: None for t in self.tasks
+                }
+                continue
+
             per_task_rows[model_result.model_name] = {
                 tr.task_name: tr.get_score() for tr in filtered
             }
@@ -463,6 +489,7 @@ class VidoreBenchmark(Benchmark):
             _format_max_tokens,
             _format_n_active_parameters,
             _format_n_parameters,
+            _get_embedding_size,
             _get_means_per_types,
             _split_on_capital,
         )
@@ -532,7 +559,7 @@ class VidoreBenchmark(Benchmark):
         joint_table.insert(
             1,
             "Embedding Dimensions",
-            model_metas.map(lambda m: int(m.embed_dim) if m.embed_dim else None),
+            model_metas.map(lambda m: _get_embedding_size(m.embed_dim)),
         )
         joint_table.insert(
             1,

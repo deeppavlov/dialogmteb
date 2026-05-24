@@ -237,7 +237,10 @@ from .poem_sentiment_classification import (
     PoemSentimentClassification,
     PoemSentimentClassificationV2,
 )
-from .ravdess_av_classification import RAVDESSAVClassification
+from .ravdess_av_classification import (
+    RAVDESSAVClassification,
+    RAVDESSVClassification,
+)
 from .resisc45_classification import RESISC45Classification
 from .sds_eye_protection_classification import (
     SDSEyeProtectionClassification,
@@ -526,6 +529,7 @@ __all__ = [
     "PoemSentimentClassification",
     "PoemSentimentClassificationV2",
     "RAVDESSAVClassification",
+    "RAVDESSVClassification",
     "RESISC45Classification",
     "SCDBPAccountabilityLegalBenchClassification",
     "SCDBPAuditsLegalBenchClassification",

@@ -7,7 +7,7 @@ from mteb.abstasks.zeroshot_classification import (
 class Kinetics400ZeroShotClassification(AbsTaskZeroShotClassification):
     metadata = TaskMetadata(
         name="Kinetics400ZeroShot",
-        description="Kinetics-400 is a large-scale action recognition dataset containing 400 human action classes from YouTube videos. Each clip is approximately 10 seconds long.",
+        description="Kinetics-400 is a large-scale action recognition dataset containing 400 human action classes from YouTube videos. Each clip is approximately 10 seconds long. Sampled 25 random shard files from each official path list, capped at 10 per class across 400 classes (~3,970 train / ~4,000 test).",
         reference="https://arxiv.org/abs/1705.06950",
         dataset={
             "path": "mteb/kinetics-400",
@@ -43,6 +43,8 @@ class Kinetics400ZeroShotClassification(AbsTaskZeroShotClassification):
         is_beta=True,
     )
 
+    input_column_name = "video"
+
     def get_candidate_labels(self) -> list[str]:
         return [
             f"a video of {name}"
@@ -53,7 +55,7 @@ class Kinetics400ZeroShotClassification(AbsTaskZeroShotClassification):
 class Kinetics400VAZeroShotClassification(AbsTaskZeroShotClassification):
     metadata = TaskMetadata(
         name="Kinetics400VAZeroShot",
-        description="Kinetics-400 is a large-scale action recognition dataset containing 400 human action classes from YouTube videos. Each clip is approximately 10 seconds long. This variant uses both video and audio modalities.",
+        description="Kinetics-400 is a large-scale action recognition dataset containing 400 human action classes from YouTube videos. Each clip is approximately 10 seconds long. This variant uses both video and audio modalities. Sampled 25 random shard files from each official path list, capped at 10 per class across 400 classes (~3,970 train / ~4,000 test).",
         reference="https://arxiv.org/abs/1705.06950",
         dataset={
             "path": "mteb/kinetics-400",

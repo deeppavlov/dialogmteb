@@ -1,3 +1,4 @@
+from .afri_hate_classification import AfriHateClassification
 from .afri_senti_classification import AfriSentiClassification
 from .afri_senti_lang_classification import AfriSentiLangClassification
 from .amazon_counterfactual_classification import AmazonCounterfactualClassification
@@ -12,6 +13,8 @@ from .xrisawoz import XRisaWoz
 from .indic_lang_classification import IndicLangClassification
 from .indic_nlp_news_classification import IndicNLPNewsClassification
 from .indic_sentiment_classification import IndicSentimentClassification
+from .injongo_intent import InjongoIntent
+from .kin_news_classification import KinNewsClassification
 from .language_classification import LanguageClassification
 from .m_in_ds14 import MInDS14Classification
 from .masakha_news_classification import MasakhaNEWSClassification
@@ -35,7 +38,7 @@ from .ru_sci_bench_classification import (
 )
 from .scala_classification import ScalaClassification
 from .scandi_sent_classification import ScandiSentClassification
-from .sib200_classification import SIB200Classification
+from .sib200_classification import SIB200Classification, SIB200ClassificationV2
 from .sibfleurs import SIBFLEURSMultilingualClassification
 from .south_african_lang_classification import SouthAfricanLangClassification
 from .swiss_judgement_classification import SwissJudgementClassification
@@ -45,6 +48,7 @@ from .vox_populi_gender_id import VoxPopuliGenderID
 from .vox_populi_language_id import VoxPopuliLanguageID
 
 __all__ = [
+    "AfriHateClassification",
     "AfriSentiClassification",
     "AfriSentiLangClassification",
     "AmazonCounterfactualClassification",
@@ -56,6 +60,8 @@ __all__ = [
     "IndicLangClassification",
     "IndicNLPNewsClassification",
     "IndicSentimentClassification",
+    "InjongoIntent",
+    "KinNewsClassification",
     "LanguageClassification",
     "MInDS14Classification",
     "MTOPDomainClassification",
@@ -76,6 +82,7 @@ __all__ = [
     "RuSciBenchOECDClassificationV2",
     "RuSciBenchPubTypeClassification",
     "SIB200Classification",
+    "SIB200ClassificationV2",
     "SIBFLEURSMultilingualClassification",
     "ScalaClassification",
     "ScandiSentClassification",

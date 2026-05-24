@@ -1,5 +1,3 @@
-from typing import Any
-
 from mteb.abstasks.classification import AbsTaskClassification
 from mteb.abstasks.task_metadata import TaskMetadata
 
@@ -43,5 +41,5 @@ class VocalSoundClassification(AbsTaskClassification):
     input_column_name: str = "audio"
     label_column_name: str = "answer"
 
-    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
+    def dataset_transform(self, **kwargs):
         self.dataset["train"] = self.dataset["val"]

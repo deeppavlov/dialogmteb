@@ -6,12 +6,13 @@ import logging
 from collections import defaultdict
 from functools import cached_property
 from importlib.metadata import version
-from typing import TYPE_CHECKING, Any
+from pathlib import Path
+from typing import TYPE_CHECKING, Any, cast
 
 import numpy as np
 from huggingface_hub import EvalResult
 from packaging.version import Version
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, model_validator
 from typing_extensions import deprecated
 
 from mteb._helpful_enum import HelpfulStrEnum
@@ -195,6 +196,7 @@ class TaskResult(BaseModel):  # noqa: PLR0904
         """
         task_meta = task.metadata
         subset2langscripts = task_meta.hf_subsets_to_langscripts
+        mteb_ver = version("mteb")
         flat_scores = defaultdict(list)
         for split, hf_subset_scores in scores.items():
             for hf_subset, hf_scores in hf_subset_scores.items():
@@ -214,13 +216,14 @@ class TaskResult(BaseModel):  # noqa: PLR0904
                     **hf_scores,
                     "hf_subset": hf_subset,
                     "languages": eval_langs,
+                    "mteb_version": mteb_ver,
                 }
                 flat_scores[split].append(_scores)
 
         return TaskResult(
             dataset_revision=task.metadata.revision,
             task_name=task.metadata.name,
-            mteb_version=version("mteb"),
+            mteb_version=mteb_ver,
             scores=flat_scores,
             evaluation_time=evaluation_time,
             kg_co2_emissions=kg_co2_emissions,
@@ -238,6 +241,17 @@ class TaskResult(BaseModel):  # noqa: PLR0904
                     raise ValueError("Scores should be a dictionary")
                 cls._validate_scores_dict(hf_subset_score)
         return v
+
+    @model_validator(mode="after")
+    def _backfill_per_subset_mteb_version(self) -> Self:
+        """Backfill mteb_version from top-level into subsets that lack it."""
+        if self.mteb_version is None:
+            return self
+        for split_scores in self.scores.values():
+            for subset_scores in split_scores:
+                if "mteb_version" not in subset_scores:
+                    subset_scores["mteb_version"] = self.mteb_version  # type: ignore[index]
+        return self
 
     @staticmethod
     def _validate_scores_dict(scores: ScoresDict) -> None:
@@ -281,7 +295,7 @@ class TaskResult(BaseModel):  # noqa: PLR0904
     @property
     def task_type(self) -> str:
         """Get the type of the task."""
-        return self.task.metadata.type
+        return cast("str", self.task.metadata.type)
 
     @property
     def is_public(self) -> bool:
@@ -307,7 +321,7 @@ class TaskResult(BaseModel):  # noqa: PLR0904
         """Get the eval splits present in the scores."""
         return list(self.scores.keys())
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         """Convert the TaskResult to a dictionary.
 
         Returns:
@@ -316,7 +330,7 @@ class TaskResult(BaseModel):  # noqa: PLR0904
         return self.model_dump()
 
     @classmethod
-    def from_dict(cls, data: dict) -> Self:
+    def from_dict(cls, data: dict[str, Any]) -> Self:
         """Create a TaskResult from a dictionary.
 
         Args:
@@ -429,7 +443,7 @@ class TaskResult(BaseModel):  # noqa: PLR0904
                             hf_subset_scores.pop(key)  # type: ignore[attr-defined]
 
     @classmethod
-    def _convert_from_before_v1_11_0(cls, data: dict) -> TaskResult:
+    def _convert_from_before_v1_11_0(cls, data: dict[str, Any]) -> TaskResult:
         from mteb.get_tasks import _TASKS_REGISTRY
 
         # in case the task name is not found in the registry, try to find a lower case version
@@ -528,8 +542,8 @@ class TaskResult(BaseModel):  # noqa: PLR0904
         languages: list[ISOLanguage | ISOLanguageScript] | None = None,
         scripts: list[ISOLanguageScript] | None = None,
         getter: Callable[[ScoresDict], Score] = lambda scores: scores["main_score"],
-        aggregation: Callable[[list[Score]], Any] = np.mean,
-    ) -> Any:
+        aggregation: Callable[[list[Score]], float] = np.mean,
+    ) -> float:
         """Get a score for the specified splits, languages, scripts and aggregation function.
 
         Args:
@@ -613,7 +627,7 @@ class TaskResult(BaseModel):  # noqa: PLR0904
         return val_sum / n_val
 
     @classmethod
-    def from_validated(cls, **data) -> TaskResult:
+    def from_validated(cls, **data: Any) -> TaskResult:
         """Create a TaskResult from validated data.
 
         Returns:
@@ -740,7 +754,6 @@ class TaskResult(BaseModel):  # noqa: PLR0904
         self,
         result: TaskResult | AbsTask,
         criteria: list[str] | list[Criteria] = [
-            "mteb_version",
             "dataset_revision",
         ],
         raise_error: bool = False,
@@ -749,7 +762,7 @@ class TaskResult(BaseModel):  # noqa: PLR0904
 
         Args:
             result: The TaskResult or Task object to check against.
-            criteria: Additional criteria to check for merging. Can be "mteb_version" or "dataset_revision".
+            criteria: Additional criteria to check for merging. Can be "dataset_revision" or "mteb_version" (opt-in).
                 It will always check that the task name match.
             raise_error: If True, raises an error if the objects cannot be merged. If False, returns False.
 
@@ -799,7 +812,6 @@ class TaskResult(BaseModel):  # noqa: PLR0904
         self,
         new_results: TaskResult,
         criteria: list[str] | list[Criteria] = [
-            "mteb_version",
             "dataset_revision",
         ],
     ) -> TaskResult:
@@ -841,10 +853,12 @@ class TaskResult(BaseModel):  # noqa: PLR0904
         date = self.date
         if new_results.date is not None and (date is None or new_results.date > date):
             date = new_results.date
+        mteb_ver = self._compute_top_level_mteb_version(merged_scores)
+
         merged_results = TaskResult(
             dataset_revision=new_results.dataset_revision,
             task_name=new_results.task_name,
-            mteb_version=new_results.mteb_version,
+            mteb_version=mteb_ver,
             scores=merged_scores,
             evaluation_time=merged_evaluation_time,
             kg_co2_emissions=merged_kg_co2_emissions,
@@ -852,6 +866,30 @@ class TaskResult(BaseModel):  # noqa: PLR0904
         )
 
         return merged_results
+
+    @staticmethod
+    def _compute_top_level_mteb_version(
+        scores: dict[SplitName, list[ScoresDict]],
+    ) -> str | None:
+        """Compute the top-level mteb_version from per-subset versions.
+
+        Returns a version range (e.g. "2.12.0-2.12.19") if subsets were
+        evaluated with different versions, a single version if all match,
+        or None if no per-subset versions are present.
+        """
+        versions: set[str] = set()
+        for split_scores in scores.values():
+            for subset_scores in split_scores:
+                v = subset_scores.get("mteb_version")
+                if v is not None:
+                    versions.add(v)
+        if not versions:
+            return None
+        min_ver = str(min(Version(v) for v in versions))
+        max_ver = str(max(Version(v) for v in versions))
+        if min_ver == max_ver:
+            return min_ver
+        return f"{min_ver}-{max_ver}"
 
     @staticmethod
     def _merge_split_scores(
@@ -983,3 +1021,47 @@ class TaskError(BaseModel):
 
     task_name: str
     exception: str
+
+
+def _read_run_settings_from_file(path: Path) -> list[dict[str, Any]]:
+    """Read run settings entries from a JSONL file."""
+    if not path.exists():
+        return []
+
+    run_settings: list[dict[str, Any]] = []
+    with path.open("r", encoding="utf-8") as f:
+        for line in f:
+            stripped_line = line.strip()
+            if not stripped_line:
+                continue
+            try:
+                parsed = json.loads(stripped_line)
+            except Exception as e:
+                logger.warning(
+                    f"Could not parse run_settings line '{stripped_line}': {e}"
+                )
+                continue
+            if isinstance(parsed, dict):
+                run_settings.append(parsed)
+    return run_settings
+
+
+def _write_and_merge_keyed_json(
+    path: Path,
+    entries: list[dict[str, Any]],
+    *,
+    key_fields: tuple[str, str, str] = ("task", "split", "subset"),
+) -> None:
+    """Write entries to `.jsonl`, if it already exist it will merge it, replacing any existing entries with the same key."""
+    existing_entries = _read_run_settings_from_file(path)
+    new_keys = {tuple(entry.get(field) for field in key_fields) for entry in entries}
+    filtered_existing = [
+        entry
+        for entry in existing_entries
+        if tuple(entry.get(field) for field in key_fields) not in new_keys
+    ]
+    all_entries = filtered_existing + entries
+
+    with path.open("w", encoding="utf-8") as f:
+        for entry in all_entries:
+            f.write(json.dumps(entry, default=str) + "\n")

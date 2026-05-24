@@ -4,6 +4,7 @@ import functools
 import json
 import logging
 import warnings
+from collections.abc import Sequence
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal, cast
 
@@ -16,6 +17,8 @@ from mteb.models import ModelMeta
 from mteb.models.get_model_meta import get_model_metas
 
 from .model_result import ModelResult, _aggregate_and_pivot
+
+__all__ = ["BenchmarkResults", "ModelResult"]
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterable, Iterator
@@ -67,7 +70,7 @@ class BenchmarkResults(BaseModel):  # noqa: PLR0904
     """
 
     model_results: list[ModelResult]
-    benchmark: Benchmark | None = None
+    benchmark: Benchmark | Sequence[Benchmark] | None = None
     model_config = ConfigDict(
         protected_namespaces=(),  # to free up the name model_results which is otherwise protected
         arbitrary_types_allowed=True,  # Benchmark is dataclasses.dataclass
@@ -288,8 +291,8 @@ class BenchmarkResults(BaseModel):  # noqa: PLR0904
         getter: Callable[[ScoresDict], Score] | None = None,
         aggregation: Callable[[list[Score]], Any] | None = None,
         format: Literal["wide", "long"] = "wide",
-    ) -> list[dict]:
-        entries = []
+    ) -> list[dict[str, Any]]:
+        entries: list[dict[str, Any]] = []
         if format == "wide":
             for model_res in self:
                 try:
@@ -401,13 +404,13 @@ class BenchmarkResults(BaseModel):  # noqa: PLR0904
 
         # Collect parallel arrays rather than a list of dicts:
         # pd.DataFrame(dict_of_lists) is ~10x faster than pd.DataFrame(list_of_dicts).
-        col_model_name: list = []
-        col_model_rev: list = []
-        col_task_name: list = []
-        col_split: list = []
-        col_language: list = []
-        col_subset: list = []
-        col_score: list = []
+        col_model_name: list[Any] = []
+        col_model_rev: list[Any] = []
+        col_task_name: list[Any] = []
+        col_split: list[Any] = []
+        col_language: list[Any] = []
+        col_subset: list[Any] = []
+        col_score: list[Any] = []
 
         for model_result in bench_results:
             mn = model_result.model_name
@@ -446,7 +449,12 @@ class BenchmarkResults(BaseModel):  # noqa: PLR0904
                 df[col] = df[col].astype("category")
         return df
 
-    def get_aggregated_scores(self) -> dict[str, dict[str, float | None]]:
+    def get_aggregated_scores(
+        self,
+    ) -> (
+        dict[str, dict[str, float | None]]
+        | dict[str, dict[str, dict[str, float | None]]]  # multiple benchmarks
+    ):
         """Get aggregated scores for each model.
 
         When a benchmark is associated with these results, uses
@@ -467,6 +475,8 @@ class BenchmarkResults(BaseModel):  # noqa: PLR0904
             }
         """
         if self.benchmark is not None:
+            if isinstance(self.benchmark, Sequence):
+                return {b.name: b.get_score(self) for b in self.benchmark}
             return self.benchmark.get_score(self)
 
         from mteb.benchmarks._benchmark_metrics import (
@@ -498,6 +508,9 @@ class BenchmarkResults(BaseModel):  # noqa: PLR0904
                 "`results = cache.load_results(tasks='MTEB(eng, v2)')`"
             )
 
+        if isinstance(self.benchmark, Sequence):
+            raise ValueError("Getting scores for multiple benchmarks is unsupported")
+
         return self.benchmark._create_summary_table(self)
 
     def __iter__(self) -> Iterator[ModelResult]:  # type: ignore[override]
@@ -506,12 +519,12 @@ class BenchmarkResults(BaseModel):  # noqa: PLR0904
     def __getitem__(self, index: int) -> ModelResult:
         return self.model_results[index]
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         """Convert BenchmarkResults to a dictionary."""
         return self.model_dump()
 
     @classmethod
-    def from_dict(cls, data: dict) -> Self:
+    def from_dict(cls, data: dict[str, Any]) -> Self:
         """Create BenchmarkResults from a dictionary."""
         return cls.model_validate(data)
 
