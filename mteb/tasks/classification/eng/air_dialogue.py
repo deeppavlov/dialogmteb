@@ -17,7 +17,7 @@ class AirDialogueClassification(AbsTaskClassification):
         category="t2c",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs=["rus-Cyrl"],
+        eval_langs=["eng-Latn"],
         main_score="f1",
         date=("2018-01-01", "2022-06-07"),
         domains=[],

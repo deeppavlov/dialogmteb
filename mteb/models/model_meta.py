@@ -43,7 +43,6 @@ from mteb._hf_integration.hf_hub_utils import (
     _repo_exists,
 )
 from mteb.languages import check_language_code
-from mteb.languages.iso_mappings import _hf_langs_to_iso_lang_scripts
 from mteb.models.models_protocols import MTEBModels
 from mteb.types import (
     ISOLanguageScript,
@@ -828,9 +827,9 @@ class ModelMeta(BaseModel):  # noqa: PLR0904
         loader, model_type = cls._detect_model_type_and_loader(
             model_name, revision, config=config
         )
-        card = ModelCard.load(model_name)
-        card_data = card.data
-        card_data = cast("ModelCardData", card_data)
+        # card = ModelCard.load(model_name)
+        # card_data = card.data
+        # card_data = cast("ModelCardData", card_data)
         try:
             model_config = AutoConfig.from_pretrained(model_name)
         except Exception as e:
@@ -846,8 +845,8 @@ class ModelMeta(BaseModel):  # noqa: PLR0904
             revisions = _get_repo_commits(model_name, "model")
             revision = revisions[0].commit_id if revisions else None
 
-        model_license = card_data.license if card_data.license != "other" else None
-        languages = _hf_langs_to_iso_lang_scripts(card_data.language)
+        # model_license = card_data.license if card_data.license != "other" else None
+        # languages = _hf_langs_to_iso_lang_scripts(card_data.language)
         n_parameters = cls._calculate_num_parameters_from_hub(model_name)
         n_embedding_parameters = cls._estimate_embedding_parameters_from_hub(
             model_name, revision=revision, config=config
@@ -884,8 +883,8 @@ class ModelMeta(BaseModel):  # noqa: PLR0904
                 revision=revision,
                 reference=reference,
                 release_date=cls.fetch_release_date(model_name),
-                license=model_license,
-                languages=languages,
+                license=None,
+                languages=None,
                 framework=frameworks,
                 n_parameters=n_parameters,
                 n_embedding_parameters=n_embedding_parameters,
@@ -893,7 +892,7 @@ class ModelMeta(BaseModel):  # noqa: PLR0904
                 max_tokens=max_tokens,
                 embed_dim=embedding_dim,
                 similarity_fn_name=similarity_fn_name,
-                adapted_from=_get_source_model(card_data),
+                adapted_from=None,
             )
         )
 

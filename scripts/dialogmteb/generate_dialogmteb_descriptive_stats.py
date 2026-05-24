@@ -104,7 +104,7 @@ def row_classification(task, stats: dict, splits: list[str]) -> dict:
         "n_samples": fmt_count(n_samples),
         "n_langs": fmt_langs(meta.languages),
         "domains": ", ".join(sorted(meta.domains)[:3]) if meta.domains else "--",
-        "metric": (meta.main_score or "").replace("test.", ""),
+        "metric": (meta.main_score or "").replace("test.", "").replace("_", "\\_"),
         "total_chars": fmt_count(total_chars),
         "avg_len": fmt_float(avg_len, 0),
         "n_classes": fmt_count(n_classes),
@@ -132,7 +132,7 @@ def row_multilabel(task, stats: dict, splits: list[str]) -> dict:
         "n_samples": fmt_count(n_samples),
         "n_langs": fmt_langs(meta.languages),
         "domains": ", ".join(sorted(meta.domains)[:3]) if meta.domains else "--",
-        "metric": (meta.main_score or "").replace("test.", ""),
+        "metric": (meta.main_score or "").replace("test.", "").replace("_", "\\_"),
         "total_chars": fmt_count(total_chars),
         "avg_len": fmt_float(avg_len, 0),
         "n_labels": fmt_count(n_classes),
@@ -159,7 +159,7 @@ def row_pair_classification(task, stats: dict, splits: list[str]) -> dict:
         "n_pairs": fmt_count(n_samples),
         "n_langs": fmt_langs(meta.languages),
         "domains": ", ".join(sorted(meta.domains)[:3]) if meta.domains else "--",
-        "metric": (meta.main_score or "").replace("test.", ""),
+        "metric": (meta.main_score or "").replace("test.", "").replace("_", "\\_"),
         "total_chars": fmt_count(total_chars),
         "avg_text1_len": fmt_float(avg_t1, 0),
         "avg_text2_len": fmt_float(avg_t2, 0),
@@ -185,7 +185,7 @@ def row_retrieval(task, stats: dict, splits: list[str]) -> dict:
         "n_queries": fmt_count(n_queries),
         "n_langs": fmt_langs(meta.languages),
         "domains": ", ".join(sorted(meta.domains)[:3]) if meta.domains else "--",
-        "metric": (meta.main_score or "").replace("test.", ""),
+        "metric": (meta.main_score or "").replace("test.", "").replace("_", "\\_"),
         "total_chars": fmt_count(total_chars),
         "avg_query_len": fmt_float(avg_q_len, 0),
         "avg_doc_len": fmt_float(avg_d_len, 0),
@@ -214,7 +214,7 @@ def row_reranking(task, stats: dict, splits: list[str]) -> dict:
         "n_samples": fmt_count(n_samples),
         "n_langs": fmt_langs(meta.languages),
         "domains": ", ".join(sorted(meta.domains)[:3]) if meta.domains else "--",
-        "metric": (meta.main_score or "").replace("test.", ""),
+        "metric": (meta.main_score or "").replace("test.", "").replace("_", "\\_"),
         "total_chars": fmt_count(total_chars),
         "avg_query_len": fmt_float(avg_q_len, 0),
         "avg_doc_len": fmt_float(avg_d_len, 0),
@@ -235,7 +235,7 @@ def row_sts(task, stats: dict, splits: list[str]) -> dict:
         "n_pairs": fmt_count(n_pairs),
         "n_langs": fmt_langs(meta.languages),
         "domains": ", ".join(sorted(meta.domains)[:3]) if meta.domains else "--",
-        "metric": (meta.main_score or "").replace("test.", ""),
+        "metric": (meta.main_score or "").replace("test.", "").replace("_", "\\_"),
         "total_chars": fmt_count(total_chars),
         "avg_text1_len": fmt_float(avg_t1, 0),
         "avg_text2_len": fmt_float(avg_t2, 0),
@@ -436,7 +436,7 @@ def render_subtable(ttype: str, rows: list[dict]) -> str:
     rows_sorted = sorted(rows, key=lambda r: r["name"])
 
     lines = [
-        "\\begin{table}[t]",
+        "\\begin{table*}[t]",
         "    \\centering",
         f"    \\caption{{DialogMTEB {caption}.}}",
         "    \\resizebox{\\linewidth}{!}{",
@@ -459,7 +459,7 @@ def render_subtable(ttype: str, rows: list[dict]) -> str:
         "    \\end{tabular}",
         "    }",
         f"    \\label{{tab:dialogmteb_stats_{label}}}",
-        "\\end{table}",
+        "\\end{table*}",
     ]
     return "\n".join(lines)
 

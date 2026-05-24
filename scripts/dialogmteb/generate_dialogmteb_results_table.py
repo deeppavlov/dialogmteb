@@ -93,7 +93,7 @@ def build_rankings(
     df: pd.DataFrame,
     task_names: list[str],
     task_type_map: dict[str, str],
-    top_n: int,
+    top_n: int | None,
 ) -> pd.DataFrame:
     available = [t for t in task_names if t in df.index]
     # Drop models with no results at all
@@ -126,7 +126,9 @@ def build_rankings(
         if task_type in category_avgs:
             df_t[f"cat_{task_type}"] = category_avgs[task_type]
 
-    df_t = df_t.sort_values("borda", ascending=False).head(top_n)
+    df_t = df_t.sort_values("borda", ascending=False)
+    if top_n is not None:
+        df_t = df_t.head(top_n)
     return df_t, category_avgs
 
 
@@ -135,8 +137,9 @@ def generate_latex_table(
     category_avgs: dict[str, pd.Series],
     task_names: list[str],
     task_type_map: dict[str, str],
-    top_n: int,
+    top_n: int | None,
     benchmark_name: str = "",
+    label_suffix: str = "",
 ) -> str:
     available = [t for t in task_names if t in category_avgs or True]
 
@@ -171,7 +174,7 @@ def generate_latex_table(
         "\\begin{table*}[!th]",
         "    \\centering",
         "    \\caption{",
-        f"    Top {top_n} models on {benchmark_name or 'DialogMTEB'} ({total} tasks). Ranked by Borda count.",
+        f"    {'All' if top_n is None else f'Top {top_n}'} models on {benchmark_name or 'DialogMTEB'} ({total} tasks). Ranked by Borda count.",
         "    \\textbf{Mean}: average across all tasks.",
         "    \\textbf{W.Mean}: average of per-category means (equal category weight).",
         "    Task types: "
@@ -179,7 +182,7 @@ def generate_latex_table(
         + ".",
         "    Best score shown in \\textbf{bold}; best within each category shaded.",
         "    }",
-        f"    \\label{{tab:dialogmteb-results}}",
+        f"    \\label{{tab:dialogmteb-results-{label_suffix}}}",
         "    \\resizebox{\\textwidth}{!}{",
         "    \\setlength{\\tabcolsep}{4pt}",
         "    {\\footnotesize",
@@ -196,7 +199,6 @@ def generate_latex_table(
             display = display[:35] + "..."
         display = display.replace("_", "\\_")
 
-        borda = int(row["borda"])
         mean_val = row["mean"]
         wmean_val = row["weighted_mean"]
 
@@ -211,7 +213,7 @@ def generate_latex_table(
 
         cat_str = " & ".join(cat_strs)
         lines.append(
-            f"    {display} & {rank} ({borda}) & {mean_str} & {wmean_str} & {cat_str} \\\\"
+            f"    {display} & {rank} & {mean_str} & {wmean_str} & {cat_str} \\\\"
         )
 
     lines += [
@@ -242,17 +244,27 @@ def run_benchmark(benchmark_name: str, suffix: str, top_n: int) -> None:
     df = load_results(unique_tasks)
     print(f"  {len(df.columns)} models with at least one result")
 
-    df_top, category_avgs = build_rankings(df, task_names, task_type_map, top_n)
-    table = generate_latex_table(
-        df_top, category_avgs, task_names, task_type_map, top_n, benchmark_name
-    )
+    df_ranked, category_avgs = build_rankings(df, task_names, task_type_map, top_n=None)
 
-    output_file = Path(__file__).parent / f"dialogmteb_{suffix}_results_table.tex"
-    output_file.write_text(table)
-    print(f"  Written to {output_file}")
+    # All models
+    table_all = generate_latex_table(
+        df_ranked, category_avgs, task_names, task_type_map, None, benchmark_name, f"{suffix}-all"
+    )
+    out_all = Path(__file__).parent / f"dialogmteb_{suffix}_results_table_all.tex"
+    out_all.write_text(table_all)
+    print(f"  Written to {out_all}")
+
+    # Top N
+    df_top = df_ranked.head(top_n)
+    table_top = generate_latex_table(
+        df_top, category_avgs, task_names, task_type_map, top_n, benchmark_name, f"{suffix}-top{top_n}"
+    )
+    out_top = Path(__file__).parent / f"dialogmteb_{suffix}_results_table_top{top_n}.tex"
+    out_top.write_text(table_top)
+    print(f"  Written to {out_top}")
 
     print(f"  Top 5:")
-    for rank, (model, row) in enumerate(df_top.head(5).iterrows(), 1):
+    for rank, (model, row) in enumerate(df_ranked.head(5).iterrows(), 1):
         print(f"    {rank}. {model}: mean={row['mean'] * 100:.1f}%")
 
 

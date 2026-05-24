@@ -172,3 +172,7 @@ CLAUDE.md
 
 # test files
 tests/mock_mteb_cache/leaderboard/__cached_results.json
+*.csv
+*.png
+*.pdf
+*.bib

@@ -28,7 +28,17 @@ class MultiWoz21(AbsTaskClassification):
         annotations_creators=None,
         dialect=None,
         sample_creation=None,
-        bibtex_citation=None,
+        bibtex_citation="""
+@misc{budzianowski2020multiwozlargescalemultidomain,
+      title={MultiWOZ -- A Large-Scale Multi-Domain Wizard-of-Oz Dataset for Task-Oriented Dialogue Modelling}, 
+      author={Paweł Budzianowski and Tsung-Hsien Wen and Bo-Hsiang Tseng and Iñigo Casanueva and Stefan Ultes and Osman Ramadan and Milica Gašić},
+      year={2020},
+      eprint={1810.00278},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/1810.00278}, 
+}
+""",
         prompt=None,
     )
     label_column_name = "topic"

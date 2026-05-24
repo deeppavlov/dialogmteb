@@ -19,58 +19,6 @@ from scripts.dialogmteb._common import OUT_DIR, load_unique_tasks, RUN_MODELS
 
 import mteb
 
-# -----------------------------------------------------------------------
-# Hand-written citations for models not (yet) in the MTEB registry
-# -----------------------------------------------------------------------
-MANUAL_CITATIONS: dict[str, str] = {
-    "princeton-nlp/sup-simcse-bert-base-uncased": r"""@inproceedings{gao-etal-2021-simcse,
-  title     = {{SimCSE}: Simple Contrastive Learning of Sentence Embeddings},
-  author    = {Gao, Tianyu and Yao, Xingcheng and Chen, Danqi},
-  booktitle = {Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing},
-  year      = {2021},
-  pages     = {6894--6910},
-  publisher = {Association for Computational Linguistics},
-  doi       = {10.18653/v1/2021.emnlp-main.552},
-}""",
-    "TODBERT/TOD-BERT-MLM-V1": r"""@inproceedings{wu-etal-2020-tod,
-  title     = {{TOD-BERT}: Pre-trained Natural Language Understanding for Task-Oriented Dialogue},
-  author    = {Wu, Chien-Sheng and Hoi, Steven C.H. and Socher, Richard and Xiong, Caiming},
-  booktitle = {Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing},
-  year      = {2020},
-  pages     = {917--929},
-  publisher = {Association for Computational Linguistics},
-  doi       = {10.18653/v1/2020.emnlp-main.66},
-}""",
-    "AndrewZeng/futuretod-base-v1.0": r"""@inproceedings{zeng-nie-2023-futuretod,
-  title     = {{FutureTOD}: Teaching Future Knowledge to Pre-trained Language Model for Task-Oriented Dialogue},
-  author    = {Zeng, Weihao and Nie, Keqing and Yao, Junwei and Huang, Ruixue and Cheng, Qianlong and Wang, Pei and Xu, Weiran},
-  booktitle = {Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
-  year      = {2023},
-  pages     = {12780--12793},
-  publisher = {Association for Computational Linguistics},
-  doi       = {10.18653/v1/2023.acl-long.716},
-}""",
-    "codefuse-ai/F2LLM-v2-0.6B": r"""@misc{f2llm2024,
-  title  = {{F2LLM}: Fine-tuned Foundation Language Models for Embedding},
-  author = {CodeFuse AI},
-  year   = {2024},
-  note   = {\url{https://huggingface.co/codefuse-ai}},
-}""",
-}
-
-# Models that share a citation with another key already in MANUAL_CITATIONS
-CITATION_ALIASES: dict[str, str] = {
-    "princeton-nlp/unsup-simcse-roberta-base": "princeton-nlp/sup-simcse-bert-base-uncased",
-    "princeton-nlp/unsup-simcse-bert-large-uncased": "princeton-nlp/sup-simcse-bert-base-uncased",
-    "princeton-nlp/unsup-simcse-roberta-large": "princeton-nlp/sup-simcse-bert-base-uncased",
-    "princeton-nlp/sup-simcse-bert-large-uncased": "princeton-nlp/sup-simcse-bert-base-uncased",
-    "princeton-nlp/sup-simcse-roberta-base": "princeton-nlp/sup-simcse-bert-base-uncased",
-    "princeton-nlp/sup-simcse-roberta-large": "princeton-nlp/sup-simcse-bert-base-uncased",
-    "codefuse-ai/F2LLM-v2-80M": "codefuse-ai/F2LLM-v2-0.6B",
-    "codefuse-ai/F2LLM-v2-160M": "codefuse-ai/F2LLM-v2-0.6B",
-    "codefuse-ai/F2LLM-v2-330M": "codefuse-ai/F2LLM-v2-0.6B",
-    "codefuse-ai/F2LLM-v2-4B": "codefuse-ai/F2LLM-v2-0.6B",
-}
 
 
 # -----------------------------------------------------------------------
@@ -130,29 +78,11 @@ def main():
                 seen[key] = normalize_bibtex(entry)
 
     # ── Models ───────────────────────────────────────────────────────────
-    print(f"Processing {len(RUN_MODELS)} models from run.py...")
-
-    # Resolve aliases first so we know which canonical entry to emit
-    canonical: dict[str, str] = {}  # model → canonical model for lookup
-    for model in RUN_MODELS:
-        canonical[model] = CITATION_ALIASES.get(model, model)
+    print(f"Processing {len(RUN_MODELS)} models...")
 
     for model in RUN_MODELS:
-        canon = canonical[model]
-        bibtex: str | None = None
-
-        # 1. Try manual citation for canonical model
-        if canon in MANUAL_CITATIONS:
-            bibtex = MANUAL_CITATIONS[canon]
-
-        # 2. Try mteb registry
-        if bibtex is None:
-            try:
-                meta = mteb.get_model_meta(model)
-                if meta.citation:
-                    bibtex = str(meta.citation).strip()
-            except Exception:
-                pass
+        meta = mteb.get_model_meta(model)
+        bibtex = str(meta.citation).strip()
 
         if not bibtex:
             warnings.append(f"[MODEL] No citation: {model}")

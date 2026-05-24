@@ -50,7 +50,7 @@ def fmt_params(n: int | None) -> str:
 
 
 def fmt_tokens(t: float | None) -> str:
-    if t is None or (isinstance(t, float) and np.isnan(t)):
+    if t is None or (isinstance(t, float) and np.isnan(t)) or np.isinf(t):
         return "--"
     t = int(t)
     if t >= 1_000:
@@ -129,7 +129,7 @@ def generate_latex_table(rows: list[dict], top_n: int | None) -> str:
         "    \\centering",
         f"    \\caption{{DialogMTEB model overview ({title_n} models). "
         "N.Param = number of parameters, Dim = embedding dimension, "
-        "Ctx = max context length.}}",
+        "Ctx = max context length.}",
         "    \\resizebox{\\linewidth}{!}{",
         "    \\begin{tabular}{lrrr}",
         "    \\toprule",

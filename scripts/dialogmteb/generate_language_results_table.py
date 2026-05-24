@@ -93,7 +93,7 @@ def main():
         "    \\centering",
         f"    \\caption{{Language-stratified DialogMTEB results (top {TOP_N} models by Borda count). "
         "Scores are means (\\%) within each language group. "
-        "\\textbf{Bold} = best in column.}}",
+        "\\textbf{Bold} = best in column.}",
         "    \\resizebox{\\linewidth}{!}{",
         "    \\begin{tabular}{lccccc}",
         "    \\toprule",

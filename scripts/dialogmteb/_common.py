@@ -21,10 +21,11 @@ BENCHMARKS: dict[str, str] = {
     "eng": BENCHMARK_NAME_ENG,
     "multilingual": BENCHMARK_NAME_MULTILINGUAL,
 }
-RESULT_CACHE_PATH = Path("/Users/samoed/Desktop/dialogmteb/result_cache")
+RESULT_CACHE_PATH = Path("../result_cache")
 OUT_DIR = Path(__file__).parent
 
 cache = ResultCache(RESULT_CACHE_PATH)
+cache.download_from_remote("https://github.com/deeppavlov/mteb-results")
 
 TYPE_ABBREV = {
     "Classification": "Clf.",
@@ -91,25 +92,25 @@ def model_mean_scores(score_df: pd.DataFrame, task_names: list[str]) -> pd.Serie
 
 RUN_MODELS: list[str] = [
     "google/embeddinggemma-300m",
-    "intfloat/multilingual-e5-large-instruct",
-    "microsoft/harrier-oss-v1-270m",
     "intfloat/multilingual-e5-small",
     "intfloat/multilingual-e5-base",
     "intfloat/multilingual-e5-large",
-    "microsoft/harrier-oss-v1-0.6b",
+    "intfloat/multilingual-e5-large-instruct",
     "Qwen/Qwen3-Embedding-0.6B",
     "Qwen/Qwen3-Embedding-4B",
     "Qwen/Qwen3-Embedding-8B",
+    "microsoft/harrier-oss-v1-270m",
+    "microsoft/harrier-oss-v1-0.6b",
     "perplexity-ai/pplx-embed-v1-0.6b",
     "perplexity-ai/pplx-embed-v1-4b",
-    "perplexity-ai/pplx-embed-v1-8b",
     "BidirLM/BidirLM-270M-Embedding",
     "BidirLM/BidirLM-0.6B-Embedding",
-    "BidirLM/BidirLM-1.7B-Embedding",
+    # "BidirLM/BidirLM-1B-Embedding",
+    # "BidirLM/BidirLM-1.7B-Embedding",
     "NovaSearch/stella_en_400M_v5",
-    "NovaSearch/stella_en_1.5B_v5",
-    "NovaSearch/jasper_en_vision_language_v1",
-    "tencent/KaLM-Embedding-Gemma3-12B-2511",
+    # "NovaSearch/stella_en_1.5B_v5",
+    # "NovaSearch/jasper_en_vision_language_v1",
+    # "tencent/KaLM-Embedding-Gemma3-12B-2511",
     "BAAI/bge-m3",
     "HIT-TMG/KaLM-embedding-multilingual-mini-instruct-v2",
     "KaLM-Embedding/KaLM-embedding-multilingual-mini-instruct-v2.5",
@@ -125,7 +126,7 @@ RUN_MODELS: list[str] = [
     "sentence-transformers/all-MiniLM-L12-v2",
     "sentence-transformers/all-MiniLM-L6-v2",
     "sentence-transformers/all-mpnet-base-v2",
-    "nvidia/llama-embed-nemotron-8b",
+    # "nvidia/llama-embed-nemotron-8b",
     "princeton-nlp/sup-simcse-bert-base-uncased",
     "princeton-nlp/unsup-simcse-roberta-base",
     "princeton-nlp/unsup-simcse-bert-large-uncased",
@@ -135,6 +136,12 @@ RUN_MODELS: list[str] = [
     "princeton-nlp/sup-simcse-roberta-large",
     "TODBERT/TOD-BERT-MLM-V1",
     "AndrewZeng/futuretod-base-v1.0",
+    "minishlab/potion-base-2M",
+    "minishlab/potion-base-8M",
+    "minishlab/potion-base-4M",
+    "minishlab/potion-base-32M",
+    "minishlab/potion-retrieval-32M",
+    "minishlab/potion-multilingual-128M",
 ]
 
 

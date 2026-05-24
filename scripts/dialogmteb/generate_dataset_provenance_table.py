@@ -108,7 +108,7 @@ def main():
         f"\\textbf{{MTEB}} = {n_from_mteb} tasks reused from MTEB. "
         "N.Langs = number of languages.}",
         "    \\resizebox{\\linewidth}{!}{",
-        "    \\begin{tabular}{lllccl}",
+        "    \\begin{tabular}{lllcc}",
         "    \\toprule",
         "    \\textbf{Dataset} & \\textbf{Citation} & \\textbf{Type} "
         "& \\textbf{Year} & \\textbf{N.Langs} \\\\",
@@ -120,15 +120,13 @@ def main():
         if row["task_type"] != current_type:
             current_type = row["task_type"]
             abbrev = TYPE_ABBREV.get(current_type, current_type)
-            lines.append(f"    \\multicolumn{{6}}{{l}}{{\\textit{{{abbrev}}}}} \\\\")
+            lines.append(f"    \\multicolumn{{5}}{{l}}{{\\textit{{{abbrev}}}}} \\\\")
 
         name = row["name"].replace("_", "\\_")
-        in_mteb_marker = "\\checkmark" if row["in_mteb"] else ""
-        contribution = row["contribution"]
         abbrev = TYPE_ABBREV.get(row["task_type"], row["task_type"])
         lines.append(
             f"    {name} & {row['citation']} & {abbrev} "
-            f"& {row['year']} & {row['n_langs']} & {contribution} \\\\"
+            f"& {row['year']} & {row['n_langs']} \\\\"
         )
 
     lines += [

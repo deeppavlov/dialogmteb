@@ -237,6 +237,14 @@ Harrier_OSS_v1_270m = ModelMeta(
     training_datasets=harrier_training_data,
     adapted_from="google/gemma-3-270m",
     superseded_by=None,
+    citation="""
+@misc{harrier_270m,
+    title = {Harrier 270m},
+    author = {Microsoft},
+    year = {2026},
+    url = {https://huggingface.co/microsoft/harrier-oss-v1-270m},
+}
+"""
 )
 
 Harrier_OSS_v1_0B6 = ModelMeta(
@@ -266,7 +274,14 @@ Harrier_OSS_v1_0B6 = ModelMeta(
     use_instructions=True,
     training_datasets=harrier_training_data,
     adapted_from="Qwen/Qwen3-0.6B",
-    superseded_by=None,
+    citation="""
+@misc{harrier_06b,
+    title = {Harrier 0.6B},
+    author = {Microsoft},
+    year = {2026},
+    url = {https://huggingface.co/microsoft/harrier-oss-v1-0.6b},
+}
+""",
 )
 
 Harrier_OSS_v1_27b = ModelMeta(
