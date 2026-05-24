@@ -92,7 +92,6 @@ from .hume_toxic_conversations_classification import (
 from .hume_tweet_sentiment_extraction_classification import (
     HUMETweetSentimentExtractionClassification,
 )
-from .multi_woz import MultiWoz21
 from .hwu_intent_classification import HWUIntentClassification
 from .imagenet1k import Imagenet1kClassification
 from .imdb_classification import ImdbClassification, ImdbClassificationV2
@@ -224,6 +223,7 @@ from .legal_bench_classification import (
 from .mantis import Mantis
 from .meld_classification import MELDAudioVideoClassification, MELDVideoClassification
 from .mnist_classification import MNISTClassification
+from .multi_woz import MultiWoz21
 from .music_avqa_classification import (
     MusicAVQACLSAudioVideoClassification,
     MusicAVQACLSVideoClassification,
@@ -498,6 +498,7 @@ __all__ = [
     "MELDVideoClassification",
     "MNISTClassification",
     "Mantis",
+    "MultiWoz21",
     "MusicAVQACLSAudioVideoClassification",
     "MusicAVQACLSVideoClassification",
     "NYSJudicialEthicsLegalBenchClassification",
@@ -601,5 +602,4 @@ __all__ = [
     "YahooAnswersTopicsClassificationV2",
     "YelpReviewFullClassification",
     "YelpReviewFullClassificationV2",
-    "MultiWoz21",
 ]

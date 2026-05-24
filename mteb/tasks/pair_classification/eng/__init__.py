@@ -1,9 +1,9 @@
 from .av_speakerbench_pc import AVSpeakerBenchPairClassification
-from .clarqa import ClarQA
 from .ave_dataset_pc import (
     AVEDatasetVAPairClassification,
     AVEDatasetVPairClassification,
 )
+from .clarqa import ClarQA
 from .cremad import CREMADPairClassification
 from .human_animal_cartoon_pc import (
     HumanAnimalCartoonVAPairClassification,

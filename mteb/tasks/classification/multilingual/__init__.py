@@ -9,7 +9,6 @@ from .hin_dialect_classification import HinDialectClassification
 from .hume_multilingual_sentiment_classification import (
     HUMEMultilingualSentimentClassification,
 )
-from .xrisawoz import XRisaWoz
 from .indic_lang_classification import IndicLangClassification
 from .indic_nlp_news_classification import IndicNLPNewsClassification
 from .indic_sentiment_classification import IndicSentimentClassification
@@ -46,6 +45,7 @@ from .turkic_classification import TurkicClassification
 from .tweet_sentiment_classification import TweetSentimentClassification
 from .vox_populi_gender_id import VoxPopuliGenderID
 from .vox_populi_language_id import VoxPopuliLanguageID
+from .xrisawoz import XRisaWoz
 
 __all__ = [
     "AfriHateClassification",
