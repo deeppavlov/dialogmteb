@@ -194,8 +194,6 @@ def main():
     tex_lines = [
         "\\begin{table}[t]",
         "    \\centering",
-        "    \\caption{Rank correlation between DialogMTEB and general MTEB. "
-        "A lower value indicates dialog performance reflects distinct capabilities.}",
         "    \\begin{tabular}{lcccc}",
         "    \\toprule",
         "    \\textbf{Comparison} & \\textbf{N} "
@@ -211,6 +209,8 @@ def main():
     tex_lines += [
         "    \\bottomrule",
         "    \\end{tabular}",
+        "    \\caption{Rank correlation between DialogMTEB and general MTEB. "
+        "A lower value indicates dialog performance reflects distinct capabilities.}",
         "    \\label{tab:dialogmteb_mteb_corr}",
         "\\end{table}",
     ]

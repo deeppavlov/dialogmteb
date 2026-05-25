@@ -103,10 +103,6 @@ def main():
     lines = [
         "\\begin{table*}[t]",
         "    \\centering",
-        "    \\caption{DialogMTEB dataset provenance. "
-        f"\\textbf{{Novel}} = {n_novel} tasks not present in general MTEB; "
-        f"\\textbf{{MTEB}} = {n_from_mteb} tasks reused from MTEB. "
-        "N.Langs = number of languages.}",
         "    \\resizebox{\\linewidth}{!}{",
         "    \\begin{tabular}{lllcc}",
         "    \\toprule",
@@ -133,6 +129,10 @@ def main():
         "    \\bottomrule",
         "    \\end{tabular}",
         "    }",
+        "    \\caption{DialogMTEB dataset provenance. "
+        f"\\textbf{{Novel}} = {n_novel} tasks not present in general MTEB; "
+        f"\\textbf{{MTEB}} = {n_from_mteb} tasks reused from MTEB. "
+        "N.Langs = number of languages.}",
         "    \\label{tab:dialogmteb_provenance}",
         "\\end{table*}",
     ]

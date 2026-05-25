@@ -102,9 +102,6 @@ def main():
     lines = [
         "\\begin{table}[t]",
         "    \\centering",
-        "    \\caption{Evaluation time per DialogMTEB task. "
-        "Times are measured on a single model inference pass and reported as the median "
-        "across all evaluated models. Total = sum of medians.}",
         "    \\begin{tabular}{llccc}",
         "    \\toprule",
         "    \\textbf{Task} & \\textbf{Type} & \\textbf{Median} "
@@ -135,6 +132,9 @@ def main():
     lines += [
         "    \\bottomrule",
         "    \\end{tabular}",
+        "    \\caption{Evaluation time per DialogMTEB task. "
+        "Times are measured on a single model inference pass and reported as the median "
+        "across all evaluated models. Total = sum of medians.}",
         "    \\label{tab:dialogmteb_eval_time}",
         "\\end{table}",
     ]

@@ -21,11 +21,11 @@ BENCHMARKS: dict[str, str] = {
     "eng": BENCHMARK_NAME_ENG,
     "multilingual": BENCHMARK_NAME_MULTILINGUAL,
 }
-RESULT_CACHE_PATH = Path("../result_cache")
+RESULT_CACHE_PATH = Path(__file__).parent.parent.parent / "result_cache"
 OUT_DIR = Path(__file__).parent
 
 cache = ResultCache(RESULT_CACHE_PATH)
-cache.download_from_remote("https://github.com/deeppavlov/mteb-results")
+# cache.download_from_remote("https://github.com/deeppavlov/mteb-results")
 
 TYPE_ABBREV = {
     "Classification": "Clf.",
@@ -102,9 +102,9 @@ RUN_MODELS: list[str] = [
     "microsoft/harrier-oss-v1-270m",
     "microsoft/harrier-oss-v1-0.6b",
     "perplexity-ai/pplx-embed-v1-0.6b",
-    "perplexity-ai/pplx-embed-v1-4b",
+    # "perplexity-ai/pplx-embed-v1-4b",
     "BidirLM/BidirLM-270M-Embedding",
-    "BidirLM/BidirLM-0.6B-Embedding",
+    # "BidirLM/BidirLM-0.6B-Embedding",
     # "BidirLM/BidirLM-1B-Embedding",
     # "BidirLM/BidirLM-1.7B-Embedding",
     "NovaSearch/stella_en_400M_v5",

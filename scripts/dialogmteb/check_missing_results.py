@@ -110,8 +110,6 @@ def main():
     lines = [
         "\\begin{table*}[t]",
         "    \\centering",
-        "    \\caption{Missing results for run.py models on DialogMTEB. "
-        "\\ding{51} = result available, \\ding{55} = missing.}",
         "    \\resizebox{\\linewidth}{!}{",
         f"    \\begin{{tabular}}{{{col_spec}}}",
         "    \\toprule",
@@ -144,6 +142,8 @@ def main():
         "    \\bottomrule",
         "    \\end{tabular}",
         "    }",
+        "    \\caption{Missing results for run.py models on DialogMTEB. "
+        "\\ding{51} = result available, \\ding{55} = missing.}",
         "    \\label{tab:dialogmteb_missing}",
         "\\end{table*}",
     ]

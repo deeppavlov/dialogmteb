@@ -438,7 +438,6 @@ def render_subtable(ttype: str, rows: list[dict]) -> str:
     lines = [
         "\\begin{table*}[t]",
         "    \\centering",
-        f"    \\caption{{DialogMTEB {caption}.}}",
         "    \\resizebox{\\linewidth}{!}{",
         f"    \\begin{{tabular}}{{{col_spec}}}",
         "    \\toprule",
@@ -458,6 +457,7 @@ def render_subtable(ttype: str, rows: list[dict]) -> str:
         "    \\bottomrule",
         "    \\end{tabular}",
         "    }",
+        f"    \\caption{{DialogMTEB {caption}.}}",
         f"    \\label{{tab:dialogmteb_stats_{label}}}",
         "\\end{table*}",
     ]

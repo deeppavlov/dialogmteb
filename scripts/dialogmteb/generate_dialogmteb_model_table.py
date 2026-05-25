@@ -127,9 +127,6 @@ def generate_latex_table(rows: list[dict], top_n: int | None) -> str:
     lines = [
         "\\begin{table*}[t]",
         "    \\centering",
-        f"    \\caption{{DialogMTEB model overview ({title_n} models). "
-        "N.Param = number of parameters, Dim = embedding dimension, "
-        "Ctx = max context length.}",
         "    \\resizebox{\\linewidth}{!}{",
         "    \\begin{tabular}{lrrr}",
         "    \\toprule",
@@ -147,6 +144,9 @@ def generate_latex_table(rows: list[dict], top_n: int | None) -> str:
         "    \\bottomrule",
         "    \\end{tabular}",
         "    }",
+        f"    \\caption{{DialogMTEB model overview ({title_n} models). "
+        "N.Param = number of parameters, Dim = embedding dimension, "
+        "Ctx = max context length.}",
         "    \\label{tab:dialogmteb_models}",
         "\\end{table*}",
     ]

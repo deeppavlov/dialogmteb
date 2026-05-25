@@ -210,8 +210,6 @@ def generate_corr_heatmap_latex(
     lines = [
         "\\begin{table*}[t]",
         "    \\centering",
-        "    \\caption{Pairwise Spearman correlation between DialogMTEB tasks "
-        "(computed over model rankings). Blue = positive, red = negative correlation.}",
         "    \\resizebox{\\linewidth}{!}{",
         f"    \\begin{{tabular}}{{{col_spec}}}",
         "    \\toprule",
@@ -235,6 +233,8 @@ def generate_corr_heatmap_latex(
         "    \\bottomrule",
         f"    \\end{{tabular}}",
         "    }",
+        "    \\caption{Pairwise Spearman correlation between DialogMTEB tasks "
+        "(computed over model rankings). Blue = positive, red = negative correlation.}",
         "    \\label{tab:dialogmteb_task_corr}",
         "\\end{table*}",
     ]
@@ -326,8 +326,6 @@ def generate_type_corr_latex(type_df: pd.DataFrame) -> str:
     lines = [
         "\\begin{table}[t]",
         "    \\centering",
-        "    \\caption{Spearman correlation between each task-type subset mean "
-        "and the full DialogMTEB mean across all evaluated models.}",
         "    \\begin{tabular}{lccc}",
         "    \\toprule",
         "    \\textbf{Task Type} & \\textbf{N Tasks} & \\textbf{N Models} & \\textbf{Spearman $r$} \\\\",
@@ -341,6 +339,8 @@ def generate_type_corr_latex(type_df: pd.DataFrame) -> str:
     lines += [
         "    \\bottomrule",
         "    \\end{tabular}",
+        "    \\caption{Spearman correlation between each task-type subset mean "
+        "and the full DialogMTEB mean across all evaluated models.}",
         "    \\label{tab:dialogmteb_type_corr}",
         "\\end{table}",
     ]

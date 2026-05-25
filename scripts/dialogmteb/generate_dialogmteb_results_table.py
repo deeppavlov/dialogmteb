@@ -173,16 +173,6 @@ def generate_latex_table(
     lines = [
         "\\begin{table*}[!th]",
         "    \\centering",
-        "    \\caption{",
-        f"    {'All' if top_n is None else f'Top {top_n}'} models on {benchmark_name or 'DialogMTEB'} ({total} tasks). Ranked by Borda count.",
-        "    \\textbf{Mean}: average across all tasks.",
-        "    \\textbf{W.Mean}: average of per-category means (equal category weight).",
-        "    Task types: "
-        + ", ".join(f"{TASK_TYPE_ABBREV.get(t, t)} = {t}" for t in present_types)
-        + ".",
-        "    Best score shown in \\textbf{bold}; best within each category shaded.",
-        "    }",
-        f"    \\label{{tab:dialogmteb-results-{label_suffix}}}",
         "    \\resizebox{\\textwidth}{!}{",
         "    \\setlength{\\tabcolsep}{4pt}",
         "    {\\footnotesize",
@@ -221,6 +211,16 @@ def generate_latex_table(
         "    \\end{tabular}",
         "    }",
         "    } % end resizebox",
+        "    \\caption{",
+        f"    {'All' if top_n is None else f'Top {top_n}'} models on {benchmark_name or 'DialogMTEB'} ({total} tasks). Ranked by Borda count.",
+        "    \\textbf{Mean}: average across all tasks.",
+        "    \\textbf{W.Mean}: average of per-category means (equal category weight).",
+        "    Task types: "
+        + ", ".join(f"{TASK_TYPE_ABBREV.get(t, t)} = {t}" for t in present_types)
+        + ".",
+        "    Best score shown in \\textbf{bold}; best within each category shaded.",
+        "    }",
+        f"    \\label{{tab:dialogmteb-results-{label_suffix}}}",
         "\\end{table*}",
     ]
 

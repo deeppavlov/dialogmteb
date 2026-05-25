@@ -170,25 +170,25 @@ def generate_table(benchmark_name: str, suffix: str) -> str:
         ]
     )
 
+    caption = (
+        f"\\caption{{Per-task results on {benchmark_name} ({len(model_order)} models, "
+        f"{n_tasks} tasks). Sorted by Borda count. "
+        f"\\textbf{{Bold}} = best per task. "
+        + "Task types: "
+        + ", ".join(
+            f"\\textcolor[HTML]{{{_TYPE_XCOLOR.get(t, '000000')}}}{{{_escape(TASK_TYPE_ABBREV.get(t, t))}}}"
+            f" = {_escape(t)}"
+            for t, _ in group_spans
+        )
+        + ".}}"
+    )
+
     lines = [
         "% Requires: \\usepackage{pdflscape,longtable,booktabs,xcolor}",
         "\\begin{landscape}",
         "{\\tiny",
         "\\setlength{\\tabcolsep}{2pt}",
         f"\\begin{{longtable}}{{{col_spec}}}",
-        (
-            f"\\caption{{Per-task results on {benchmark_name} ({len(model_order)} models, "
-            f"{n_tasks} tasks). Sorted by Borda count. "
-            f"\\textbf{{Bold}} = best per task. "
-            + "Task types: "
-            + ", ".join(
-                f"\\textcolor[HTML]{{{_TYPE_XCOLOR.get(t, '000000')}}}{{{_escape(TASK_TYPE_ABBREV.get(t, t))}}}"
-                f" = {_escape(t)}"
-                for t, _ in group_spans
-            )
-            + ".}}\\\\"
-        ),
-        f"\\label{{tab:pertask-results-{suffix}}}\\\\[2pt]",
         header_block,
         "\\endfirsthead",
         f"\\multicolumn{{{n_cols}}}{{c}}{{\\tablename\\ \\thetable{{}} --- continued from previous page}}\\\\[2pt]",
@@ -225,6 +225,8 @@ def generate_table(benchmark_name: str, suffix: str) -> str:
         lines.append(f"{display} & {rank} & {score_str} & {mean_str} \\\\")
 
     lines += [
+        caption + "\\\\",
+        f"\\label{{tab:pertask-results-{suffix}}}",
         "\\end{longtable}",
         "}",  # end \tiny
         "\\end{landscape}",

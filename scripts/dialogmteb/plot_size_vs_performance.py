@@ -81,8 +81,8 @@ def plot_panel(ax: plt.Axes, df: pd.DataFrame, title: str) -> None:
         zorder=0,
     )
 
-    # Annotate top-5 by mean
-    for _, row in df.nlargest(5, "mean").iterrows():
+    # Annotate all Pareto frontier points
+    for _, row in pareto.iterrows():
         label = row["model"].split("/")[-1]
         if len(label) > 20:
             label = label[:18] + ".."

@@ -119,7 +119,6 @@ def generate_overview_table(rows: list[dict]) -> str:
     lines = [
         "\\begin{table*}[t]",
         "    \\centering",
-        f"    \\caption{{DialogMTEB Task Overview. Tasks are grouped by type and show dataset size, language coverage, and main evaluation metric.}}",
         "    \\resizebox{\\linewidth}{!}{",
         "    \\begin{tabular}{llccc}",
         "    \\toprule",
@@ -152,6 +151,7 @@ def generate_overview_table(rows: list[dict]) -> str:
         "    \\bottomrule",
         "    \\end{tabular}",
         "    }",
+        "    \\caption{DialogMTEB Task Overview. Tasks are grouped by type and show dataset size, language coverage, and main evaluation metric.}",
         "    \\label{tab:dialogmteb_overview}",
         "\\end{table*}",
     ]

@@ -91,9 +91,6 @@ def main():
     lines = [
         "\\begin{table*}[t]",
         "    \\centering",
-        f"    \\caption{{Language-stratified DialogMTEB results (top {TOP_N} models by Borda count). "
-        "Scores are means (\\%) within each language group. "
-        "\\textbf{Bold} = best in column.}",
         "    \\resizebox{\\linewidth}{!}{",
         "    \\begin{tabular}{lccccc}",
         "    \\toprule",
@@ -127,6 +124,9 @@ def main():
         "    \\bottomrule",
         "    \\end{tabular}",
         "    }",
+        f"    \\caption{{Language-stratified DialogMTEB results (top {TOP_N} models by Borda count). "
+        "Scores are means (\\%) within each language group. "
+        "\\textbf{Bold} = best in column.}",
         "    \\label{tab:dialogmteb_lang_results}",
         "\\end{table*}",
     ]
