@@ -2,10 +2,10 @@ from mteb.abstasks.retrieval import AbsTaskRetrieval
 from mteb.abstasks.task_metadata import TaskMetadata
 
 
-class WiardOfWikipedia(AbsTaskRetrieval):
+class WizardOfWikipedia(AbsTaskRetrieval):
     metadata = TaskMetadata(
-        name="WiardOfWikipedia",
-        description="WiardOfWikipedia",
+        name="WizardOfWikipedia",
+        description="WizardOfWikipedia",
         reference=None,
         dataset={
             "path": "DeepPavlov/wizard_of_wikipedia",

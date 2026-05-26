@@ -25,25 +25,6 @@ class ATEC(AbsTaskSTS):
         dialect=[],
         sample_creation="found",
         bibtex_citation=r"""
-@inproceedings{raghu-etal-2021-end,
-  address = {Online and Punta Cana, Dominican Republic},
-  author = {Raghu, Dinesh  and
-Agarwal, Shantanu  and
-Joshi, Sachindra  and
-{Mausam}},
-  booktitle = {Proceedings of the 2021 Conference on Empirical Methods in Natural Language Processing},
-  doi = {10.18653/v1/2021.emnlp-main.357},
-  editor = {Moens, Marie-Francine  and
-Huang, Xuanjing  and
-Specia, Lucia  and
-Yih, Scott Wen-tau},
-  month = nov,
-  pages = {4348--4366},
-  publisher = {Association for Computational Linguistics},
-  title = {End-to-End Learning of Flowchart Grounded Task-Oriented Dialogs},
-  url = {https://aclanthology.org/2021.emnlp-main.357},
-  year = {2021},
-}
 """,
     )
 
