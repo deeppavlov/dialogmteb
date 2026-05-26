@@ -142,6 +142,10 @@ RUN_MODELS: list[str] = [
     "minishlab/potion-base-32M",
     "minishlab/potion-retrieval-32M",
     "minishlab/potion-multilingual-128M",
+    "aws-ai/dse-bert-base",
+    "aws-ai/dse-bert-large",
+    "aws-ai/dse-roberta-base",
+    "aws-ai/dse-roberta-large",
 ]
 
 
