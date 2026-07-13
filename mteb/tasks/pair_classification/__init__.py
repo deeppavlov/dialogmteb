@@ -4,6 +4,7 @@ from .dan import *
 from .deu import *
 from .eng import *
 from .fas import *
+from .fra import *
 from .hye import *
 from .ind import *
 from .ita import *
