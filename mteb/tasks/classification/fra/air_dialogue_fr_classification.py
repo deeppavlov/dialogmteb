@@ -28,27 +28,7 @@ class FrAirDialogueClassification(AbsTaskClassification):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="machine-translated and verified",
-        bibtex_citation=r"""
-@inproceedings{wei-etal-2018-airdialogue,
-  address = {Brussels, Belgium},
-  author = {Wei, Wei  and
-Le, Quoc  and
-Dai, Andrew  and
-Li, Jia},
-  booktitle = {Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing},
-  doi = {10.18653/v1/D18-1419},
-  editor = {Riloff, Ellen  and
-Chiang, David  and
-Hockenmaier, Julia  and
-Tsujii, Jun{'}ichi},
-  month = oct # {-} # nov,
-  pages = {3844--3854},
-  publisher = {Association for Computational Linguistics},
-  title = {{A}ir{D}ialogue: An Environment for Goal-Oriented Dialogue Research},
-  url = {https://aclanthology.org/D18-1419},
-  year = {2018},
-}
-""",
+        bibtex_citation="",
         adapted_from=["AirDialogueClassification"],
     )
 

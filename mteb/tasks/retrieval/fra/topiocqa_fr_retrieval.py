@@ -36,16 +36,7 @@ class FrTopiOCQARetrieval(AbsTaskRetrieval):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="machine-translated and verified",
-        bibtex_citation=r"""
-@misc{adlakha2022topiocqa,
-  archiveprefix = {arXiv},
-  author = {Vaibhav Adlakha and Shehzaad Dhuliawala and Kaheer Suleman and Harm de Vries and Siva Reddy},
-  eprint = {2110.00768},
-  primaryclass = {cs.CL},
-  title = {TopiOCQA: Open-domain Conversational Question Answering with Topic Switching},
-  year = {2022},
-}
-""",
+        bibtex_citation="",
         adapted_from=["TopiOCQA"],
     )
 

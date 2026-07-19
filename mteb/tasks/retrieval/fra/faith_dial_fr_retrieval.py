@@ -32,19 +32,7 @@ class FrFaithDialRetrieval(AbsTaskRetrieval):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="machine-translated and verified",
-        bibtex_citation="""
-@article{dziri2022faithdial,
-  author = {Dziri, Nouha and Kamalloo, Ehsan and Milton, Sivan and Zaiane, Osmar and Yu, Mo and Ponti, Edoardo M and Reddy, Siva},
-  doi = {10.1162/tacl_a_00529},
-  journal = {Transactions of the Association for Computational Linguistics},
-  month = {12},
-  pages = {1473--1490},
-  publisher = {MIT Press},
-  title = {{FaithDial: A Faithful Benchmark for Information-Seeking Dialogue}},
-  volume = {10},
-  year = {2022},
-}
-""",
+        bibtex_citation="",
         adapted_from=["FaithDial"],
     )
 

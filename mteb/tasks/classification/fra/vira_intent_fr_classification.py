@@ -26,17 +26,6 @@ class FrViraIntentClassification(AbsTaskClassification):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="machine-translated and verified",
-        bibtex_citation=r"""
-@article{weeks2022chatbot,
-  author = {Weeks, Rose and Cooper, Lyra and Sangha, Pooja and Sedoc, João and White, Sydney and Toledo, Assaf and Gretz, Shai and Lahav, Dan and Martin, Nina and Michel, Alexandra and others},
-  journal = {Journal of medical Internet research},
-  number = {7},
-  pages = {e38418},
-  publisher = {JMIR Publications Toronto, Canada},
-  title = {Chatbot-delivered COVID-19 vaccine communication message preferences of young adults and public health workers in urban American communities: qualitative study},
-  volume = {24},
-  year = {2022},
-}
-""",
+        bibtex_citation="",
         adapted_from=["ViraIntentClassification"],
     )

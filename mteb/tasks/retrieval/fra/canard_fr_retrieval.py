@@ -6,7 +6,7 @@ class FrCanard(AbsTaskRetrieval):
     metadata = TaskMetadata(
         name="FrCanard",
         description="canard",
-        reference=None,
+        reference="https://huggingface.co/datasets/DeepPavlov/canard_fr",
         dataset={
             "path": "DeepPavlov/canard_fr",
             "revision": "e1ea7582a3e62c18262a28935a6a579f45a303e1",
@@ -17,32 +17,13 @@ class FrCanard(AbsTaskRetrieval):
         eval_splits=["test"],
         eval_langs=["fra-Latn"],
         main_score="ndcg_at_10",
-        date=None,
+        date=("2019-01-01", "2019-12-31"),
         domains=[],
         task_subtypes=[],
-        license=None,
+        license="not specified",
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated and verified",
-        bibtex_citation=r"""
-@inproceedings{elgohary-etal-2019-unpack,
-  address = {Hong Kong, China},
-  author = {Elgohary, Ahmed  and
-Peskov, Denis  and
-Boyd-Graber, Jordan},
-  booktitle = {Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)},
-  doi = {10.18653/v1/D19-1605},
-  editor = {Inui, Kentaro  and
-Jiang, Jing  and
-Ng, Vincent  and
-Wan, Xiaojun},
-  month = nov,
-  pages = {5918--5924},
-  publisher = {Association for Computational Linguistics},
-  title = {Can You Unpack That? Learning to Rewrite Questions-in-Context},
-  url = {https://aclanthology.org/D19-1605/},
-  year = {2019},
-}
-""",
+        bibtex_citation="",
         adapted_from=["Canard"],
     )

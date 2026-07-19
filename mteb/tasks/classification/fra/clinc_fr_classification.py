@@ -28,24 +28,6 @@ class FrClincIntentClassification(AbsTaskClassification):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="machine-translated and verified",
-        bibtex_citation=r"""
-@inproceedings{larson-etal-2019-evaluation,
-  author = {Larson, Stefan  and
-Mahendran, Anish  and
-Peper, Joseph J.  and
-Clarke, Christopher  and
-Lee, Andrew  and
-Hill, Parker  and
-Kummerfeld, Jonathan K.  and
-Leach, Kevin  and
-Laurenzano, Michael A.  and
-Tang, Lingjia  and
-Mars, Jason},
-  booktitle = {Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)},
-  title = {An Evaluation Dataset for Intent Classification and Out-of-Scope Prediction},
-  url = {https://www.aclweb.org/anthology/D19-1131},
-  year = {2019},
-}
-""",
+        bibtex_citation="",
         adapted_from=["ClincIntentClassification"],
     )

@@ -33,17 +33,7 @@ class FrDailyDialogClassificationAct(AbsTaskClassification):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="machine-translated and verified",
-        bibtex_citation=r"""
-@misc{li2017dailydialogmanuallylabelledmultiturn,
-  archiveprefix = {arXiv},
-  author = {Yanran Li and Hui Su and Xiaoyu Shen and Wenjie Li and Ziqiang Cao and Shuzi Niu},
-  eprint = {1710.03957},
-  primaryclass = {cs.CL},
-  title = {DailyDialog: A Manually Labelled Multi-turn Dialogue Dataset},
-  url = {https://arxiv.org/abs/1710.03957},
-  year = {2017},
-}
-""",
+        bibtex_citation="",
         adapted_from=["DailyDialogClassificationAct"],
     )
 
@@ -76,17 +66,7 @@ class FrDailyDialogClassificationEmotion(AbsTaskClassification):
         annotations_creators="human-annotated",
         dialect=[],
         sample_creation="machine-translated and verified",
-        bibtex_citation=r"""
-@misc{li2017dailydialogmanuallylabelledmultiturn,
-  archiveprefix = {arXiv},
-  author = {Yanran Li and Hui Su and Xiaoyu Shen and Wenjie Li and Ziqiang Cao and Shuzi Niu},
-  eprint = {1710.03957},
-  primaryclass = {cs.CL},
-  title = {DailyDialog: A Manually Labelled Multi-turn Dialogue Dataset},
-  url = {https://arxiv.org/abs/1710.03957},
-  year = {2017},
-}
-""",
+        bibtex_citation="",
         adapted_from=["DailyDialogClassificationEmotion"],
     )
 

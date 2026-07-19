@@ -10,7 +10,7 @@ class FrClarQA(AbsTaskPairClassification):
     metadata = TaskMetadata(
         name="FrClarQA",
         description="ClarQA.",
-        reference=None,
+        reference="https://huggingface.co/datasets/DeepPavlov/clarqa_fr",
         dataset={
             "path": "DeepPavlov/clarqa_fr",
             "revision": "fe5d77ba4762df41c8004619c9af7a7a5d2926ad",
@@ -24,37 +24,13 @@ class FrClarQA(AbsTaskPairClassification):
             "multi_turn": ["fra-Latn"],
         },
         main_score="max_ap",
-        date=None,
+        date=("2019-01-01", "2019-12-31"),
         domains=[],
         task_subtypes=[],
-        license=None,
+        license="not specified",
         annotations_creators="derived",
         dialect=[],
         sample_creation="machine-translated and verified",
-        bibtex_citation=r"""
-@inproceedings{xu-etal-2019-asking,
-  address = {Hong Kong, China},
-  author = {Xu, Jingjing  and
-Wang, Yuechen  and
-Tang, Duyu  and
-Duan, Nan  and
-Yang, Pengcheng  and
-Zeng, Qi  and
-Zhou, Ming  and
-Sun, Xu},
-  booktitle = {Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)},
-  doi = {10.18653/v1/D19-1172},
-  editor = {Inui, Kentaro  and
-Jiang, Jing  and
-Ng, Vincent  and
-Wan, Xiaojun},
-  month = nov,
-  pages = {1618--1629},
-  publisher = {Association for Computational Linguistics},
-  title = {Asking Clarification Questions in Knowledge-Based Question Answering},
-  url = {https://aclanthology.org/D19-1172/},
-  year = {2019},
-}
-""",
+        bibtex_citation="",
         adapted_from=["ClarQA"],
     )
