@@ -1,3 +1,5 @@
+from typing import Any
+
 from mteb.abstasks.retrieval import AbsTaskRetrieval
 from mteb.abstasks.task_metadata import TaskMetadata
 
@@ -27,3 +29,15 @@ class EsIKAT2023(AbsTaskRetrieval):
         bibtex_citation="",
         adapted_from=["iKAT2023"],
     )
+
+    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
+        def fix_null_text(row: dict[str, Any]) -> dict[str, Any]:
+            if row["text"] is None:
+                row["text"] = row["utterance"]
+            return row
+
+        for subset in self.dataset:
+            for split in self.dataset[subset]:
+                self.dataset[subset][split]["queries"] = self.dataset[subset][split][
+                    "queries"
+                ].map(fix_null_text)

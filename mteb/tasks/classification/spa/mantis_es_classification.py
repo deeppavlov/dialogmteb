@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import json
+import ast
 from typing import Any
 
 from mteb.abstasks.classification import AbsTaskClassification
@@ -35,7 +35,7 @@ class EsMantisClassification(AbsTaskClassification):
 
     def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
-            history = json.loads(row["dialog"])
+            history = ast.literal_eval(row["dialog"])
             text = ""
             if len(history) > 0:
                 for entry in history:

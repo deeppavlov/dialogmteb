@@ -2,6 +2,10 @@ from typing import Any
 
 from mteb.abstasks import AbsTaskReranking
 from mteb.abstasks.task_metadata import TaskMetadata
+from mteb.abstasks.text.reranking import OLD_FORMAT_RERANKING_TASKS
+
+if "EsWebLINXCandidatesReranking" not in OLD_FORMAT_RERANKING_TASKS:
+    OLD_FORMAT_RERANKING_TASKS.append("EsWebLINXCandidatesReranking")
 
 
 class EsWebLINXCandidatesReranking(AbsTaskReranking):

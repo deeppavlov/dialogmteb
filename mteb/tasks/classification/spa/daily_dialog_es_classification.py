@@ -6,11 +6,6 @@ from mteb.abstasks.classification import AbsTaskClassification
 from mteb.abstasks.task_metadata import TaskMetadata
 
 
-def combine_dialogs(row: dict) -> dict:
-    row["dialog_es"] = "\n".join(row["dialog_es"])
-    return row
-
-
 class EsDailyDialogClassificationAct(AbsTaskClassification):
     metadata = TaskMetadata(
         name="EsDailyDialogClassificationAct",
@@ -38,7 +33,6 @@ class EsDailyDialogClassificationAct(AbsTaskClassification):
     )
 
     def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
-        self.dataset = self.dataset.map(combine_dialogs)
         self.dataset = self.dataset.rename_columns(
             {"act_label": "label", "dialog_es": "text"}
         )
@@ -71,7 +65,6 @@ class EsDailyDialogClassificationEmotion(AbsTaskClassification):
     )
 
     def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
-        self.dataset = self.dataset.map(combine_dialogs)
         self.dataset = self.dataset.rename_columns(
             {"emotion_label": "label", "dialog_es": "text"}
         )

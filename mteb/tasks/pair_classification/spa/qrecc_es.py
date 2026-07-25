@@ -1,3 +1,4 @@
+import ast
 from typing import Any
 
 from mteb.abstasks.pair_classification import AbsTaskPairClassification
@@ -32,8 +33,13 @@ class EsQRECC(AbsTaskPairClassification):
 
     def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def transform(example: dict) -> dict:
+            context = (
+                ast.literal_eval(example["context"])
+                if isinstance(example["context"], str)
+                else example["context"]
+            )
             context_str = ""
-            for replic in example["context"]:
+            for replic in context:
                 if replic["role"] == "user":
                     context_str += "User: " + replic["content"] + " "
                 else:

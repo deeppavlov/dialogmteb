@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datasets import Value
+
 from mteb.abstasks.classification import AbsTaskClassification
 from mteb.abstasks.task_metadata import TaskMetadata
 
@@ -31,3 +33,9 @@ class EsClincIntentClassification(AbsTaskClassification):
         bibtex_citation="",
         adapted_from=["ClincIntentClassification"],
     )
+
+    def dataset_transform(self, num_proc: int | None = None, **kwargs) -> None:
+        for subset in self.dataset:
+            self.dataset[subset] = self.dataset[subset].cast_column(
+                "label", Value("int64")
+            )

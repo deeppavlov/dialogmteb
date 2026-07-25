@@ -1,3 +1,4 @@
+import json
 from typing import Any
 
 from mteb.abstasks import AbsTaskClassification
@@ -32,7 +33,7 @@ class EsXRisaWoz(AbsTaskClassification):
 
     def dataset_transform(self, num_proc: int | None = None, **kwargs: Any) -> None:
         def process_history(row: dict[str, Any]) -> dict[str, Any]:
-            history = row["history"]
+            history = json.loads(row["history"]) if row["history"] else []
             text = ""
             if len(history) > 0:
                 for entry in history:
