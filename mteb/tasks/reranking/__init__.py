@@ -5,6 +5,7 @@ from .fra import *
 from .jpn import *
 from .multilingual import *
 from .rus import *
+from .spa import *
 from .vie import *
 from .zho import *
 from .zxx import *
