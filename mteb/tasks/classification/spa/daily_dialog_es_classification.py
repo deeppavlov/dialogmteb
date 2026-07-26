@@ -33,6 +33,9 @@ class EsDailyDialogClassificationAct(AbsTaskClassification):
     )
 
     def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
+        self.dataset = self.dataset.filter(
+            lambda row: row["dialog_es"] is not None, num_proc=num_proc
+        )
         self.dataset = self.dataset.rename_columns(
             {"act_label": "label", "dialog_es": "text"}
         )
@@ -65,6 +68,9 @@ class EsDailyDialogClassificationEmotion(AbsTaskClassification):
     )
 
     def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
+        self.dataset = self.dataset.filter(
+            lambda row: row["dialog_es"] is not None, num_proc=num_proc
+        )
         self.dataset = self.dataset.rename_columns(
             {"emotion_label": "label", "dialog_es": "text"}
         )

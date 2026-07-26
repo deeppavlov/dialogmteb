@@ -42,6 +42,10 @@ class EsWebLINXCandidatesReranking(AbsTaskReranking):
     )
 
     def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
+        for split in self.dataset:
+            ds = self.dataset[split]
+            self.dataset[split] = ds.select(range(min(len(ds), 300)))
+
         self.dataset = self.dataset.rename_columns(
             {"query": "query_en", "query_es": "query"}
         )

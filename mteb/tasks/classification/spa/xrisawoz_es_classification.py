@@ -44,7 +44,12 @@ class EsXRisaWoz(AbsTaskClassification):
             text += f"User: {row['text']}"
             row["text"] = text
             row["history"] = None
-            row["label"] = row["domains"][0]
+            domains = (
+                json.loads(row["domains"])
+                if isinstance(row["domains"], str)
+                else row["domains"]
+            )
+            row["label"] = domains[0]
             return row
 
         for subset in self.dataset:
