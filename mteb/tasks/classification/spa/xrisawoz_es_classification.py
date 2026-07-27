@@ -1,3 +1,4 @@
+import ast
 import json
 from typing import Any
 
@@ -45,7 +46,7 @@ class EsXRisaWoz(AbsTaskClassification):
             row["text"] = text
             row["history"] = None
             domains = (
-                json.loads(row["domains"])
+                ast.literal_eval(row["domains"])
                 if isinstance(row["domains"], str)
                 else row["domains"]
             )
