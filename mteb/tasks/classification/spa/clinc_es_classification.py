@@ -36,6 +36,9 @@ class EsClincIntentClassification(AbsTaskClassification):
 
     def dataset_transform(self, num_proc: int | None = None, **kwargs) -> None:
         for subset in self.dataset:
-            self.dataset[subset] = self.dataset[subset].cast_column(
-                "label", Value("int64")
+            ds = self.dataset[subset].filter(
+                lambda row: row["label"] is not None
+                and row["utterance_es"] is not None,
+                num_proc=num_proc,
             )
+            self.dataset[subset] = ds.cast_column("label", Value("int64"))
