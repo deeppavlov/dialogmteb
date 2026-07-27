@@ -1,4 +1,4 @@
-from typing import Any
+import datasets
 
 from mteb.abstasks import AbsTaskReranking
 from mteb.abstasks.task_metadata import TaskMetadata
@@ -41,11 +41,17 @@ class EsWebLINXCandidatesReranking(AbsTaskReranking):
         adapted_from=["WebLINXCandidatesReranking"],
     )
 
-    def dataset_transform(self, num_proc: int | None = None, **kwargs: Any):
-        for split in self.dataset:
-            ds = self.dataset[split]
-            self.dataset[split] = ds.select(range(min(len(ds), 300)))
+    def load_data(self, num_proc: int | None = None, **kwargs) -> None:
+        if self.data_loaded:
+            return
 
-        self.dataset = self.dataset.rename_columns(
-            {"query": "query_en", "query_es": "query"}
-        )
+        raw = datasets.load_dataset(**self.metadata.dataset)
+        prepared = datasets.DatasetDict()
+        for split, raw_ds in raw.items():
+            capped = raw_ds.select(range(min(len(raw_ds), 300)))
+            prepared[split] = capped.rename_columns(
+                {"query": "query_en", "query_es": "query"}
+            )
+
+        self.transform_old_dataset_format(given_dataset=prepared)
+        self.data_loaded = True
