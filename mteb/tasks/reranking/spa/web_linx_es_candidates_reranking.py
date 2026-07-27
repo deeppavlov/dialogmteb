@@ -46,14 +46,15 @@ class EsWebLINXCandidatesReranking(AbsTaskReranking):
             return
 
         def cap_candidates(row: dict) -> dict:
-            row["positive"] = row["positive"][:5]
-            row["negative"] = row["negative"][:5]
+            row["positive"] = [d for d in row["positive"] if d is not None][:5]
+            row["negative"] = [d for d in row["negative"] if d is not None][:5]
             return row
 
         raw = datasets.load_dataset(**self.metadata.dataset)
         prepared = datasets.DatasetDict()
         for split, raw_ds in raw.items():
-            capped = raw_ds.select(range(min(len(raw_ds), 100))).map(cap_candidates)
+            filtered = raw_ds.filter(lambda row: row["query_es"] is not None)
+            capped = filtered.select(range(min(len(filtered), 100))).map(cap_candidates)
             prepared[split] = capped.rename_columns(
                 {"query": "query_en", "query_es": "query"}
             )
