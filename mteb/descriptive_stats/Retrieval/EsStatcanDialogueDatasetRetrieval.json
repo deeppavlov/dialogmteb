@@ -1,0 +1,66 @@
+{
+    "dev": {
+        "num_samples": 6450,
+        "number_of_characters": 12392836,
+        "documents_text_statistics": {
+            "total_text_length": 12042252,
+            "min_text_length": 324,
+            "average_text_length": 2038.64093448451,
+            "max_text_length": 132884,
+            "unique_texts": 5907
+        },
+        "documents_image_statistics": null,
+        "documents_audio_statistics": null,
+        "documents_video_statistics": null,
+        "queries_text_statistics": {
+            "total_text_length": 350584,
+            "min_text_length": 49,
+            "average_text_length": 645.6427255985267,
+            "max_text_length": 4429,
+            "unique_texts": 520
+        },
+        "queries_image_statistics": null,
+        "queries_audio_statistics": null,
+        "queries_video_statistics": null,
+        "relevant_docs_statistics": {
+            "num_relevant_docs": 543,
+            "min_relevant_docs_per_query": 1,
+            "average_relevant_docs_per_query": 1.0,
+            "max_relevant_docs_per_query": 1,
+            "unique_relevant_docs": 277
+        },
+        "top_ranked_statistics": null
+    },
+    "test": {
+        "num_samples": 6460,
+        "number_of_characters": 12446236,
+        "documents_text_statistics": {
+            "total_text_length": 12042252,
+            "min_text_length": 324,
+            "average_text_length": 2038.64093448451,
+            "max_text_length": 132884,
+            "unique_texts": 5907
+        },
+        "documents_image_statistics": null,
+        "documents_audio_statistics": null,
+        "documents_video_statistics": null,
+        "queries_text_statistics": {
+            "total_text_length": 403984,
+            "min_text_length": 17,
+            "average_text_length": 730.5316455696203,
+            "max_text_length": 5188,
+            "unique_texts": 541
+        },
+        "queries_image_statistics": null,
+        "queries_audio_statistics": null,
+        "queries_video_statistics": null,
+        "relevant_docs_statistics": {
+            "num_relevant_docs": 553,
+            "min_relevant_docs_per_query": 1,
+            "average_relevant_docs_per_query": 1.0,
+            "max_relevant_docs_per_query": 1,
+            "unique_relevant_docs": 291
+        },
+        "top_ranked_statistics": null
+    }
+}

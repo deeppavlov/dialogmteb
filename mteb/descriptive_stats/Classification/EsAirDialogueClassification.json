@@ -1,0 +1,76 @@
+{
+    "test": {
+        "num_samples": 40215,
+        "samples_in_train": 1,
+        "text_statistics": {
+            "total_text_length": 27941120,
+            "min_text_length": 223,
+            "average_text_length": 694.7934850180282,
+            "max_text_length": 2590,
+            "unique_texts": 40215
+        },
+        "image_statistics": null,
+        "audio_statistics": null,
+        "video_statistics": null,
+        "label_statistics": {
+            "min_labels_per_text": 1,
+            "average_label_per_text": 1.0,
+            "max_labels_per_text": 1,
+            "unique_labels": 5,
+            "labels": {
+                "book": {
+                    "count": 20916
+                },
+                "no_reservation": {
+                    "count": 9150
+                },
+                "no_flight": {
+                    "count": 9263
+                },
+                "change": {
+                    "count": 282
+                },
+                "cancel": {
+                    "count": 604
+                }
+            }
+        }
+    },
+    "train": {
+        "num_samples": 321459,
+        "samples_in_train": null,
+        "text_statistics": {
+            "total_text_length": 218070300,
+            "min_text_length": 167,
+            "average_text_length": 678.3767136711058,
+            "max_text_length": 2769,
+            "unique_texts": 321449
+        },
+        "image_statistics": null,
+        "audio_statistics": null,
+        "video_statistics": null,
+        "label_statistics": {
+            "min_labels_per_text": 1,
+            "average_label_per_text": 1.0,
+            "max_labels_per_text": 1,
+            "unique_labels": 5,
+            "labels": {
+                "no_reservation": {
+                    "count": 73204
+                },
+                "book": {
+                    "count": 168068
+                },
+                "no_flight": {
+                    "count": 73165
+                },
+                "cancel": {
+                    "count": 4621
+                },
+                "change": {
+                    "count": 2401
+                }
+            }
+        }
+    }
+}
