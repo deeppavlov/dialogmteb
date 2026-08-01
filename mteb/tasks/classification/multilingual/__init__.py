@@ -19,6 +19,27 @@ from .m_in_ds14 import MInDS14Classification
 from .masakha_news_classification import MasakhaNEWSClassification
 from .massive_intent_classification import MassiveIntentClassification
 from .massive_scenario_classification import MassiveScenarioClassification
+from .matis_intent_classification import (
+    MultilingualAbgCosQA,
+    MultilingualAirDialogueClassification,
+    MultilingualAtisIntentClassification,
+    MultilingualBanking77Classification,
+    MultilingualCanard,
+    MultilingualClincIntentClassification,
+    MultilingualDailyDialogClassificationAct,
+    MultilingualDailyDialogClassificationEmotion,
+    MultilingualFaithDialRetrieval,
+    MultilingualHWUIntentClassification,
+    MultilingualIKAT2023,
+    MultilingualMantis,
+    MultilingualMultiWoz21,
+    MultilingualQRECC,
+    MultilingualStatcanDialogueDatasetRetrieval,
+    MultilingualViraIntentClassification,
+    MultilingualWiardOfWikipedia,
+    MultilingualXRisaWoz,
+MultilingualTopiOCQAHardNegatives, DialogSum,  MultilingualDialogSum,
+)
 from .mtop_domain_classification import MTOPDomainClassification
 from .mtop_intent_classification import MTOPIntentClassification
 from .multi_hate_classification import MultiHateClassification
@@ -48,6 +69,9 @@ from .vox_populi_language_id import VoxPopuliLanguageID
 from .xrisawoz import XRisaWoz
 
 __all__ = [
+    "DialogSum",
+    "MultilingualDialogSum",
+    "MultilingualTopiOCQAHardNegatives",
     "AfriHateClassification",
     "AfriSentiClassification",
     "AfriSentiLangClassification",
@@ -70,7 +94,25 @@ __all__ = [
     "MassiveIntentClassification",
     "MassiveScenarioClassification",
     "MultiHateClassification",
+    "MultilingualAbgCosQA",
+    "MultilingualAirDialogueClassification",
+    "MultilingualAtisIntentClassification",
+    "MultilingualBanking77Classification",
+    "MultilingualCanard",
+    "MultilingualClincIntentClassification",
+    "MultilingualDailyDialogClassificationAct",
+    "MultilingualDailyDialogClassificationEmotion",
+    "MultilingualFaithDialRetrieval",
+    "MultilingualHWUIntentClassification",
+    "MultilingualIKAT2023",
+    "MultilingualMantis",
+    "MultilingualMultiWoz21",
+    "MultilingualQRECC",
     "MultilingualSentimentClassification",
+    "MultilingualStatcanDialogueDatasetRetrieval",
+    "MultilingualViraIntentClassification",
+    "MultilingualWiardOfWikipedia",
+    "MultilingualXRisaWoz",
     "NaijaSenti",
     "NordicLangClassification",
     "NusaParagraphEmotionClassification",
