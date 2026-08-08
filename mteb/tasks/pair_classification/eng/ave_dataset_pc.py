@@ -1,7 +1,12 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING, ClassVar
+
 from mteb.abstasks import AbsTaskPairClassification
 from mteb.abstasks.task_metadata import TaskMetadata
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 BIBTEX = r"""
 @inproceedings{tian2018audio,
@@ -36,7 +41,7 @@ class AVEDatasetVPairClassification(AbsTaskPairClassification):
         eval_langs=["eng-Latn"],
         main_score="max_ap",
         date=("2018-01-01", "2018-09-01"),
-        domains=["Web", "AudioScene"],
+        domains=["AudioScene", "Web"],
         task_subtypes=["Environment Sound Classification"],
         license="not specified",
         annotations_creators="human-annotated",
@@ -67,7 +72,7 @@ class AVEDatasetVAPairClassification(AbsTaskPairClassification):
         eval_langs=["eng-Latn"],
         main_score="max_ap",
         date=("2018-01-01", "2018-09-01"),
-        domains=["Web", "AudioScene"],
+        domains=["AudioScene", "Web"],
         task_subtypes=["Environment Sound Classification"],
         license="not specified",
         annotations_creators="human-annotated",
@@ -78,6 +83,12 @@ class AVEDatasetVAPairClassification(AbsTaskPairClassification):
         is_beta=True,
     )
 
-    input1_column_name = (("video1", "video"), ("audio1", "audio"))
-    input2_column_name = (("video2", "video"), ("audio2", "audio"))
+    input1_column_name: ClassVar[Mapping[str, str]] = {
+        "video1": "video",
+        "audio1": "audio",
+    }
+    input2_column_name: ClassVar[Mapping[str, str]] = {
+        "video2": "video",
+        "audio2": "audio",
+    }
     label_column_name: str = "label"

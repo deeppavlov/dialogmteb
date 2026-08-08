@@ -64,12 +64,19 @@ class EBindWrapper(AbsEncoder):
 
     def _process_audio_batch(self, audio_items: list) -> torch.Tensor:
         """Process a batch of audio items via temp WAV files (IBAudioProcessor requires paths)."""
+        import numpy as np
         import soundfile as sf
 
         audio_tensors = []
         for item in audio_items:
+            array = np.asarray(item["array"])
+            sr = item["sampling_rate"]
+            # pad clips shorter than the mel-spectrogram window
+            min_samples = max(int(sr * 0.5), 1)
+            if array.shape[0] < min_samples:
+                array = np.pad(array, (0, min_samples - array.shape[0]))
             with tempfile.NamedTemporaryFile(suffix=".wav", delete=True) as tmp:
-                sf.write(tmp.name, item["array"], item["sampling_rate"])
+                sf.write(tmp.name, array, sr)
                 audio_tensors.append(self.processor.processors["audio"](tmp.name))
         return torch.stack(audio_tensors).to(self.device)
 
@@ -192,10 +199,49 @@ _EBIND_COMMON = dict(
     framework=["PyTorch", "safetensors"],
     similarity_fn_name=ScoringFunction.COSINE,
     use_instructions=False,
-    training_datasets=set(),
     citation=_EBIND_CITATION,
     extra_requirements_groups=["ebind"],
 )
+
+_EBIND_AV_TRAINING = {
+    "VALOR32KA2VRetrieval",
+    "VALOR32KAT2VRetrieval",
+    "VALOR32KT2VARetrieval",
+    "VALOR32KT2VRetrieval",
+    "VALOR32KV2ARetrieval",
+    "VALOR32KV2TRetrieval",
+    "VALOR32KVA2TRetrieval",
+    "VALOR32KVT2ARetrieval",
+    "VGGSoundV",
+    "VGGSoundVA",
+    "VGGSoundVideoZeroshot",
+    "VGGSoundVideoAudioZeroshot",
+    "VGGSoundAVA2VRetrieval",
+    "VGGSoundAVAT2VRetrieval",
+    "VGGSoundAVT2VRetrieval",
+    "VGGSoundAVT2VARetrieval",
+    "VGGSoundAVV2ARetrieval",
+    "VGGSoundAVV2TRetrieval",
+    "VGGSoundAVVA2TRetrieval",
+    "VGGSoundAVVT2ARetrieval",
+    "AudioCapsA2TRetrieval",
+    "AudioCapsT2ARetrieval",
+    "AudioCapsAVA2VRetrieval",
+    "AudioCapsAVAT2VRetrieval",
+    "AudioCapsAVT2VRetrieval",
+    "AudioCapsAVT2VARetrieval",
+    "AudioCapsAVV2ARetrieval",
+    "AudioCapsAVV2TRetrieval",
+    "AudioCapsAVVA2TRetrieval",
+    "AudioCapsAVVT2ARetrieval",
+    "Imagenet1k",
+    "Imagenet1kZeroShot",
+}
+
+_EBIND_POINTS_TRAINING = {
+    "Imagenet1k",
+    "Imagenet1kZeroShot",
+}
 
 # n_parameters is the total loaded at runtime (backbone encoders + projectors).
 # Safetensors only stores 8.4M projection params; backbones load from separate repos.
@@ -209,6 +255,7 @@ ebind_full = ModelMeta(
     embed_dim=1024,
     modalities=["text", "image", "audio", "video"],
     reference="https://huggingface.co/encord-team/ebind-full",
+    training_datasets=_EBIND_AV_TRAINING,
     **_EBIND_COMMON,
 )
 
@@ -221,6 +268,7 @@ ebind_audio_vision = ModelMeta(
     embed_dim=1024,
     modalities=["text", "image", "audio", "video"],
     reference="https://huggingface.co/encord-team/ebind-audio-vision",
+    training_datasets=_EBIND_AV_TRAINING,
     **_EBIND_COMMON,
 )
 
@@ -233,5 +281,6 @@ ebind_points_vision = ModelMeta(
     embed_dim=1024,
     modalities=["text", "image", "video"],
     reference="https://huggingface.co/encord-team/ebind-points-vision",
+    training_datasets=_EBIND_POINTS_TRAINING,
     **_EBIND_COMMON,
 )

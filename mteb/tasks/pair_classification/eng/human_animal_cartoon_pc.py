@@ -1,7 +1,12 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING, ClassVar
+
 from mteb.abstasks import AbsTaskPairClassification
 from mteb.abstasks.task_metadata import TaskMetadata
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 BIBTEX = r"""
 @inproceedings{dong2023simmmdg,
@@ -35,7 +40,7 @@ class HumanAnimalCartoonVPairClassification(AbsTaskPairClassification):
         eval_langs=["eng-Latn"],
         main_score="max_ap",
         date=("2023-10-30", "2023-10-30"),
-        domains=["Web", "Scene"],
+        domains=["Activity", "Animation", "Nature", "Web"],
         task_subtypes=["Activity recognition"],
         license="apache-2.0",
         annotations_creators="human-annotated",
@@ -66,7 +71,7 @@ class HumanAnimalCartoonVAPairClassification(AbsTaskPairClassification):
         eval_langs=["eng-Latn"],
         main_score="max_ap",
         date=("2023-10-30", "2023-10-30"),
-        domains=["Web", "Scene"],
+        domains=["Activity", "Animation", "Nature", "Web"],
         task_subtypes=["Activity recognition"],
         license="apache-2.0",
         annotations_creators="human-annotated",
@@ -77,6 +82,12 @@ class HumanAnimalCartoonVAPairClassification(AbsTaskPairClassification):
         is_beta=True,
     )
 
-    input1_column_name = (("video1", "video"), ("audio1", "audio"))
-    input2_column_name = (("video2", "video"), ("audio2", "audio"))
+    input1_column_name: ClassVar[Mapping[str, str]] = {
+        "video1": "video",
+        "audio1": "audio",
+    }
+    input2_column_name: ClassVar[Mapping[str, str]] = {
+        "video2": "video",
+        "audio2": "audio",
+    }
     label_column_name: str = "label"
