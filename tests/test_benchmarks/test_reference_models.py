@@ -16,6 +16,7 @@ REFERENCE_MODELS = [
     "sentence-transformers/static-similarity-mrl-multilingual-v1",
     "minishlab/potion-multilingual-128M",
     "mteb/baseline-bm25s",
+    "codefuse-ai/F2LLM-v2-80M",
 ]
 
 # Models that implement SearchProtocol only (retrieval/reranking tasks)
@@ -29,7 +30,13 @@ def _get_expected_task_names(benchmark, model_name):
     is_retrieval_only = model_name in RETRIEVAL_ONLY_MODELS
     task_names = []
     benchmark_tasks = []
-    for task in benchmark.tasks:
+    for task in benchmark:
+        if (
+            task.metadata.name == "CodeRAGStackoverflowPosts"
+            and benchmark.name == "CodeRAG"
+        ):
+            # CodeRAGStackoverflowPosts is too big
+            continue
         if task.is_aggregate:
             benchmark_tasks.extend(task.metadata.tasks)
         else:
@@ -53,7 +60,7 @@ def result_cache() -> BenchmarkResults:
     return results_cache
 
 
-TARGET_BENCHMARKS = mteb.get_benchmarks(display_on_leaderboard=True)
+TARGET_BENCHMARKS = mteb.get_benchmarks()
 
 
 @pytest.mark.test_reference_models

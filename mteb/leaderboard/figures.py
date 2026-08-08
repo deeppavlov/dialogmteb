@@ -1,4 +1,5 @@
 import logging
+import time
 from typing import get_args
 
 import numpy as np
@@ -29,10 +30,16 @@ def _failsafe_plot(fun):
     """
 
     def wrapper(*args, **kwargs):
+        t0 = time.time()
         try:
-            return fun(*args, **kwargs)
+            result = fun(*args, **kwargs)
+            elapsed = time.time() - t0
+            n_rows = len(args[0].index) if args and hasattr(args[0], "index") else None
+            logger.info("plot %s: %.3fs (input_rows=%s)", fun.__name__, elapsed, n_rows)
+            return result
         except Exception as e:
-            logger.info(f"Plot generation failed: {e}")
+            elapsed = time.time() - t0
+            logger.info(f"Plot generation failed after {elapsed:.3f}s: {e}")
             return _text_plot(f"Couldn't produce plot. Reason: {e}")
 
     return wrapper
@@ -46,12 +53,10 @@ def _parse_n_params(params: float | None) -> int | float:
 
 
 def _parse_model_name(name: str) -> str:
-    if name is None:
+    """Shorten an ``org/name`` identifier to its display segment for plot legends."""
+    if not name:
         return ""
-    if "]" not in name:
-        return name
-    name, _ = name.split("]")
-    return name[1:]
+    return name.rsplit("/", 1)[-1]
 
 
 def _parse_float(value) -> float:
@@ -245,15 +250,7 @@ task_types.remove("InstructionRetrieval")
 # Not displayed, because the scores are negative,
 # doesn't work well with the radar chart.
 
-# Create a mapping for task types that lose digits when processed by _split_on_capital
-# e.g., "Any2AnyRetrieval" -> "Any Any Retrieval" -> "AnyAnyRetrieval" (loses the "2")
-_task_type_normalized = {t: "".join(t.split()) for t in task_types}
-# Add reverse mappings for task types with digits that get lost
-# "AnyAnyRetrieval" should also match to "Any2AnyRetrieval"
-_task_type_aliases = {
-    "AnyAnyRetrieval": "Any2AnyRetrieval",
-    "AnyAnyMultilingualRetrieval": "Any2AnyMultilingualRetrieval",
-}
+_task_type_set = frozenset(task_types)
 
 line_colors = [
     "#EE4266",
@@ -272,18 +269,8 @@ fill_colors = [
 
 
 def _is_task_type_column(column: str) -> bool:
-    """Check if a column name corresponds to a task type.
-
-    Handles cases where task types with digits (e.g., Any2AnyRetrieval) become
-    column names without digits (e.g., "Any Any Retrieval") after _split_on_capital.
-    """
-    normalized = "".join(column.split())
-    if normalized in task_types:
-        return True
-    # Check aliases for task types that lose digits
-    if normalized in _task_type_aliases:
-        return True
-    return False
+    """Check if a column name corresponds to a task type (canonical CamelCase)."""
+    return column in _task_type_set
 
 
 @_failsafe_plot

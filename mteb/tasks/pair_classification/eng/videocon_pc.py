@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from mteb.abstasks import AbsTaskPairClassification
 from mteb.abstasks.task_metadata import TaskMetadata
-from mteb.types import PromptType
 
 
 class VideoConPairClassification(AbsTaskPairClassification):
@@ -26,7 +25,7 @@ class VideoConPairClassification(AbsTaskPairClassification):
         eval_langs=["eng-Latn"],
         main_score="max_ap",
         date=("2023-11-01", "2023-11-30"),
-        domains=["Scene"],
+        domains=["Activity", "Web"],
         task_subtypes=["Caption Pairing"],
         license="mit",
         annotations_creators="LM-generated and reviewed",
@@ -44,8 +43,6 @@ class VideoConPairClassification(AbsTaskPairClassification):
 """,
     )
 
-    input1_column_name: str = "video"
-    input2_column_name: str = "text"
+    input1_column_name = ({"video": "video"},)
+    input2_column_name = ({"text": "text"},)
     label_column_name: str = "label"
-    input1_prompt_type: PromptType | None = PromptType.query
-    input2_prompt_type: PromptType | None = PromptType.document

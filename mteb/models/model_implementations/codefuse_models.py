@@ -17,6 +17,28 @@ F2LLM_CITATION = """@article{2025F2LLM,
     eprint={2510.02294}
 }"""
 
+F2LLMV2_CITATION = """
+@misc{f2llm-v2,
+    title={F2LLM-v2: Inclusive, Performant, and Efficient Embeddings for a Multilingual World},
+    author={Ziyin Zhang and Zihan Liao and Hang Yu and Peng Di and Rui Wang},
+    year={2026},
+    eprint={2603.19223},
+    archivePrefix={arXiv},
+    primaryClass={cs.CL},
+    url={https://arxiv.org/abs/2603.19223},
+}"""
+
+C2LLM_CITATION = """
+@misc{qin2025c2llmtechnicalreportnew,
+    title={C2LLM Technical Report: A New Frontier in Code Retrieval via Adaptive Cross-Attention Pooling},
+    author={Jin Qin and Zihan Liao and Ziyin Zhang and Hang Yu and Peng Di and Rui Wang},
+    year={2025},
+    eprint={2512.21332},
+    archivePrefix={arXiv},
+    primaryClass={cs.CL},
+    url={https://arxiv.org/abs/2512.21332},
+}"""
+
 training_datasets = {
     "MSMARCO",
     "ArguAna",
@@ -895,8 +917,7 @@ C2LLM_0B5 = ModelMeta(
     adapted_from=None,
     superseded_by=None,
     modalities=["text"],
-    is_cross_encoder=None,
-    citation=None,
+    citation=C2LLM_CITATION,
     contacts=None,
 )
 
@@ -924,8 +945,7 @@ C2LLM_7B = ModelMeta(
     adapted_from=None,
     superseded_by=None,
     modalities=["text"],
-    is_cross_encoder=None,
-    citation=None,
+    citation=C2LLM_CITATION,
     contacts=None,
 )
 
@@ -938,7 +958,6 @@ F2LLM_v2_80M = ModelMeta(
         add_eos_token=True,
         max_seq_length=8192,
         model_kwargs={
-            "attn_implementation": "flash_attention_2",
             "torch_dtype": torch.bfloat16,
         },
     ),
@@ -965,7 +984,7 @@ F2LLM_v2_80M = ModelMeta(
     superseded_by=None,
     modalities=["text"],
     model_type=["dense"],
-    citation=None,
+    citation=F2LLMV2_CITATION,
     contacts=None,
 )
 
@@ -978,7 +997,6 @@ F2LLM_v2_160M = ModelMeta(
         add_eos_token=True,
         max_seq_length=8192,
         model_kwargs={
-            "attn_implementation": "flash_attention_2",
             "torch_dtype": torch.bfloat16,
         },
     ),
@@ -1005,7 +1023,7 @@ F2LLM_v2_160M = ModelMeta(
     superseded_by=None,
     modalities=["text"],
     model_type=["dense"],
-    citation=None,
+    citation=F2LLMV2_CITATION,
     contacts=None,
 )
 
@@ -1018,7 +1036,6 @@ F2LLM_v2_330M = ModelMeta(
         add_eos_token=True,
         max_seq_length=8192,
         model_kwargs={
-            "attn_implementation": "flash_attention_2",
             "torch_dtype": torch.bfloat16,
         },
     ),
@@ -1045,7 +1062,7 @@ F2LLM_v2_330M = ModelMeta(
     superseded_by=None,
     modalities=["text"],
     model_type=["dense"],
-    citation=None,
+    citation=F2LLMV2_CITATION,
     contacts=None,
 )
 
@@ -1058,7 +1075,6 @@ F2LLM_v2_0B6 = ModelMeta(
         add_eos_token=True,
         max_seq_length=8192,
         model_kwargs={
-            "attn_implementation": "flash_attention_2",
             "torch_dtype": torch.bfloat16,
         },
     ),
@@ -1085,7 +1101,7 @@ F2LLM_v2_0B6 = ModelMeta(
     superseded_by=None,
     modalities=["text"],
     model_type=["dense"],
-    citation=None,
+    citation=F2LLMV2_CITATION,
     contacts=None,
 )
 
@@ -1098,7 +1114,6 @@ F2LLM_v2_1B7 = ModelMeta(
         add_eos_token=True,
         max_seq_length=8192,
         model_kwargs={
-            "attn_implementation": "flash_attention_2",
             "torch_dtype": torch.bfloat16,
         },
     ),
@@ -1125,7 +1140,7 @@ F2LLM_v2_1B7 = ModelMeta(
     superseded_by=None,
     modalities=["text"],
     model_type=["dense"],
-    citation=None,
+    citation=F2LLMV2_CITATION,
     contacts=None,
 )
 
@@ -1138,7 +1153,6 @@ F2LLM_v2_4B = ModelMeta(
         add_eos_token=True,
         max_seq_length=8192,
         model_kwargs={
-            "attn_implementation": "flash_attention_2",
             "torch_dtype": torch.bfloat16,
         },
     ),
@@ -1165,7 +1179,7 @@ F2LLM_v2_4B = ModelMeta(
     superseded_by=None,
     modalities=["text"],
     model_type=["dense"],
-    citation=None,
+    citation=F2LLMV2_CITATION,
     contacts=None,
 )
 
@@ -1178,7 +1192,6 @@ F2LLM_v2_8B = ModelMeta(
         add_eos_token=True,
         max_seq_length=8192,
         model_kwargs={
-            "attn_implementation": "flash_attention_2",
             "torch_dtype": torch.bfloat16,
         },
     ),
@@ -1205,7 +1218,7 @@ F2LLM_v2_8B = ModelMeta(
     superseded_by=None,
     modalities=["text"],
     model_type=["dense"],
-    citation=None,
+    citation=F2LLMV2_CITATION,
     contacts=None,
 )
 
@@ -1218,7 +1231,6 @@ F2LLM_v2_14B = ModelMeta(
         add_eos_token=True,
         max_seq_length=8192,
         model_kwargs={
-            "attn_implementation": "flash_attention_2",
             "torch_dtype": torch.bfloat16,
         },
     ),
@@ -1245,6 +1257,6 @@ F2LLM_v2_14B = ModelMeta(
     superseded_by=None,
     modalities=["text"],
     model_type=["dense"],
-    citation=None,
+    citation=F2LLMV2_CITATION,
     contacts=None,
 )

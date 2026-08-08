@@ -8,13 +8,15 @@ from packaging.version import Version
 
 import mteb
 from mteb.abstasks import AbsTask
+from mteb.mocks import MOCK_TASK_TEST_GRID_MONOLINGUAL
 from tests.mock_models import MockSentenceTransformersbf16Encoder
-from tests.task_grid import MOCK_TASK_TEST_GRID_MONOLINGUAL
 
 logging.basicConfig(level=logging.INFO)
 
 
-@pytest.mark.parametrize("task", MOCK_TASK_TEST_GRID_MONOLINGUAL)
+@pytest.mark.parametrize(
+    "task", MOCK_TASK_TEST_GRID_MONOLINGUAL, ids=lambda t: t.metadata.name
+)
 @pytest.mark.parametrize(
     "model",
     [

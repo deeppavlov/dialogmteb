@@ -224,12 +224,23 @@ class ResultCache:
 
     @property
     def remote_repo_path(self) -> Path:
-        """Get the path to the remote repository clone.
+        """The path to the remote repository clone.
 
         Returns:
             The path to the remote repository clone.
         """
         return self.cache_path / "remote"
+
+    @property
+    def leaderboard_parquet_path(self) -> Path:
+        """Local per-benchmark leaderboard cache (single parquet file).
+
+        Lives next to `ResultCache` rather than the Gradio leaderboard
+        module so consumers that don't need gradio/pandas/cachetools (e.g.
+        the FastAPI service in `mteb.api`) can reach it without
+        importing the full leaderboard stack.
+        """
+        return self.cache_path / "leaderboard" / "benchmark_results.parquet"
 
     @property
     def has_remote(self) -> bool:
@@ -242,7 +253,7 @@ class ResultCache:
 
     @property
     def remote_results_path(self) -> Path:
-        """Get the path to the remote results directory.
+        """The path to the remote results directory.
 
         Returns:
             The path to the remote results directory.
@@ -420,7 +431,7 @@ class ResultCache:
 
     @property
     def default_cache_path(self) -> Path:
-        """Get the local cache directory for MTEB results.
+        """The local cache directory for MTEB results.
 
         Returns:
             The path to the local cache directory.
@@ -497,6 +508,24 @@ class ResultCache:
                 logger.info(f"Checking out revision '{revision}'")
                 subprocess.run(
                     ["git", "checkout", revision],
+                    cwd=results_directory,
+                    check=True,
+                    text=True,
+                )
+            elif download_latest:
+                # `git fetch` alone leaves the working tree on the old commit, so a
+                # fresh clone here would silently use stale result files. Move HEAD to
+                # the remote's default branch so the rebuild actually sees new results.
+                default_branch = subprocess.run(
+                    ["git", "rev-parse", "--abbrev-ref", "origin/HEAD"],
+                    cwd=results_directory,
+                    check=True,
+                    text=True,
+                    capture_output=True,
+                ).stdout.strip()  # e.g. "origin/main"
+                logger.info(f"Updating working tree to {default_branch}")
+                subprocess.run(
+                    ["git", "reset", "--hard", default_branch],
                     cwd=results_directory,
                     check=True,
                     text=True,
@@ -1052,7 +1081,7 @@ class ResultCache:
         try:
             with meta_file.open("r") as f:
                 meta_dict = f.read()
-            return ModelMeta.model_validate_json(meta_dict)
+            return ModelMeta.model_validate_json_resolved(meta_dict)
         except Exception as e:
             logger.warning(f"Failed to load ModelMeta from {meta_file}: {e}")
             return None

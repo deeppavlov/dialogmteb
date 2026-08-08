@@ -7,9 +7,7 @@ from scipy.stats import pearsonr, spearmanr
 
 from mteb._evaluators import AnySTSEvaluator
 from mteb.models import EncoderProtocol
-from mteb.types.statistics import (
-    SplitDescriptiveStatistics,
-)
+from mteb.types.statistics import AnySTSDescriptiveStatistics
 
 from ._statistics_calculation import (
     calculate_pair_modality_statistics,
@@ -18,65 +16,17 @@ from ._statistics_calculation import (
 from .abstask import AbsTask
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Mapping
     from pathlib import Path
 
     from datasets import Dataset
 
     from mteb._evaluators.any_sts_evaluator import STSEvaluatorScores
     from mteb.models import MTEBModels
+    from mteb.timing import TimingStack
     from mteb.types import EncodeKwargs, Modalities, PromptType
-    from mteb.types.statistics import (
-        AudioStatistics,
-        ImageStatistics,
-        ScoreStatistics,
-        TextStatistics,
-        VideoStatistics,
-    )
 
 logger = logging.getLogger(__name__)
-
-
-class AnySTSDescriptiveStatistics(SplitDescriptiveStatistics):
-    """Descriptive statistics for STS
-
-    Attributes:
-        num_samples: number of samples in the dataset.
-        number_of_characters: Total number of symbols in the dataset.
-        unique_pairs: Number of unique pairs
-
-        text1_statistics: Statistics for sentence1
-        text2_statistics: Statistics for sentence2
-
-        image1_statistics: Statistics for image1
-        image2_statistics: Statistics for image2
-
-        audio1_statistics: Statistics for audio1
-        audio2_statistics: Statistics for audio2
-
-        video1_statistics: Statistics for video1
-        video2_statistics: Statistics for video2
-
-        label_statistics: Statistics for labels
-    """
-
-    num_samples: int
-    number_of_characters: int | None
-    unique_pairs: int | None
-
-    text1_statistics: TextStatistics | None
-    text2_statistics: TextStatistics | None
-
-    image1_statistics: ImageStatistics | None
-    image2_statistics: ImageStatistics | None
-
-    audio1_statistics: AudioStatistics | None
-    audio2_statistics: AudioStatistics | None
-
-    video1_statistics: VideoStatistics | None
-    video2_statistics: VideoStatistics | None
-
-    label_statistics: ScoreStatistics
 
 
 class STSMetrics(TypedDict):
@@ -129,8 +79,8 @@ class AbsTaskSTS(AbsTask):
     column_names: (
         tuple[str, str]
         | tuple[
-            Sequence[tuple[str, Modalities]],
-            Sequence[tuple[str, Modalities]],
+            Mapping[str, Modalities],
+            Mapping[str, Modalities],
         ]
     ) = (
         "sentence1",
@@ -151,6 +101,7 @@ class AbsTaskSTS(AbsTask):
         hf_subset: str,
         prediction_folder: Path | None = None,
         num_proc: int | None = None,
+        timer: TimingStack,
         **kwargs: Any,
     ) -> STSMetrics:
         if not isinstance(model, EncoderProtocol):
@@ -166,6 +117,7 @@ class AbsTaskSTS(AbsTask):
             hf_subset=hf_subset,
             input1_prompt_type=self.input1_prompt_type,
             input2_prompt_type=self.input2_prompt_type,
+            timer=timer,
             **kwargs,
         )
         scores = evaluator(
@@ -243,6 +195,7 @@ class AbsTaskSTS(AbsTask):
                 else self.dataset[split]
             )
         )
+
         if hf_subset:
             score = self.dataset[hf_subset][split]["score"]
             n = len(score)
@@ -269,18 +222,13 @@ class AbsTaskSTS(AbsTask):
             def _load_col(col: str) -> list[Any]:
                 return list(self.dataset[split][col])
 
-        if isinstance(self.column_names[0], str):
-            modality1 = self.metadata.get_modalities(self.input1_prompt_type)[0]
-            modality2 = self.metadata.get_modalities(self.input2_prompt_type)[0]
-            col_modalities1: list[tuple[str, str]] = [
-                (str(self.column_names[0]), modality1)
-            ]
-            col_modalities2: list[tuple[str, str]] = [
-                (str(self.column_names[1]), modality2)
-            ]
+        if isinstance(self.column_names[0], str) and len(self.metadata.modalities) == 1:
+            modality = self.metadata.modalities[0]
+            col_modalities1 = {str(self.column_names[0]): modality}
+            col_modalities2 = {str(self.column_names[1]): modality}
         else:
-            col_modalities1 = list(self.column_names[0])
-            col_modalities2 = list(self.column_names[1])
+            col_modalities1 = self.column_names[0]  # type: ignore[assignment]
+            col_modalities2 = self.column_names[1]  # type: ignore[assignment]
 
         pair_stats = calculate_pair_modality_statistics(
             col_modalities1,
@@ -288,6 +236,7 @@ class AbsTaskSTS(AbsTask):
             _load_col,
             n,
             max_workers=num_proc,
+            symmetric=True,
         )
         labels_statistics = calculate_score_statistics(score)
 
@@ -320,9 +269,7 @@ class AbsTaskSTS(AbsTask):
         if isinstance(self.column_names[0], str):
             cols = [self.column_names[0], self.column_names[1]]
         else:
-            cols = [col for col, _ in self.column_names[0]] + [
-                col for col, _ in self.column_names[1]
-            ]
+            cols = list(self.column_names[0]) + list(self.column_names[1])
         self._upload_dataset_to_hub(
             repo_name, [*cols, "score"], num_proc=num_proc, **kwargs
         )
