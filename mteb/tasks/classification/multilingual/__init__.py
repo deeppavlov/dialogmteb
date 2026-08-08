@@ -20,6 +20,7 @@ from .masakha_news_classification import MasakhaNEWSClassification
 from .massive_intent_classification import MassiveIntentClassification
 from .massive_scenario_classification import MassiveScenarioClassification
 from .matis_intent_classification import (
+    DialogSum,
     MultilingualAbgCosQA,
     MultilingualAirDialogueClassification,
     MultilingualAtisIntentClassification,
@@ -28,6 +29,7 @@ from .matis_intent_classification import (
     MultilingualClincIntentClassification,
     MultilingualDailyDialogClassificationAct,
     MultilingualDailyDialogClassificationEmotion,
+    MultilingualDialogSum,
     MultilingualFaithDialRetrieval,
     MultilingualHWUIntentClassification,
     MultilingualIKAT2023,
@@ -35,10 +37,10 @@ from .matis_intent_classification import (
     MultilingualMultiWoz21,
     MultilingualQRECC,
     MultilingualStatcanDialogueDatasetRetrieval,
+    MultilingualTopiOCQAHardNegatives,
     MultilingualViraIntentClassification,
     MultilingualWiardOfWikipedia,
     MultilingualXRisaWoz,
-MultilingualTopiOCQAHardNegatives, DialogSum,  MultilingualDialogSum,
 )
 from .mtop_domain_classification import MTOPDomainClassification
 from .mtop_intent_classification import MTOPIntentClassification
@@ -69,9 +71,6 @@ from .vox_populi_language_id import VoxPopuliLanguageID
 from .xrisawoz import XRisaWoz
 
 __all__ = [
-    "DialogSum",
-    "MultilingualDialogSum",
-    "MultilingualTopiOCQAHardNegatives",
     "AfriHateClassification",
     "AfriSentiClassification",
     "AfriSentiLangClassification",
@@ -79,6 +78,7 @@ __all__ = [
     "AmazonReviewsClassification",
     "CataloniaTweetClassification",
     "CyrillicTurkicLangClassification",
+    "DialogSum",
     "HUMEMultilingualSentimentClassification",
     "HinDialectClassification",
     "IndicLangClassification",
@@ -102,6 +102,7 @@ __all__ = [
     "MultilingualClincIntentClassification",
     "MultilingualDailyDialogClassificationAct",
     "MultilingualDailyDialogClassificationEmotion",
+    "MultilingualDialogSum",
     "MultilingualFaithDialRetrieval",
     "MultilingualHWUIntentClassification",
     "MultilingualIKAT2023",
@@ -110,6 +111,7 @@ __all__ = [
     "MultilingualQRECC",
     "MultilingualSentimentClassification",
     "MultilingualStatcanDialogueDatasetRetrieval",
+    "MultilingualTopiOCQAHardNegatives",
     "MultilingualViraIntentClassification",
     "MultilingualWiardOfWikipedia",
     "MultilingualXRisaWoz",

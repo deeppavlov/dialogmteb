@@ -364,7 +364,7 @@ class MultilingualStatcanDialogueDatasetRetrieval(AbsTaskRetrieval):
 
 class MultilingualFaithDialRetrieval(AbsTaskRetrieval):
     metadata = TaskMetadata(
-        name="MultilingualFaithDialRetrievalFaithDial",
+        name="MultilingualFaithDialRetrieval",
         dataset={
             "path": "DeepPavlov/faithdial-translated",
             "revision": "e42d09175ef2b34219758575c9a09beadbc6caee",
@@ -756,6 +756,7 @@ class MultilingualIKAT2023(AbsTaskRetrieval):
 """,
     )
 
+
 class MultilingualTopiOCQAHardNegatives(AbsTaskRetrieval):
     metadata = TaskMetadata(
         name="MultilingualTopiOCQAHardNegatives",
@@ -837,6 +838,7 @@ class DialogSum(AbsTaskClassification):
                 .select_columns(["text", "topic"])
             )
 
+
 class MultilingualDialogSum(AbsTaskClassification):
     label_column_name = "topic"
 
@@ -856,7 +858,6 @@ class MultilingualDialogSum(AbsTaskClassification):
             "es-gemma": ["spa-Latn"],
             "fr-gemma": ["fra-Latn"],
         },
-
         main_score="f1",
         date=("2018-01-01", "2022-06-07"),
         domains=[],
