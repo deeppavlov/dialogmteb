@@ -5,6 +5,8 @@ from typing import Any
 from datasets import load_dataset
 
 from mteb.abstasks.classification import AbsTaskClassification
+from mteb.abstasks.pair_classification import AbsTaskPairClassification
+from mteb.abstasks.retrieval import AbsTaskRetrieval
 from mteb.abstasks.task_metadata import TaskMetadata
 
 
@@ -329,10 +331,6 @@ class MultilingualDailyDialogClassificationEmotion(AbsTaskClassification):
         }
 
 
-from mteb.abstasks.retrieval import AbsTaskRetrieval
-from mteb.abstasks.task_metadata import TaskMetadata
-
-
 class MultilingualStatcanDialogueDatasetRetrieval(AbsTaskRetrieval):
     metadata = TaskMetadata(
         name="MultilingualStatcanDialogueDatasetRetrieval",
@@ -615,9 +613,6 @@ class MultilingualWiardOfWikipedia(AbsTaskRetrieval):
 
 """,
     )
-
-
-from mteb.abstasks.pair_classification import AbsTaskPairClassification
 
 
 class MultilingualQRECC(AbsTaskPairClassification):

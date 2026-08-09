@@ -1232,7 +1232,9 @@ class ResultCache:
         normalized_models = self._normalize_models(models)
 
         try:
-            self.download_from_remote()
+            self.download_from_remote(
+                remote="https://github.com/deeppavlov/mteb-results"
+            )
             unsubmitted = self._get_unsubmitted_results(normalized_models)
 
             if not unsubmitted:

@@ -63,15 +63,15 @@ from .bright_v1_1_retrieval import (
 )
 from .browse_comp_plus_retrieval import BrowseCompPlusRetrieval
 from .built_bench_retrieval import BuiltBenchRetrieval
-from .castella_amr import CASTELLAAMRRetrieval
 from .canard import Canard
+from .castella_amr import CASTELLAAMRRetrieval
 from .chat_doctor_retrieval import ChatDoctorRetrieval
 from .chem_hotpot_qa_retrieval import ChemHotpotQARetrieval
 from .chem_nq_retrieval import ChemNQRetrieval
 from .chemrxiv import ChemRxivRetrieval
 from .cirr_it2i_retrieval import CIRRIT2IRetrieval
-from .cld_at2a_retrieval import CLDA2TRetrieval, CLDAT2ARetrieval
 from .clarq import Clarq
+from .cld_at2a_retrieval import CLDA2TRetrieval, CLDAT2ARetrieval
 from .climate_fever_retrieval import (
     ClimateFEVER,
     ClimateFEVERHardNegatives,
