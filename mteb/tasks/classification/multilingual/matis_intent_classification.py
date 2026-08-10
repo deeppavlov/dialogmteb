@@ -756,8 +756,8 @@ class MultilingualTopiOCQAHardNegatives(AbsTaskRetrieval):
     metadata = TaskMetadata(
         name="MultilingualTopiOCQAHardNegatives",
         dataset={
-            "path": "mteb/TopiOCQA_validation_top_250_only_w_correct-v2",
-            "revision": "b4cc09fb8bb3a9e0ce0f94dc69c96397a2a47c18",
+            "path": "DeepPavlov/topiocqa-translated",
+            "revision": "930de0eb6cd3d4b2d51650cd298dc12d7857d376",
         },
         reference="https://mcgill-nlp.github.io/topiocqa",
         description=(
@@ -769,7 +769,10 @@ class MultilingualTopiOCQAHardNegatives(AbsTaskRetrieval):
         category="t2t",
         modalities=["text"],
         eval_splits=["validation"],
-        eval_langs=["eng-Latn"],
+        eval_langs={
+            "es-gemma": ["spa-Latn"],
+            "fr-gemma": ["fra-Latn"],
+        },
         main_score="ndcg_at_10",
         date=("2021-03-01", "2021-07-31"),
         domains=["Encyclopaedic", "Written"],

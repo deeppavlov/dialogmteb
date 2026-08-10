@@ -1817,7 +1817,6 @@ NANOBEIR_EXTENDED = Benchmark(
     citation=None,
 )
 
-
 C_MTEB = Benchmark(
     name="MTEB(cmn, v1)",
     aliases=["MTEB(Chinese)", "CMTEB"],
@@ -3308,7 +3307,6 @@ _MAEB_CITATION = """@misc{assadi2026maebmassiveaudioembedding,
   year = {2026},
 }"""
 
-
 MAEB_AUDIO = Benchmark(
     name="MAEB(beta, audio-only)",
     aliases=["MAEB(audio-only)"],
@@ -3403,7 +3401,6 @@ MAEB = Benchmark(
     contacts=["AdnanElAssadi56", "isaac-chung", "KennethEnevoldsen", "Samoed"],
 )
 
-
 MVEB = Benchmark(
     name="MVEB(beta)",
     aliases=["MVEB"],
@@ -3448,7 +3445,6 @@ MVEB = Benchmark(
     contacts=["AdnanElAssadi56", "isaac-chung", "KennethEnevoldsen", "Samoed"],
 )
 
-
 MVEB_TEXT_VIDEO = Benchmark(
     name="MVEB(text, video, beta)",
     aliases=["MVEB(text, video)"],
@@ -3488,7 +3484,6 @@ MVEB_TEXT_VIDEO = Benchmark(
     citation="",
     contacts=["AdnanElAssadi56", "isaac-chung", "KennethEnevoldsen", "Samoed"],
 )
-
 
 MVEB_VIDEO = Benchmark(
     name="MVEB(video, beta)",
@@ -3588,6 +3583,92 @@ DIALOG_MTEB_ENG_V1 = Benchmark(
             "FaithDial",
             "ATEC",
             "TopiOCQAHardNegatives",
+        ]
+    ),
+)
+
+DIALOG_MTEB_V1 = Benchmark(
+    name="DialogMTEB(v1)",
+    display_name="Dialog MTEB",
+    description="",
+    reference="null",
+    citation=None,
+    contacts=["Samoed"],
+    tasks=get_tasks(
+        tasks=[
+            "AtisIntentClassification",
+            "Banking77Classification.v2",
+            "ViraIntentClassification",
+            "ClincIntentClassification",
+            "HWUIntentClassification",
+            "MTOPIntentClassification",
+            "MassiveIntentClassification",
+            "DailyDialogClassificationAct",
+            "DailyDialogClassificationEmotion",
+            "StatcanDialogueDatasetRetrieval",
+            "FaithDial",
+            "MultiWoz21",
+            "AirDialogueClassification",
+            "AbgCosQA",
+            "MantisClassification",
+            "MultiWoz21",
+            "XRisaWoz",
+            "SkillOfMind",
+            "ClarQA",
+            "QRECC",
+            "Canard",
+            "Clarq",
+            "iKAT2023",
+            "WiardOfWikipedia",
+            "Banking77Classification",
+            "MTOPIntentClassification",
+            "MassiveIntentClassification",
+            "StatcanDialogueDatasetRetrieval",
+            "WebLINXCandidatesReranking",
+            "FaithDial",
+            "ATEC",
+            "TopiOCQAHardNegatives",
+            "MultilingualAtisIntentClassification",
+            "MultilingualBanking77Classification",
+            "MultilingualViraIntentClassification",
+            "MultilingualHWUIntentClassification",
+            "MultilingualClincIntentClassification",
+            "MultilingualXRisaWoz",
+            "MultilingualDailyDialogClassificationAct",
+            "MultilingualDailyDialogClassificationEmotion",
+            "MultilingualStatcanDialogueDatasetRetrieval",
+            "MultilingualFaithDialRetrieval",
+            "MultilingualMultiWoz21",
+            "MultilingualAirDialogueClassification",
+            "MultilingualCanard",
+            "MultilingualMantisClassification",
+            "MultilingualWiardOfWikipedia",
+            "MultilingualQRECC",
+            "MultilingualAbgCosQA",
+            "MultilingualIKAT2023",
+            "MultilingualTopiOCQAHardNegatives",
+            "DialogSum",
+            "MultilingualDialogSum",
+            # "AggAbgCosQA",
+            # "AggAirDialogueClassification",
+            # "AggAtisIntent",
+            # "AggBanking77Classification",
+            # "AggCanard",
+            # "AggClincIntentClassification",
+            # "AggDailyDialogClassificationAct",
+            # "AggDailyDialogClassificationEmotion",
+            # "AggDialogSum",
+            # "AggFaithDialRetrieval",
+            # "AggHWUIntentClassification",
+            # "AggIKAT2023",
+            # "AggMantisClassification",
+            # "AggMultiWoz21",
+            # "AggQRECC",
+            # "AggStatcanDialogueDatasetRetrieval",
+            # "AggTopiOCQAHardNegatives",
+            # "AggViraIntentClassification",
+            # "AggWiardOfWikipedia",
+            # "AggXRisaWoz",
         ]
     ),
 )
