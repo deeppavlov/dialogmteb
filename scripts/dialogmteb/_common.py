@@ -15,7 +15,7 @@ import mteb
 from mteb.cache import ResultCache
 
 BENCHMARK_NAME_ENG = "DialogMTEB(v1, eng)"
-BENCHMARK_NAME_MULTILINGUAL = "DialogMTEB(v1, multilingual)"
+BENCHMARK_NAME_MULTILINGUAL = "DialogMTEB(v1)"
 BENCHMARK_NAME = BENCHMARK_NAME_MULTILINGUAL  # default (full benchmark)
 BENCHMARKS: dict[str, str] = {
     "eng": BENCHMARK_NAME_ENG,
@@ -25,7 +25,7 @@ RESULT_CACHE_PATH = Path(__file__).parent.parent.parent / "result_cache"
 OUT_DIR = Path(__file__).parent
 
 cache = ResultCache(RESULT_CACHE_PATH)
-# cache.download_from_remote("https://github.com/deeppavlov/mteb-results")
+cache.download_from_remote("https://github.com/deeppavlov/mteb-results")
 
 TYPE_ABBREV = {
     "Classification": "Clf.",
@@ -146,6 +146,8 @@ RUN_MODELS: list[str] = [
     "aws-ai/dse-bert-large",
     "aws-ai/dse-roberta-base",
     "aws-ai/dse-roberta-large",
+    "lightonai/mDenseOn-unsupervised",
+    "lightonai/mDenseOn",
 ]
 
 

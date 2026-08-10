@@ -42,7 +42,7 @@ from mteb.tasks.retrieval import (
     FaithDialRetrieval,
     StatcanDialogueDatasetRetrieval,
     TopiOCQARetrievalHardNegatives,
-    WiardOfWikipedia,
+WizardOfWikipedia,
 )
 
 
@@ -308,7 +308,7 @@ class AggWiardOfWikipedia(AbsTaskAggregate):
         description="AbsTaskAggregate",
         reference=None,
         tasks=[
-            WiardOfWikipedia(),
+            WizardOfWikipedia(),
             MultilingualWiardOfWikipedia().filter_languages(["fra", "spa"]),
         ],
         type="Retrieval",
@@ -317,7 +317,7 @@ class AggWiardOfWikipedia(AbsTaskAggregate):
         eval_splits=["test"],
         eval_langs=["eng-Latn"],
         main_score="ndcg_at_10",
-        bibtex_citation=WiardOfWikipedia.metadata.bibtex_citation,
+        bibtex_citation=WizardOfWikipedia.metadata.bibtex_citation,
     )
 
 

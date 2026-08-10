@@ -3652,7 +3652,7 @@ DIALOG_MTEB_V1 = Benchmark(
             "Canard",
             "Clarq",
             "iKAT2023",
-            "WiardOfWikipedia",
+            "WizardOfWikipedia",
             "Banking77Classification",
             "MTOPIntentClassification",
             "MassiveIntentClassification",
