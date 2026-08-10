@@ -64,12 +64,14 @@ from .bright_v1_1_retrieval import (
 from .browse_comp_plus_retrieval import BrowseCompPlusRetrieval
 from .built_bench_retrieval import BuiltBenchRetrieval
 from .canard import Canard
+from .castella_amr import CASTELLAAMRRetrieval
 from .chat_doctor_retrieval import ChatDoctorRetrieval
 from .chem_hotpot_qa_retrieval import ChemHotpotQARetrieval
 from .chem_nq_retrieval import ChemNQRetrieval
 from .chemrxiv import ChemRxivRetrieval
 from .cirr_it2i_retrieval import CIRRIT2IRetrieval
 from .clarq import Clarq
+from .cld_at2a_retrieval import CLDA2TRetrieval, CLDAT2ARetrieval
 from .climate_fever_retrieval import (
     ClimateFEVER,
     ClimateFEVERHardNegatives,
@@ -79,6 +81,7 @@ from .climate_fever_retrieval import (
 from .clotho import ClothoA2TRetrieval, ClothoT2ARetrieval
 from .cmu_arctic import CMUArcticA2TRetrieval, CMUArcticT2ARetrieval
 from .coral import Coral
+from .covers80_retrieval import Covers80A2ARetrieval
 from .cqa_dupstack_android_retrieval import CQADupstackAndroidRetrieval
 from .cqa_dupstack_english_retrieval import CQADupstackEnglishRetrieval
 from .cqa_dupstack_gaming_retrieval import CQADupstackGamingRetrieval
@@ -141,6 +144,11 @@ from .fever_retrieval import FEVER, FEVERHardNegatives, FEVERHardNegativesV2
 from .fi_qa2018_retrieval import FiQA2018
 from .fin_qa_retrieval import FinQARetrieval
 from .finance_bench_retrieval import FinanceBenchRetrieval
+from .flare_retrieval import (
+    FLAREAudioT2VARetrieval,
+    FLAREUnifiedT2VARetrieval,
+    FLAREVisionT2VRetrieval,
+)
 from .flickr30k_i2t_retrieval import Flickr30kI2TRetrieval
 from .flickr30k_t2i_retrieval import Flickr30kT2IRetrieval
 from .forb_i2i_retrieval import FORBI2I
@@ -210,9 +218,11 @@ from .medical_qa_retrieval import MedicalQARetrieval
 from .memotion_i2t_retrieval import MemotionI2TRetrieval
 from .memotion_t2i_retrieval import MemotionT2IRetrieval
 from .met_i2i_retrieval import METI2IRetrieval
+from .miao_retrieval import MIAOA2IRetrieval, MIAOI2ARetrieval
 from .ml_questions import MLQuestionsRetrieval
 from .mmdocir_t2i_retrieval import MMDocIRT2IRetrieval
 from .mmdocir_t2it_retrieval import MMDocIRT2ITRetrieval
+from .moment_seeker import MomentSeekerTI2VRetrieval, MomentSeekerTV2VRetrieval
 from .mscoco_i2t_retrieval import MSCOCOI2TRetrieval
 from .mscoco_t2i_retrieval import MSCOCOT2IRetrieval
 from .msmarc_ov2_retrieval import MSMARCOv2
@@ -246,6 +256,13 @@ from .narrative_qa_retrieval import NarrativeQARetrieval
 from .nf_corpus_retrieval import NFCorpus
 from .nights_i2i_retrieval import NIGHTSI2IRetrieval
 from .nq_retrieval import NQ, NQHardNegatives
+from .obliq_bench_retrieval import (
+    OBLIQBenchCongressRetrieval,
+    OBLIQBenchMathRetrieval,
+    OBLIQBenchTwitterRetrieval,
+    OBLIQBenchWildChatRetrieval,
+    OBLIQBenchWritingRetrieval,
+)
 from .okvqa_it2t_retrieval import OKVQAIT2TRetrieval
 from .oven_it2it_retrieval import OVENIT2ITRetrieval
 from .oven_it2t_retrieval import OVENIT2TRetrieval
@@ -290,6 +307,10 @@ from .sci_fact_retrieval import SciFact
 from .sci_mmir_i2t_retrieval import SciMMIRI2TRetrieval
 from .sci_mmir_t2i_retrieval import SciMMIRT2IRetrieval
 from .scidocs_retrieval import SCIDOCS
+from .sea_vl_crawling_retrieval import (
+    SeaVLCrawlingI2TRetrieval,
+    SeaVLCrawlingT2IRetrieval,
+)
 from .shot2story_retrieval import (
     Shot2Story20KA2VRetrieval,
     Shot2Story20KAT2VRetrieval,
@@ -300,10 +321,13 @@ from .shot2story_retrieval import (
     Shot2Story20KVA2TRetrieval,
     Shot2Story20KVT2ARetrieval,
 )
+from .shs100k_retrieval import SHS100KA2ARetrieval
 from .siqa_retrieval import SIQA
 from .sketchy_i2i_retrieval import SketchyI2IRetrieval
 from .sop_i2i_retrieval import SOPI2IRetrieval
+from .sounding_earth import SoundingEarthA2IRetrieval, SoundingEarthI2ARetrieval
 from .spart_qa_retrieval import SpartQA
+from .speech_coco import SpeechCocoA2IRetrieval, SpeechCocoI2ARetrieval
 from .spoken_s_qu_ad import SpokenSQuADT2ARetrieval
 from .stanford_cars_i2i_retrieval import StanfordCarsI2I
 from .temp_reason_l1_retrieval import TempReasonL1
@@ -471,7 +495,10 @@ __all__ = [
     "BrightTheoremQATheoremsRetrieval",
     "BrowseCompPlusRetrieval",
     "BuiltBenchRetrieval",
+    "CASTELLAAMRRetrieval",
     "CIRRIT2IRetrieval",
+    "CLDA2TRetrieval",
+    "CLDAT2ARetrieval",
     "CMUArcticA2TRetrieval",
     "CMUArcticT2ARetrieval",
     "CQADupstackAndroidRetrieval",
@@ -500,6 +527,7 @@ __all__ = [
     "ClothoT2ARetrieval",
     "ConvoMem",
     "Coral",
+    "Covers80A2ARetrieval",
     "CovidQA",
     "DAPFAMAllTitlAbsClmToFullTextRetrieval",
     "DAPFAMAllTitlAbsClmToTitlAbsClmRetrieval",
@@ -545,6 +573,9 @@ __all__ = [
     "EnglishHealthcare1Retrieval",
     "FEVERHardNegatives",
     "FEVERHardNegativesV2",
+    "FLAREAudioT2VARetrieval",
+    "FLAREUnifiedT2VARetrieval",
+    "FLAREVisionT2VRetrieval",
     "FaithDialRetrieval",
     "Fashion200kI2TRetrieval",
     "Fashion200kT2IRetrieval",
@@ -604,6 +635,8 @@ __all__ = [
     "MACSA2TRetrieval",
     "MACST2ARetrieval",
     "METI2IRetrieval",
+    "MIAOA2IRetrieval",
+    "MIAOI2ARetrieval",
     "MLQuestionsRetrieval",
     "MMDocIRT2IRetrieval",
     "MMDocIRT2ITRetrieval",
@@ -618,6 +651,8 @@ __all__ = [
     "MemGovern",
     "MemotionI2TRetrieval",
     "MemotionT2IRetrieval",
+    "MomentSeekerTI2VRetrieval",
+    "MomentSeekerTV2VRetrieval",
     "NFCorpus",
     "NIGHTSI2IRetrieval",
     "NQHardNegatives",
@@ -636,6 +671,11 @@ __all__ = [
     "NanoTouche2020Retrieval",
     "NarrativeQARetrieval",
     "NovelQA",
+    "OBLIQBenchCongressRetrieval",
+    "OBLIQBenchMathRetrieval",
+    "OBLIQBenchTwitterRetrieval",
+    "OBLIQBenchWildChatRetrieval",
+    "OBLIQBenchWritingRetrieval",
     "OKVQAIT2TRetrieval",
     "OVENIT2ITRetrieval",
     "OVENIT2TRetrieval",
@@ -668,10 +708,13 @@ __all__ = [
     "RParisMediumI2IRetrieval",
     "ReMe",
     "ReMuQIT2TRetrieval",
+    "SHS100KA2ARetrieval",
     "SOPI2IRetrieval",
     "SciFact",
     "SciMMIRI2TRetrieval",
     "SciMMIRT2IRetrieval",
+    "SeaVLCrawlingI2TRetrieval",
+    "SeaVLCrawlingT2IRetrieval",
     "Shot2Story20KA2VRetrieval",
     "Shot2Story20KAT2VRetrieval",
     "Shot2Story20KT2VARetrieval",
@@ -681,7 +724,11 @@ __all__ = [
     "Shot2Story20KVA2TRetrieval",
     "Shot2Story20KVT2ARetrieval",
     "SketchyI2IRetrieval",
+    "SoundingEarthA2IRetrieval",
+    "SoundingEarthI2ARetrieval",
     "SpartQA",
+    "SpeechCocoA2IRetrieval",
+    "SpeechCocoI2ARetrieval",
     "SpokenSQuADT2ARetrieval",
     "StanfordCarsI2I",
     "TUBerlinT2IRetrieval",
