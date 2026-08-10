@@ -1399,7 +1399,6 @@ class ResultCache:
                 for params in experiment_kwargs
             }
         for path in paths:
-            print(path)
             task_result = TaskResult.from_disk(path)
 
             if only_main_score:

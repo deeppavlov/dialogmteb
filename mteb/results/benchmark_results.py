@@ -437,6 +437,11 @@ class BenchmarkResults(BaseModel):  # noqa: PLR0904
             aggregation_fn=aggregation_fn,
             format=format,
         )
+        if format == "wide" and "is_public" in result.columns:
+            # "is_public" is only added to the pivot index to keep task rows
+            # unique; it isn't a documented output column and would otherwise
+            # be indistinguishable from a model-score column.
+            result = result.drop(columns="is_public")
         # Cast categorical columns back to object so downstream string ops don't
         # raise "can only concatenate str (not Categorical) to str".
         for col in result.select_dtypes(include="category").columns:
