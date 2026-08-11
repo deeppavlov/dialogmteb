@@ -59,7 +59,6 @@ class AggAtisIntent(AbsTaskAggregate):
         category="t2c",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs=["eng-Latn"],
         main_score="accuracy",
         date=("1990-01-01", "1990-01-01"),
         domains=["Spoken"],
@@ -85,7 +84,6 @@ class AggBanking77Classification(AbsTaskAggregate):
         category="t2c",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs=["eng-Latn"],
         main_score="accuracy",
         bibtex_citation=Banking77ClassificationV2.metadata.bibtex_citation,
     )
@@ -104,7 +102,6 @@ class AggViraIntentClassification(AbsTaskAggregate):
         category="t2c",
         modalities=["text"],
         eval_splits=["val", "test"],
-        eval_langs=["eng-Latn"],
         main_score="accuracy",
         bibtex_citation=ViraIntentClassification.metadata.bibtex_citation,
     )
@@ -123,7 +120,6 @@ class AggHWUIntentClassification(AbsTaskAggregate):
         category="t2c",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs=["eng-Latn"],
         main_score="f1",
         bibtex_citation=HWUIntentClassification.metadata.bibtex_citation,
     )
@@ -142,7 +138,6 @@ class AggClincIntentClassification(AbsTaskAggregate):
         category="t2c",
         modalities=["text"],
         eval_splits=["test", "validation"],
-        eval_langs=["eng-Latn"],
         main_score="accuracy",
         bibtex_citation=ClincIntentClassification.metadata.bibtex_citation,
     )
@@ -161,7 +156,6 @@ class AggDailyDialogClassificationAct(AbsTaskAggregate):
         category="t2c",
         modalities=["text"],
         eval_splits=["test", "validation"],
-        eval_langs=["eng-Latn"],
         main_score="accuracy",
         bibtex_citation=DailyDialogClassificationAct.metadata.bibtex_citation,
     )
@@ -182,7 +176,6 @@ class AggDailyDialogClassificationEmotion(AbsTaskAggregate):
         category="t2c",
         modalities=["text"],
         eval_splits=["test", "validation"],
-        eval_langs=["eng-Latn"],
         main_score="accuracy",
         bibtex_citation=DailyDialogClassificationEmotion.metadata.bibtex_citation,
     )
@@ -201,7 +194,6 @@ class AggStatcanDialogueDatasetRetrieval(AbsTaskAggregate):
         category="t2t",
         modalities=["text"],
         eval_splits=["dev", "test"],
-        eval_langs=["eng-Latn"],
         main_score="recall_at_10",
         bibtex_citation=StatcanDialogueDatasetRetrieval.metadata.bibtex_citation,
     )
@@ -220,7 +212,6 @@ class AggFaithDialRetrieval(AbsTaskAggregate):
         category="t2t",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs=["eng-Latn"],
         main_score="ndcg_at_10",
         bibtex_citation=FaithDialRetrieval.metadata.bibtex_citation,
     )
@@ -239,7 +230,6 @@ class AggMultiWoz21(AbsTaskAggregate):
         category="t2c",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs=["eng-Latn"],
         main_score="accuracy",
         bibtex_citation=MultiWoz21.metadata.bibtex_citation,
     )
@@ -258,7 +248,6 @@ class AggAirDialogueClassification(AbsTaskAggregate):
         category="t2c",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs=["eng-Latn"],
         main_score="f1",
         bibtex_citation=AirDialogueClassification.metadata.bibtex_citation,
     )
@@ -277,7 +266,6 @@ class AggCanard(AbsTaskAggregate):
         category="t2t",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs=["eng-Latn"],
         main_score="ndcg_at_10",
         bibtex_citation=Canard.metadata.bibtex_citation,
     )
@@ -296,7 +284,6 @@ class AggMantisClassification(AbsTaskAggregate):
         category="t2c",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs=["eng-Latn"],
         main_score="f1",
         bibtex_citation=Mantis.metadata.bibtex_citation,
     )
@@ -315,7 +302,6 @@ class AggWiardOfWikipedia(AbsTaskAggregate):
         category="t2t",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs=["eng-Latn"],
         main_score="ndcg_at_10",
         bibtex_citation=WizardOfWikipedia.metadata.bibtex_citation,
     )
@@ -334,7 +320,6 @@ class AggQRECC(AbsTaskAggregate):
         category="t2t",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs=["eng-Latn"],
         main_score="max_ap",
         bibtex_citation=QRECC.metadata.bibtex_citation,
     )
@@ -353,7 +338,6 @@ class AggAbgCosQA(AbsTaskAggregate):
         category="t2c",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs=["eng-Latn"],
         main_score="f1",
         bibtex_citation=AbgCosQA.metadata.bibtex_citation,
     )
@@ -372,7 +356,6 @@ class AggIKAT2023(AbsTaskAggregate):
         category="t2t",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs=["eng-Latn"],
         main_score="ndcg_at_10",
         bibtex_citation=IKAT2023.metadata.bibtex_citation,
     )
@@ -393,7 +376,6 @@ class AggXRisaWoz(AbsTaskAggregate):
         category="t2c",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs=["eng-Latn"],
         main_score="accuracy",
         bibtex_citation=XRisaWoz.metadata.bibtex_citation,
     )
@@ -412,7 +394,6 @@ class AggTopiOCQAHardNegatives(AbsTaskAggregate):
         category="t2t",
         modalities=["text"],
         eval_splits=["validation"],
-        eval_langs=["eng-Latn"],
         main_score="ndcg_at_10",
         bibtex_citation=TopiOCQARetrievalHardNegatives.metadata.bibtex_citation,
     )
@@ -431,7 +412,6 @@ class AggDialogSum(AbsTaskAggregate):
         category="t2c",
         modalities=["text"],
         eval_splits=["test"],
-        eval_langs=["eng-Latn"],
         main_score="f1",
         bibtex_citation=DialogSum.metadata.bibtex_citation,
     )
