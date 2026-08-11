@@ -52,16 +52,16 @@ class AbsTaskAggregate(AbsTask):
             A dictionary with the aggregated scores.
         """
         scores: dict[str, Mapping[HFSubset, ScoresDict]] = {}
-        subsets = (
-            self.metadata.eval_langs.keys()
-            if isinstance(self.metadata.eval_langs, dict)
-            else None
-        )
-        eval_langs = (
-            self.metadata.eval_langs.values()
-            if isinstance(self.metadata.eval_langs, dict)
-            else [self.metadata.eval_langs]
-        )
+        if isinstance(self.metadata.eval_langs, dict):
+            # one group per named subset, each subset weighted equally
+            lang_groups: list[tuple[str | None, list[str]]] = list(
+                self.metadata.eval_langs.items()
+            )
+        else:
+            # one group per individual language, so e.g. eng/fra/spa are
+            # weighted equally in the aggregate instead of first being
+            # averaged together within whichever task happens to report them.
+            lang_groups = [(None, [lang]) for lang in self.metadata.eval_langs]
 
         valid_task_results = [
             tr for tr in task_results if tr.task_name in self.taskname_to_task
@@ -76,18 +76,31 @@ class AbsTaskAggregate(AbsTask):
             )
 
         for split in self.metadata.eval_splits:
-            main_scores = []
+            group_scores = []
             if not is_missing:
-                for task_res in valid_task_results:
-                    for langs in eval_langs:
-                        main_scores.append(
-                            task_res._get_score_fast(
-                                languages=[lang.split("-")[0] for lang in langs],
-                                splits=[split],
-                                subsets=subsets,
+                for subset_name, langs in lang_groups:
+                    subsets = [subset_name] if subset_name is not None else None
+                    languages = [lang.split("-")[0] for lang in langs]
+                    task_scores = []
+                    for task_res in valid_task_results:
+                        try:
+                            task_scores.append(
+                                task_res._get_score_fast(
+                                    languages=languages,
+                                    splits=[split],
+                                    subsets=subsets,
+                                )
                             )
+                        except ValueError:
+                            # this task result doesn't cover this language/subset
+                            continue
+                    if task_scores:
+                        group_scores.append(np.mean(task_scores))
+                    else:
+                        logger.warning(
+                            f"No task result of {self.metadata.name} covers languages {langs} for split {split}."
                         )
-                main_score = np.mean(main_scores)
+                main_score = np.mean(group_scores) if group_scores else None
             else:
                 main_score = None
             scores[split] = {
