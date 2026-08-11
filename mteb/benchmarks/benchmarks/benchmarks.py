@@ -3644,7 +3644,7 @@ DIALOG_MTEB_V1 = Benchmark(
             # "MantisClassification",
             "MultiWoz21",
             # "XRisaWoz",
-            "SkillOfMind",
+            # "SkillOfMind",
             "ClarQA",
             # "QRECC",
             # "Canard",
