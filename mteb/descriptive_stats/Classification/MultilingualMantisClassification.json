@@ -1,0 +1,390 @@
+{
+    "test": {
+        "num_samples": 24128,
+        "samples_in_train": 0,
+        "text_statistics": {
+            "total_text_length": 9147289,
+            "min_text_length": 168,
+            "average_text_length": 379.11509449602124,
+            "max_text_length": 1719,
+            "unique_texts": 24128
+        },
+        "image_statistics": null,
+        "audio_statistics": null,
+        "video_statistics": null,
+        "label_statistics": {
+            "min_labels_per_text": 1,
+            "average_label_per_text": 1.0,
+            "max_labels_per_text": 1,
+            "unique_labels": 14,
+            "labels": {
+                "apple": {
+                    "count": 1696
+                },
+                "askubuntu": {
+                    "count": 5330
+                },
+                "dba": {
+                    "count": 1562
+                },
+                "diy": {
+                    "count": 460
+                },
+                "electronics": {
+                    "count": 3210
+                },
+                "english": {
+                    "count": 972
+                },
+                "gaming": {
+                    "count": 896
+                },
+                "gis": {
+                    "count": 2730
+                },
+                "physics": {
+                    "count": 2350
+                },
+                "scifi": {
+                    "count": 666
+                },
+                "security": {
+                    "count": 1128
+                },
+                "stats": {
+                    "count": 2304
+                },
+                "travel": {
+                    "count": 432
+                },
+                "worldbuilding": {
+                    "count": 392
+                }
+            }
+        },
+        "hf_subset_descriptive_stats": {
+            "es-gemma": {
+                "num_samples": 12064,
+                "samples_in_train": 0,
+                "text_statistics": {
+                    "total_text_length": 4703419,
+                    "min_text_length": 168,
+                    "average_text_length": 389.8722645888594,
+                    "max_text_length": 1719,
+                    "unique_texts": 12064
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 14,
+                    "labels": {
+                        "apple": {
+                            "count": 848
+                        },
+                        "askubuntu": {
+                            "count": 2665
+                        },
+                        "dba": {
+                            "count": 781
+                        },
+                        "diy": {
+                            "count": 230
+                        },
+                        "electronics": {
+                            "count": 1605
+                        },
+                        "english": {
+                            "count": 486
+                        },
+                        "gaming": {
+                            "count": 448
+                        },
+                        "gis": {
+                            "count": 1365
+                        },
+                        "physics": {
+                            "count": 1175
+                        },
+                        "scifi": {
+                            "count": 333
+                        },
+                        "security": {
+                            "count": 564
+                        },
+                        "stats": {
+                            "count": 1152
+                        },
+                        "travel": {
+                            "count": 216
+                        },
+                        "worldbuilding": {
+                            "count": 196
+                        }
+                    }
+                }
+            },
+            "fr-gemma": {
+                "num_samples": 12064,
+                "samples_in_train": 0,
+                "text_statistics": {
+                    "total_text_length": 4443870,
+                    "min_text_length": 175,
+                    "average_text_length": 368.357924403183,
+                    "max_text_length": 1631,
+                    "unique_texts": 12064
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 14,
+                    "labels": {
+                        "apple": {
+                            "count": 848
+                        },
+                        "askubuntu": {
+                            "count": 2665
+                        },
+                        "dba": {
+                            "count": 781
+                        },
+                        "diy": {
+                            "count": 230
+                        },
+                        "electronics": {
+                            "count": 1605
+                        },
+                        "english": {
+                            "count": 486
+                        },
+                        "gaming": {
+                            "count": 448
+                        },
+                        "gis": {
+                            "count": 1365
+                        },
+                        "physics": {
+                            "count": 1175
+                        },
+                        "scifi": {
+                            "count": 333
+                        },
+                        "security": {
+                            "count": 564
+                        },
+                        "stats": {
+                            "count": 1152
+                        },
+                        "travel": {
+                            "count": 216
+                        },
+                        "worldbuilding": {
+                            "count": 196
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "train": {
+        "num_samples": 112442,
+        "samples_in_train": null,
+        "text_statistics": {
+            "total_text_length": 42357757,
+            "min_text_length": 165,
+            "average_text_length": 376.7076092563277,
+            "max_text_length": 2928,
+            "unique_texts": 112442
+        },
+        "image_statistics": null,
+        "audio_statistics": null,
+        "video_statistics": null,
+        "label_statistics": {
+            "min_labels_per_text": 1,
+            "average_label_per_text": 1.0,
+            "max_labels_per_text": 1,
+            "unique_labels": 14,
+            "labels": {
+                "apple": {
+                    "count": 7902
+                },
+                "askubuntu": {
+                    "count": 24862
+                },
+                "dba": {
+                    "count": 7274
+                },
+                "diy": {
+                    "count": 2138
+                },
+                "electronics": {
+                    "count": 14964
+                },
+                "english": {
+                    "count": 4522
+                },
+                "gaming": {
+                    "count": 4174
+                },
+                "gis": {
+                    "count": 12730
+                },
+                "physics": {
+                    "count": 10956
+                },
+                "scifi": {
+                    "count": 3098
+                },
+                "security": {
+                    "count": 5252
+                },
+                "stats": {
+                    "count": 10746
+                },
+                "travel": {
+                    "count": 2006
+                },
+                "worldbuilding": {
+                    "count": 1818
+                }
+            }
+        },
+        "hf_subset_descriptive_stats": {
+            "es-gemma": {
+                "num_samples": 56221,
+                "samples_in_train": null,
+                "text_statistics": {
+                    "total_text_length": 21790213,
+                    "min_text_length": 165,
+                    "average_text_length": 387.5813841802885,
+                    "max_text_length": 2928,
+                    "unique_texts": 56221
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 14,
+                    "labels": {
+                        "apple": {
+                            "count": 3951
+                        },
+                        "askubuntu": {
+                            "count": 12431
+                        },
+                        "dba": {
+                            "count": 3637
+                        },
+                        "diy": {
+                            "count": 1069
+                        },
+                        "electronics": {
+                            "count": 7482
+                        },
+                        "english": {
+                            "count": 2261
+                        },
+                        "gaming": {
+                            "count": 2087
+                        },
+                        "gis": {
+                            "count": 6365
+                        },
+                        "physics": {
+                            "count": 5478
+                        },
+                        "scifi": {
+                            "count": 1549
+                        },
+                        "security": {
+                            "count": 2626
+                        },
+                        "stats": {
+                            "count": 5373
+                        },
+                        "travel": {
+                            "count": 1003
+                        },
+                        "worldbuilding": {
+                            "count": 909
+                        }
+                    }
+                }
+            },
+            "fr-gemma": {
+                "num_samples": 56221,
+                "samples_in_train": null,
+                "text_statistics": {
+                    "total_text_length": 20567544,
+                    "min_text_length": 170,
+                    "average_text_length": 365.8338343323669,
+                    "max_text_length": 2875,
+                    "unique_texts": 56221
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 14,
+                    "labels": {
+                        "apple": {
+                            "count": 3951
+                        },
+                        "askubuntu": {
+                            "count": 12431
+                        },
+                        "dba": {
+                            "count": 3637
+                        },
+                        "diy": {
+                            "count": 1069
+                        },
+                        "electronics": {
+                            "count": 7482
+                        },
+                        "english": {
+                            "count": 2261
+                        },
+                        "gaming": {
+                            "count": 2087
+                        },
+                        "gis": {
+                            "count": 6365
+                        },
+                        "physics": {
+                            "count": 5478
+                        },
+                        "scifi": {
+                            "count": 1549
+                        },
+                        "security": {
+                            "count": 2626
+                        },
+                        "stats": {
+                            "count": 5373
+                        },
+                        "travel": {
+                            "count": 1003
+                        },
+                        "worldbuilding": {
+                            "count": 909
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

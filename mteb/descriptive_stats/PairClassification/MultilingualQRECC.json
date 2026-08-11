@@ -1,0 +1,112 @@
+{
+    "test": {
+        "num_samples": 32902,
+        "unique_pairs": 32878,
+        "number_of_characters": 16107548,
+        "text1_statistics": {
+            "total_text_length": 14299940,
+            "min_text_length": 10,
+            "average_text_length": 434.6222114157194,
+            "max_text_length": 1940,
+            "unique_texts": 32595
+        },
+        "image1_statistics": null,
+        "audio1_statistics": null,
+        "video1_statistics": null,
+        "text2_statistics": {
+            "total_text_length": 1807608,
+            "min_text_length": 12,
+            "average_text_length": 54.93915263509817,
+            "max_text_length": 105,
+            "unique_texts": 32397
+        },
+        "image2_statistics": null,
+        "audio2_statistics": null,
+        "video2_statistics": null,
+        "labels_statistics": {
+            "min_labels_per_text": 1,
+            "average_label_per_text": 1.0,
+            "max_labels_per_text": 1,
+            "unique_labels": 1,
+            "labels": {
+                "1": {
+                    "count": 32902
+                }
+            }
+        },
+        "hf_subset_descriptive_stats": {
+            "es-gemma": {
+                "num_samples": 16451,
+                "unique_pairs": 16446,
+                "number_of_characters": 8053184,
+                "text1_statistics": {
+                    "total_text_length": 7153798,
+                    "min_text_length": 10,
+                    "average_text_length": 434.8549024375418,
+                    "max_text_length": 1940,
+                    "unique_texts": 16300
+                },
+                "image1_statistics": null,
+                "audio1_statistics": null,
+                "video1_statistics": null,
+                "text2_statistics": {
+                    "total_text_length": 899386,
+                    "min_text_length": 12,
+                    "average_text_length": 54.67059753206492,
+                    "max_text_length": 104,
+                    "unique_texts": 16384
+                },
+                "image2_statistics": null,
+                "audio2_statistics": null,
+                "video2_statistics": null,
+                "labels_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 1,
+                    "labels": {
+                        "1": {
+                            "count": 16451
+                        }
+                    }
+                }
+            },
+            "fr-gemma": {
+                "num_samples": 16451,
+                "unique_pairs": 16437,
+                "number_of_characters": 8054364,
+                "text1_statistics": {
+                    "total_text_length": 7146142,
+                    "min_text_length": 13,
+                    "average_text_length": 434.38952039389704,
+                    "max_text_length": 1861,
+                    "unique_texts": 16300
+                },
+                "image1_statistics": null,
+                "audio1_statistics": null,
+                "video1_statistics": null,
+                "text2_statistics": {
+                    "total_text_length": 908222,
+                    "min_text_length": 13,
+                    "average_text_length": 55.20770773813142,
+                    "max_text_length": 105,
+                    "unique_texts": 16018
+                },
+                "image2_statistics": null,
+                "audio2_statistics": null,
+                "video2_statistics": null,
+                "labels_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 1,
+                    "labels": {
+                        "1": {
+                            "count": 16451
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

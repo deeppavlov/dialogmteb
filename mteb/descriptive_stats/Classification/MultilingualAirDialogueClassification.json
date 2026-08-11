@@ -1,0 +1,228 @@
+{
+    "test": {
+        "num_samples": 80430,
+        "samples_in_train": 0,
+        "text_statistics": {
+            "total_text_length": 52494082,
+            "min_text_length": 223,
+            "average_text_length": 652.6679348501802,
+            "max_text_length": 1878,
+            "unique_texts": 80430
+        },
+        "image_statistics": null,
+        "audio_statistics": null,
+        "video_statistics": null,
+        "label_statistics": {
+            "min_labels_per_text": 1,
+            "average_label_per_text": 1.0,
+            "max_labels_per_text": 1,
+            "unique_labels": 5,
+            "labels": {
+                "book": {
+                    "count": 41832
+                },
+                "no_reservation": {
+                    "count": 18300
+                },
+                "no_flight": {
+                    "count": 18526
+                },
+                "change": {
+                    "count": 564
+                },
+                "cancel": {
+                    "count": 1208
+                }
+            }
+        },
+        "hf_subset_descriptive_stats": {
+            "es-gemma": {
+                "num_samples": 40215,
+                "samples_in_train": 0,
+                "text_statistics": {
+                    "total_text_length": 25410419,
+                    "min_text_length": 223,
+                    "average_text_length": 631.8642048986696,
+                    "max_text_length": 1826,
+                    "unique_texts": 40215
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 5,
+                    "labels": {
+                        "book": {
+                            "count": 20916
+                        },
+                        "no_reservation": {
+                            "count": 9150
+                        },
+                        "no_flight": {
+                            "count": 9263
+                        },
+                        "change": {
+                            "count": 282
+                        },
+                        "cancel": {
+                            "count": 604
+                        }
+                    }
+                }
+            },
+            "fr-gemma": {
+                "num_samples": 40215,
+                "samples_in_train": 0,
+                "text_statistics": {
+                    "total_text_length": 27083663,
+                    "min_text_length": 246,
+                    "average_text_length": 673.471664801691,
+                    "max_text_length": 1878,
+                    "unique_texts": 40215
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 5,
+                    "labels": {
+                        "book": {
+                            "count": 20916
+                        },
+                        "no_reservation": {
+                            "count": 9150
+                        },
+                        "no_flight": {
+                            "count": 9263
+                        },
+                        "change": {
+                            "count": 282
+                        },
+                        "cancel": {
+                            "count": 604
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "train": {
+        "num_samples": 642918,
+        "samples_in_train": null,
+        "text_statistics": {
+            "total_text_length": 397374807,
+            "min_text_length": 148,
+            "average_text_length": 618.0800770860359,
+            "max_text_length": 2096,
+            "unique_texts": 642911
+        },
+        "image_statistics": null,
+        "audio_statistics": null,
+        "video_statistics": null,
+        "label_statistics": {
+            "min_labels_per_text": 1,
+            "average_label_per_text": 1.0,
+            "max_labels_per_text": 1,
+            "unique_labels": 5,
+            "labels": {
+                "no_reservation": {
+                    "count": 146408
+                },
+                "book": {
+                    "count": 336136
+                },
+                "no_flight": {
+                    "count": 146330
+                },
+                "cancel": {
+                    "count": 9242
+                },
+                "change": {
+                    "count": 4802
+                }
+            }
+        },
+        "hf_subset_descriptive_stats": {
+            "es-gemma": {
+                "num_samples": 321459,
+                "samples_in_train": null,
+                "text_statistics": {
+                    "total_text_length": 193191424,
+                    "min_text_length": 148,
+                    "average_text_length": 600.9830927116677,
+                    "max_text_length": 2096,
+                    "unique_texts": 321456
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 5,
+                    "labels": {
+                        "no_reservation": {
+                            "count": 73204
+                        },
+                        "book": {
+                            "count": 168068
+                        },
+                        "no_flight": {
+                            "count": 73165
+                        },
+                        "cancel": {
+                            "count": 4621
+                        },
+                        "change": {
+                            "count": 2401
+                        }
+                    }
+                }
+            },
+            "fr-gemma": {
+                "num_samples": 321459,
+                "samples_in_train": null,
+                "text_statistics": {
+                    "total_text_length": 204183383,
+                    "min_text_length": 155,
+                    "average_text_length": 635.1770614604039,
+                    "max_text_length": 2088,
+                    "unique_texts": 321455
+                },
+                "image_statistics": null,
+                "audio_statistics": null,
+                "video_statistics": null,
+                "label_statistics": {
+                    "min_labels_per_text": 1,
+                    "average_label_per_text": 1.0,
+                    "max_labels_per_text": 1,
+                    "unique_labels": 5,
+                    "labels": {
+                        "no_reservation": {
+                            "count": 73204
+                        },
+                        "book": {
+                            "count": 168068
+                        },
+                        "no_flight": {
+                            "count": 73165
+                        },
+                        "cancel": {
+                            "count": 4621
+                        },
+                        "change": {
+                            "count": 2401
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

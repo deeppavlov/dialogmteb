@@ -805,7 +805,7 @@ class TaskResult(BaseModel):  # noqa: PLR0904
             return False
 
         if Criteria.DATASET_REVISION in criteria and self.dataset_revision != revision:
-            msg = f"Cannot merge TaskResult objects as they are derived from different dataset revisions ({self.dataset_revision} and {revision})"
+            msg = f"Cannot merge TaskResult objects for {self.task_name} as they are derived from different dataset revisions ({self.dataset_revision} and {revision})"
             if raise_error:
                 raise ValueError(msg)
             logger.debug(msg)
