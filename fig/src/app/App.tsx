@@ -1,35 +1,22 @@
 import { TaskCard } from "./components/TaskCard";
-import { Languages, ListChecks, Globe, Layers } from "lucide-react";
+import { Languages, ListChecks, Globe } from "lucide-react";
 
 export default function App() {
   return (
     <div className="min-h-screen bg-white p-8 flex items-center justify-center">
       <div className="w-full max-w-[1850px]">
         <div id="dialogmteb-figure" className="bg-white">
-          <div className="grid grid-cols-[340px_1fr_340px] grid-rows-[auto_auto] gap-4 items-stretch">
+          <div className="grid grid-cols-2 grid-rows-2 gap-4 items-stretch">
 
-            {/* Row 1 left */}
-            <TaskCard
-              title="Classification"
-              stats={{ languages: "50", tasks: "14", domains: "7" }}
-              datasets={[
-                "ATIS Intent",
-                "Banking77",
-                "DailyDialog Emotion",
-                "MASSIVE Intent",
-              ]}
-              taskType="classification"
-            />
-
-            {/* Row 1 centre — header */}
+            {/* Top-left — header */}
             <div className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 border-4 border-blue-400 rounded-3xl p-8 shadow-lg h-full">
-              <div className="h-full max-w-[1120px] mx-auto flex flex-col justify-center pt-3">
+              <div className="h-full max-w-[720px] mx-auto flex flex-col justify-center pt-3">
                 <div className="text-center mb-8">
                   <h1
                     className="text-6xl text-gray-900 mb-3"
                     style={{ fontWeight: 900, letterSpacing: "-0.02em" }}
                   >
-                    DialogMTEB
+                    DialogMTEB(v1)
                   </h1>
                   <div className="text-xl text-gray-600" style={{ fontWeight: 500, letterSpacing: "0.01em" }}>
                     <span style={{ fontWeight: 700 }}>Dialog</span>ue{" "}
@@ -40,12 +27,11 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-4 gap-6 mt-3">
+                <div className="grid grid-cols-3 gap-6 mt-3">
                   {[
                     { icon: Languages, value: "51", label: "Languages" },
-                    { icon: ListChecks, value: "25", label: "Tasks" },
-                    { icon: Globe,      value: "9",  label: "Domains" },
-                    { icon: Layers,     value: "50+", label: "Models" },
+                    { icon: ListChecks, value: "29", label: "Tasks" },
+                    { icon: Globe,      value: "8",  label: "Domains" },
                   ].map(({ icon: Icon, value, label }) => (
                     <div key={label} className="text-center">
                       <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
@@ -63,40 +49,39 @@ export default function App() {
               </div>
             </div>
 
-            {/* Row 1 right */}
+            {/* Top-right */}
+            <TaskCard
+              title="Classification"
+              stats={{ languages: "50", tasks: "17", domains: "6" }}
+              datasets={[
+                "MTOP Intent",
+                "Massive Intent",
+                "Banking77",
+                "MultiWoz21",
+              ]}
+              taskType="classification"
+            />
+
+            {/* Bottom-left */}
             <TaskCard
               title="Retrieval"
-              stats={{ languages: "7", tasks: "8", domains: "6" }}
+              stats={{ languages: "3", tasks: "9", domains: "5" }}
               datasets={[
-                "Canard",
+                "Statcan Dialogue",
                 "FaithDial",
+                "Clarq",
                 "TopiOCQA",
-                "iKAT 2023",
               ]}
               taskType="retrieval"
             />
 
-            {/* Row 2 — 3 equal cards spanning all columns */}
-            <div className="col-span-3 grid grid-cols-3 gap-4">
-              <TaskCard
-                title="STS"
-                stats={{ languages: "1", tasks: "1", domains: "2" }}
-                datasets={["ATEC"]}
-                taskType="sts"
-              />
-              <TaskCard
-                title="Pair Classification"
-                stats={{ languages: "1", tasks: "1", domains: "1" }}
-                datasets={["ClarQA"]}
-                taskType="pair"
-              />
-              <TaskCard
-                title="Reranking"
-                stats={{ languages: "1", tasks: "1", domains: "3" }}
-                datasets={["WebLINX Reranking"]}
-                taskType="reranking"
-              />
-            </div>
+            {/* Bottom-right */}
+            <TaskCard
+              title="Pair Classification"
+              stats={{ languages: "3", tasks: "2", domains: "0" }}
+              datasets={["ClarQA", "QRECC"]}
+              taskType="pair"
+            />
 
           </div>
         </div>

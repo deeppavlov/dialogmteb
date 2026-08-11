@@ -20,7 +20,12 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 import mteb
-from scripts.dialogmteb._common import OUT_DIR, RUN_MODELS
+from scripts.dialogmteb._common import (
+    OUT_DIR,
+    get_complete_models,
+    load_score_df,
+    load_unique_tasks,
+)
 
 _KEY_RE = re.compile(r"@\w+\{([^,\s]+)", re.MULTILINE)
 
@@ -98,8 +103,21 @@ def fetch_model_meta(model_name: str) -> dict:
 # ---------------------------------------------------------------------------
 
 
+def get_fully_evaluated_models() -> list[str]:
+    """Return RUN_MODELS that have results for every task in the (multilingual) benchmark."""
+    tasks = load_unique_tasks()
+    task_names = [t.metadata.name for t in tasks]
+    score_df = load_score_df(tasks)
+    complete = get_complete_models(score_df, task_names)
+    skipped = sorted(set(score_df.columns) - set(complete))
+    if skipped:
+        print(f"Skipping {len(skipped)} models missing results on some tasks: {skipped}")
+    print(f"{len(complete)} models fully evaluated on all {len(task_names)} tasks")
+    return complete
+
+
 def build_model_rows(top_n: int | None) -> list[dict]:
-    models = sorted(RUN_MODELS)
+    models = sorted(get_fully_evaluated_models())
     if top_n is not None:
         models = models[:top_n]
 

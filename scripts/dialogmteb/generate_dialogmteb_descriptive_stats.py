@@ -400,6 +400,37 @@ TYPE_CAPTIONS = {
 # ---------------------------------------------------------------------------
 
 
+def display_name(name: str) -> str:
+    """Strip the leading 'Agg' prefix used by aggregate task class names for display."""
+    return name[len("Agg") :] if name.startswith("Agg") else name
+
+
+def get_task_stats(task) -> tuple[dict, list[str]]:
+    """Return (stats, splits) for a task, combining constituent tasks for aggregates.
+
+    Aggregate tasks (AbsTaskAggregate) don't have their own dataset to load
+    descriptive statistics from - they're a placeholder combining several
+    underlying tasks. So instead we compute descriptive statistics for each
+    constituent task and combine them into one stats dict, keyed by a
+    synthetic "{task_name}::{split}" entry per constituent split. The existing
+    row builders already aggregate (sum/mean/max) across whatever list of
+    split-keys they're given, so treating each constituent's splits as
+    additional "splits" of the combined task reuses that logic unchanged.
+    """
+    if not task.is_aggregate:
+        stats = task.calculate_descriptive_statistics()
+        return stats, list(task.metadata.eval_splits)
+
+    combined: dict[str, dict] = {}
+    for subtask in task.tasks:
+        sub_stats = subtask.calculate_descriptive_statistics()
+        for split in subtask.metadata.eval_splits:
+            if split not in sub_stats:
+                continue
+            combined[f"{subtask.metadata.name}::{split}"] = sub_stats[split]
+    return combined, list(combined.keys())
+
+
 def build_all_rows(tasks: list) -> dict[str, list[dict]]:
     """Return {task_type: [row_dict, ...]}."""
     by_type: dict[str, list[dict]] = {}
@@ -413,8 +444,9 @@ def build_all_rows(tasks: list) -> dict[str, list[dict]]:
 
         print(f"  {meta.name}...", end=" ", flush=True)
         try:
-            stats = task.calculate_descriptive_statistics()
-            row = builder(task, stats, meta.eval_splits)
+            stats, splits = get_task_stats(task)
+            row = builder(task, stats, splits)
+            row["name"] = display_name(row["name"])
             row["type_abbrev"] = TYPE_ABBREV.get(ttype, ttype)
         except Exception as e:
             print(f"FAILED ({e})")

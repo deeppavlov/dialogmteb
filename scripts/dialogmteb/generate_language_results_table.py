@@ -3,8 +3,8 @@
 Groups tasks by language coverage:
   English-only  (only 'eng')
   Multilingual  (2+ languages, includes English)
-  Russian       (rus)
-  Chinese       (cmn / cmo)
+  French        (fra)
+  Spanish       (spa)
   Other
 """
 
@@ -23,6 +23,7 @@ from scripts.dialogmteb._common import (
     load_unique_tasks,
     load_score_df,
     compute_borda,
+    get_complete_models,
 )
 
 TOP_N = 30
@@ -32,10 +33,10 @@ def classify_language(languages: list[str]) -> str:
     langs = set(lang.split("-")[0] for lang in languages)
     if langs == {"eng"}:
         return "English"
-    if "rus" in langs and len(langs) == 1:
-        return "Russian"
-    if langs <= {"cmn", "cmo"}:
-        return "Chinese"
+    if "fra" in langs and len(langs) == 1:
+        return "French"
+    if langs <= {"spa"}:
+        return "Spanish"
     return "Multilingual"
 
 
@@ -60,6 +61,14 @@ def main():
         print(f"  {g} ({len(ts)}): {ts}")
 
     score_df = load_score_df(tasks)
+
+    complete_models = get_complete_models(score_df, task_names)
+    skipped = sorted(set(score_df.columns) - set(complete_models))
+    if skipped:
+        print(f"Skipping {len(skipped)} models missing results on some tasks: {skipped}")
+    score_df = score_df[complete_models]
+    print(f"{len(score_df.columns)} models fully evaluated on all {len(task_names)} tasks")
+
     borda = compute_borda(score_df, task_names)
 
     mt = score_df.loc[[t for t in task_names if t in score_df.index]].T.dropna(
@@ -68,7 +77,7 @@ def main():
     mt["borda"] = borda
     mt["mean_all"] = mt[task_names].mean(axis=1, skipna=True) * 100
 
-    group_order = ["English", "Russian", "Chinese", "Multilingual"]
+    group_order = ["English", "French", "Spanish", "Multilingual"]
     for group in group_order:
         tasks_in_group = [t for t in lang_group.get(group, []) if t in mt.columns]
         if tasks_in_group:
@@ -95,7 +104,7 @@ def main():
         "    \\begin{tabular}{lccccc}",
         "    \\toprule",
         "    \\textbf{Model} & \\textbf{All} & \\textbf{English} & "
-        "\\textbf{Russian} & \\textbf{Chinese} & \\textbf{Multilingual} \\\\",
+        "\\textbf{French} & \\textbf{Spanish} & \\textbf{Multilingual} \\\\",
         "    \\textcolor{gray}{\\# tasks} & "
         + " & ".join(
             [

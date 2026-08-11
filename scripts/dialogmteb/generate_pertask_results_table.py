@@ -22,6 +22,7 @@ from scripts.dialogmteb._common import (
     BENCHMARKS,
     cache,
     RUN_MODELS,
+    get_complete_models,
     TYPE_ORDER as TASK_TYPE_ORDER,
     TYPE_ABBREV as TASK_TYPE_ABBREV,
     TYPE_COLORS,
@@ -88,6 +89,14 @@ def generate_table(benchmark_name: str, suffix: str) -> str:
 
     task_type_map = _build_task_type_map(unique_tasks)
     df = _load_results(unique_tasks)
+
+    task_names_all = [t.metadata.name for t in unique_tasks]
+    complete_models = get_complete_models(df, task_names_all)
+    skipped = sorted(set(df.columns) - set(complete_models))
+    if skipped:
+        print(f"  Skipping {len(skipped)} models missing results on some tasks: {skipped}")
+    df = df[complete_models]
+    print(f"  {len(df.columns)} models fully evaluated on all {len(task_names_all)} tasks")
 
     # Order tasks by type group
     ordered_tasks: list[str] = []

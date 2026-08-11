@@ -22,6 +22,7 @@ from scripts.dialogmteb._common import (
     BENCHMARKS,
     cache,
     RUN_MODELS,
+    get_complete_models,
     TYPE_ORDER as TASK_TYPE_ORDER,
     TYPE_ABBREV as TASK_TYPE_ABBREV,
 )
@@ -243,6 +244,13 @@ def run_benchmark(benchmark_name: str, suffix: str, top_n: int) -> None:
 
     df = load_results(unique_tasks)
     print(f"  {len(df.columns)} models with at least one result")
+
+    complete_models = get_complete_models(df, task_names)
+    skipped = sorted(set(df.columns) - set(complete_models))
+    if skipped:
+        print(f"  Skipping {len(skipped)} models missing results on some tasks: {skipped}")
+    df = df[complete_models]
+    print(f"  {len(df.columns)} models fully evaluated on all {len(task_names)} tasks")
 
     df_ranked, category_avgs = build_rankings(df, task_names, task_type_map, top_n=None)
 
